@@ -15,7 +15,7 @@ public:
 	///
 	/// Constructs the LedDevice for attached via SEDU device
 	///
-	/// @param outputDevice The name of the output device (eg '/etc/ttyS0')
+	/// @param outputDevice The name of the output device (eg '/dev/ttyS0')
 	/// @param baudrate The used baudrate for writing to the output device
 	///
 	LedDeviceSedu(const std::string& outputDevice, const unsigned baudrate);
