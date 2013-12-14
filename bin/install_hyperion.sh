@@ -16,26 +16,28 @@ fi
 # Stop hyperion daemon if it is running
 /sbin/initctl stop hyperion
 
-# Get and extract the Hyperion binaries and effects to /opt
-wget https://raw.github.com/tvdzwan/hyperion/master/deploy/hyperion.tar.gz -O - | tar -C /opt -xz
+# Get the Hyperion executable
+wget -N github.com/tvdzwan/hyperion/raw/master/deploy/hyperiond -P /usr/bin/
+chmod +x /usr/bin/hyperiond
 
-# create links to the binaries
-ln -fs /opt/hyperion/bin/hyperiond /usr/bin/hyperiond
-ln -fs /opt/hyperion/bin/hyperion-remote /usr/bin/hyperion-remote
+# Get the Hyperion command line utility
+wget -N github.com/tvdzwan/hyperion/raw/master/deploy/hyperion-remote -P /usr/bin/
+chmod +x /usr/bin/hyperion-remote
 
-# create link to the gpio changer (gpio->spi)
+# Copy the gpio changer (gpio->spi) to the /usr/bin
 if [ $IS_XBIAN -eq 0 ]; then
-	ln -fs /opt/hyperion/bin/gpio2spi /usr/bin/gpio2spi
+	wget -N github.com/tvdzwan/hyperion/raw/master/deploy/gpio2spi -P /usr/bin/
+	chmod +x /usr/bin/gpio2spi
 fi
 
-# Copy a link to the hyperion configuration file to /etc
-ln -s /opt/hyperion/config/hyperion.config.json /etc/hyperion.config.json
+# Copy the hyperion configuration file to /etc
+wget -N github.com/tvdzwan/hyperion/raw/master/config/hyperion.config.json -P /etc/
 
 # Copy the service control configuration to /etc/int
 if [ $IS_XBIAN -eq 0 ]; then
-	wget -N https://raw.github.com/tvdzwan/hyperion/master/deploy/hyperion.conf -P /etc/init/
+	wget -N github.com/tvdzwan/hyperion/raw/master/deploy/hyperion.conf -P /etc/init/
 else
-	wget -N https://raw.github.com/tvdzwan/hyperion/master/deploy/hyperion.xbian.conf -O /etc/init/hyperion.conf
+	wget -N github.com/tvdzwan/hyperion/raw/master/deploy/hyperion.xbian.conf -O /etc/init/hyperion.conf
 fi
 
 # Start the hyperion daemon
