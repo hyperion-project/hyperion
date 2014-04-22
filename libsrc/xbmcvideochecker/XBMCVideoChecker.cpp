@@ -17,6 +17,10 @@
 // {"id":668,"jsonrpc":"2.0","method":"XBMC.GetInfoBooleans","params":{"booleans":["System.ScreenSaverActive"]}}
 // {"id":668,"jsonrpc":"2.0","result":{"System.ScreenSaverActive":false}}
 
+// Request stereoscopicmode example:
+// {"jsonrpc":"2.0","method":"GUI.GetProperties","params":{"properties":["stereoscopicmode"]},"id":1}
+// {"id":1,"jsonrpc":"2.0","result":{"stereoscopicmode":{"label":"Nebeneinander","mode":"split_vertical"}}}
+
 XBMCVideoChecker::XBMCVideoChecker(const std::string & address, uint16_t port, bool grabVideo, bool grabPhoto, bool grabAudio, bool grabMenu, bool grabScreensaver, bool enable3DDetection) :
 	QObject(),
 	_address(QString::fromStdString(address)),
@@ -24,6 +28,7 @@ XBMCVideoChecker::XBMCVideoChecker(const std::string & address, uint16_t port, b
 	_activePlayerRequest(R"({"id":666,"jsonrpc":"2.0","method":"Player.GetActivePlayers"})"),
 	_currentPlayingItemRequest(R"({"id":667,"jsonrpc":"2.0","method":"Player.GetItem","params":{"playerid":%1,"properties":["file"]}})"),
 	_checkScreensaverRequest(R"({"id":668,"jsonrpc":"2.0","method":"XBMC.GetInfoBooleans","params":{"booleans":["System.ScreenSaverActive"]}})"),
+	_getStereoscopicMode(R"({"jsonrpc":"2.0","method":"GUI.GetProperties","params":{"properties":["stereoscopicmode"]},"id":1})"),
 	_socket(),
 	_grabVideo(grabVideo),
 	_grabPhoto(grabPhoto),
@@ -116,6 +121,9 @@ void XBMCVideoChecker::receiveReply()
 	}
 	else if (reply.contains("\"id\":667"))
 	{
+		// check of active stereoscopicmode
+		_socket.write(_getStereoscopicMode.toUtf8());
+
 		// result of Player.GetItem
 		// TODO: what if the filename contains a '"'. In Json this should have been escaped
 		QRegExp regex("\"file\":\"((?!\").)*\"");
@@ -142,6 +150,23 @@ void XBMCVideoChecker::receiveReply()
 		// result of System.ScreenSaverActive
 		bool active = reply.contains("\"System.ScreenSaverActive\":true");
 		setScreensaverMode(!_grabScreensaver && active);
+	}
+	else if (reply.contains("\"stereoscopicmode\""))
+	{
+		QRegExp regex("\"mode\":\"(split_vertical|split_horizontal)\"");
+		int pos = regex.indexIn(reply);
+		if (pos > 0)
+		{
+			QString sMode = regex.cap(1);
+			if (sMode == "split_vertical")
+			{
+				setVideoMode(VIDEO_3DSBS);
+			}
+			else if (sMode == "split_horizontal")
+			{
+				setVideoMode(VIDEO_3DTAB);
+			}
+		}
 	}
 }
 
