@@ -99,9 +99,6 @@ private:
 	/// The JSON-RPC message to check the active stereoscopicmode
 	const QString _getStereoscopicMode;
 
-	/// The JSON-RPC message to check the xbmc version
-	const QString _getXbmcVersion;
-
 	/// The QT TCP Socket with connection to XBMC
 	QTcpSocket _socket;
 
