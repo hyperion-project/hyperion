@@ -6,7 +6,7 @@
 // Qt includes
 #include <QTimer>
 
-// hyperion incluse
+// hyperion include
 #include "LedRs232Device.h"
 
 ///
@@ -40,7 +40,7 @@ private slots:
 	/// Write the last data to the leds again
 	void rewriteLeds();
 
-private:
+protected:
 	/// The buffer containing the packed RGB values
 	std::vector<uint8_t> _ledBuffer;
 
