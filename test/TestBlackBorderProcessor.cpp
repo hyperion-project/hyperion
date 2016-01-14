@@ -98,7 +98,7 @@ int main()
 		{
 			if (newBorder)
 			{
-				std::cerr << "Incorrectly detected new border, when there in none" << std::endl;
+				std::cerr << "Incorrectly detected new border, when there is none" << std::endl;
 				exit(EXIT_FAILURE);
 			}
 		}
@@ -111,10 +111,20 @@ int main()
 		exit(EXIT_FAILURE);
 	}
 
-	// Switch back (in one shot) to no border
+	// new border detection requires 11 stable frames to switch to smaller border
+	for (unsigned i=0; i<10; ++i)
+	{
+		bool newBorder = processor.process(noBorderImage);
+		if (newBorder) {
+			std::cerr << "Switch back to 'no border' with " << (i+1) << " image(s)" << std::endl;
+			exit(EXIT_FAILURE);
+		}
+	}
+
+	// Switch back (in 11 shots) to no border
 	if (!processor.process(noBorderImage) || (processor.getCurrentBorder().unknown != false || processor.getCurrentBorder().horizontalSize != 0 || processor.getCurrentBorder().verticalSize != 0))
 	{
-		std::cerr << "Failed to switch back to 'no border' with one image" << std::endl;
+		std::cerr << "Failed to switch back to 'no border' with more then 10 images" << std::endl;
 		exit(EXIT_FAILURE);
 	}
 
@@ -146,9 +156,9 @@ int main()
 		exit(EXIT_FAILURE);
 	}
 
-	// Switch back (in one shot) to no border
-	assert(processor.process(noBorderImage));
-	assert(processor.getCurrentBorder().verticalSize == 0 && processor.getCurrentBorder().horizontalSize == 0);
+	// Switch back (in one shot) to no border -> commented because it should switch after 11
+//	assert(processor.process(noBorderImage));
+//	assert(processor.getCurrentBorder().verticalSize == 0 && processor.getCurrentBorder().horizontalSize == 0);
 
 	return 0;
 }
