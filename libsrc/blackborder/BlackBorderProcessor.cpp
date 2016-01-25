@@ -1,18 +1,28 @@
-//#include <iostream>
+#include <iostream>
+#include <iomanip>
+using std::cout;
+using std::endl;
+using std::setw;
+using std::left;
 
 // Blackborder includes
 #include <blackborder/BlackBorderProcessor.h>
 
-using namespace hyperion;
 
+using namespace hyperion;
+/*
 BlackBorderProcessor::BlackBorderProcessor(const unsigned unknownFrameCnt,
 		const unsigned borderFrameCnt,
 		const unsigned blurRemoveCnt,
-		uint8_t blackborderThreshold) :
-	_unknownSwitchCnt(unknownFrameCnt),
-	_borderSwitchCnt(borderFrameCnt),
-	_blurRemoveCnt(blurRemoveCnt),
-	_detector(blackborderThreshold),
+		uint8_t blackborderThreshold,
+		const Json::Value &blackborderConfig
+		) :
+*/
+BlackBorderProcessor::BlackBorderProcessor(const Json::Value &blackborderConfig) :
+	_unknownSwitchCnt(blackborderConfig.get("unknownFrameCnt", 600).asUInt()),
+	_borderSwitchCnt(blackborderConfig.get("borderFrameCnt", 50).asUInt()),
+	_blurRemoveCnt(blackborderConfig.get("blurRemoveCnt", 1).asUInt()),
+	_detector(blackborderConfig.get("threshold", 0.01).asDouble()),
 	_currentBorder({true, -1, -1}),
 	_previousDetectedBorder({true, -1, -1}),
 	_consistentCnt(0),
@@ -39,7 +49,9 @@ bool BlackBorderProcessor::updateBorder(const BlackBorder & newDetectedBorder)
 // makes it look like the border detectionn is not working - since the new 3 line detection algorithm is more precise this became a problem specialy in dark scenes
 // wisc
 
-//	std::cout << "cur: " << _currentBorder.verticalSize << " " << _currentBorder.horizontalSize << " new: " << newDetectedBorder.verticalSize << " " << newDetectedBorder.horizontalSize << " c:i " << _consistentCnt << ":" << _inconsistentCnt << std::endl;
+//std::cout << "conf:" << deviceConfig.get("colorOrder", "rgb").asString();
+
+	std::cout << "c: " << setw(2) << _currentBorder.verticalSize << " " << setw(2) << _currentBorder.horizontalSize << " p: " << setw(2) << _previousDetectedBorder.verticalSize << " " << setw(2) << _previousDetectedBorder.horizontalSize << " n: " << setw(2) << newDetectedBorder.verticalSize << " " << setw(2) << newDetectedBorder.horizontalSize << " c:i " << setw(2) << _consistentCnt << ":" << setw(2) << _inconsistentCnt << std::endl;
 
 	// set the consistency counter
 	if (newDetectedBorder == _previousDetectedBorder)

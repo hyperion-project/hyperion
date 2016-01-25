@@ -1,6 +1,8 @@
 
 #pragma once
 
+// Jsoncpp includes
+#include <json/json.h>
 // Local Hyperion includes
 #include "BlackBorderDetector.h"
 
@@ -24,10 +26,12 @@ namespace hyperion
 		/// @param[in] blackborderThreshold The threshold which the blackborder detector should use
 		///
 		BlackBorderProcessor(
-				const unsigned unknownFrameCnt,
-				const unsigned borderFrameCnt,
-				const unsigned blurRemoveCnt,
-				uint8_t blackborderThreshold);
+//				const unsigned unknownFrameCnt,
+//				const unsigned borderFrameCnt,
+//				const unsigned blurRemoveCnt,
+//				uint8_t blackborderThreshold,
+				const Json::Value &blackborderConfig
+				);
 
 		///
 		/// Return the current (detected) border

@@ -49,7 +49,8 @@ namespace hyperion
 		/// Constructs a black-border detector
 		/// @param[in] blackborderThreshold The threshold which the blackborder detector should use
 		///
-		BlackBorderDetector(uint8_t blackborderThreshold);
+//		BlackBorderDetector(uint8_t blackborderThreshold);
+		BlackBorderDetector(double threshold);
 
 		///
 		/// Performs the actual black-border detection on the given image
@@ -58,10 +59,12 @@ namespace hyperion
 		///
 		/// @return The detected (or not detected) black border info
 		///
+
+		void _calculateThreshold(double blackborderThreshold);
+
 		template <typename Pixel_T>
 		BlackBorder process(const Image<Pixel_T> & image)
 		{
-
 			// test center and 33%, 66% of width/heigth
 			// 33 and 66 will check left and top
 			// center ill check right and bottom sids
@@ -129,7 +132,9 @@ namespace hyperion
 		}
 
 	private:
+		const double _threshold;
 		/// Threshold for the blackborder detector [0 .. 255]
-		const uint8_t _blackborderThreshold;
+//		const uint8_t _blackborderThreshold;
+		uint8_t _blackborderThreshold;
 	};
 } // end namespace hyperion
