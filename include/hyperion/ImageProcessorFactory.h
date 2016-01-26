@@ -33,7 +33,6 @@ public:
 	/// @param[in] enableBlackBorderDetector Flag indicating if the blacborder detector should be enabled
 	/// @param[in] blackborderThreshold The threshold which the blackborder detector should use
 	///
-//	void init(const LedString& ledString, bool enableBlackBorderDetector, double blackborderThreshold);
 	void init(const LedString& ledString, const Json::Value &blackborderConfig);
 
 	///
@@ -47,12 +46,6 @@ private:
 	/// The Led-string specification
 	LedString _ledString;
 
-	/// Flag indicating if the black border detector should be used
-//	bool _enableBlackBorderDetector;
-
-	/// Threshold for the blackborder detector [0 .. 255]
-//	uint8_t _blackborderThreshold;
-
-	// Reference to the blackborder configuration values WISC
+	// Reference to the blackborder json configuration values
 	Json::Value _blackborderConfig;
 };

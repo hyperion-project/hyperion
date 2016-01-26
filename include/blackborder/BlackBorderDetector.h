@@ -60,7 +60,7 @@ namespace hyperion
 		/// @return The detected (or not detected) black border info
 		///
 
-		void _calculateThreshold(double blackborderThreshold);
+		uint8_t calculateThreshold(double blackborderThreshold);
 
 		template <typename Pixel_T>
 		BlackBorder process(const Image<Pixel_T> & image)
@@ -82,9 +82,9 @@ namespace hyperion
 			int firstNonBlackYPixelIndex = -1;
 
 			// find first X pixel of the image
-			for (int x = 0; x < width; ++x)
+			for (int x = 0; x < width33percent; ++x)
 			{
-				const Pixel_T & color1 = image( (width - x), yCenter); // right side center line check
+				const Pixel_T & color1 = image( (width - 1 - x), yCenter); // right side center line check
 				const Pixel_T & color2 = image(x, height33percent);
 				const Pixel_T & color3 = image(x, height66percent);
 				if (!isBlack(color1) || !isBlack(color2) || !isBlack(color3))
@@ -95,9 +95,9 @@ namespace hyperion
 			}
 
 			// find first Y pixel of the image
-			for (int y = 0; y < height; ++y)
+			for (int y = 0; y < height33percent; ++y)
 			{
-				const Pixel_T & color1 = image(xCenter, (height - y)); // bottom center line check
+				const Pixel_T & color1 = image(xCenter, (height - 1 - y)); // bottom center line check
 				const Pixel_T & color2 = image(width33percent, y );
 				const Pixel_T & color3 = image(width66percent, y);
 				if (!isBlack(color1) || !isBlack(color2) || !isBlack(color3))
@@ -132,9 +132,8 @@ namespace hyperion
 		}
 
 	private:
-		const double _threshold;
 		/// Threshold for the blackborder detector [0 .. 255]
-//		const uint8_t _blackborderThreshold;
-		uint8_t _blackborderThreshold;
+		const uint8_t _blackborderThreshold;
+
 	};
 } // end namespace hyperion

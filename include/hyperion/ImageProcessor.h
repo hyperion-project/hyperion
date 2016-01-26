@@ -106,7 +106,6 @@ private:
 	/// @param[in] enableBlackBorderDetector Flag indicating if the blacborder detector should be enabled
 	/// @param[in] blackborderThreshold The threshold which the blackborder detector should use
 	///
-//	ImageProcessor(const LedString &ledString, bool enableBlackBorderDetector, uint8_t blackborderThreshold);
 	ImageProcessor(const LedString &ledString, const Json::Value &blackborderConfig);
 
 	///
@@ -127,12 +126,12 @@ private:
 			delete _imageToLeds;
 
 			if (border.unknown)
-			{
+			{ std::cout << "---1---";
 				// Construct a new buffer and mapping
 				_imageToLeds = new hyperion::ImageToLedsMap(image.width(), image.height(), 0, 0, _ledString.leds());
 			}
 			else
-			{
+			{ std::cout << "---2---";
 				// Construct a new buffer and mapping
 				_imageToLeds = new hyperion::ImageToLedsMap(image.width(), image.height(), border.horizontalSize, border.verticalSize, _ledString.leds());
 			}

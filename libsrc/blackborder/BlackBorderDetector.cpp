@@ -4,22 +4,23 @@
 
 using namespace hyperion;
 
-//BlackBorderDetector::BlackBorderDetector(uint8_t blackborderThreshold) :
 BlackBorderDetector::BlackBorderDetector(double threshold) :
-	_threshold(threshold)
+	_blackborderThreshold(calculateThreshold(threshold))
 {
-	_calculateThreshold(_threshold);
 	// empty
 }
 
-void BlackBorderDetector::_calculateThreshold(double blackborderThreshold)
+uint8_t BlackBorderDetector::calculateThreshold(double threshold)
 {
-	int threshold = int(std::ceil(blackborderThreshold * 255));
-	if (threshold < 0)
-		threshold = 0;
-	else if (threshold > 255)
-		threshold = 255;
-	_blackborderThreshold = uint8_t(threshold);
+	int rgbThreshold = int(std::ceil(threshold * 255));
+	if (rgbThreshold < 0)
+		rgbThreshold = 0;
+	else if (rgbThreshold > 255)
+		rgbThreshold = 255;
 
-	std::cout << "Black border threshold set to " << blackborderThreshold << " (" << int(_blackborderThreshold) << ")" << std::endl;
+	uint8_t blackborderThreshold = uint8_t(rgbThreshold);
+
+	std::cout << "Black border threshold set to " << threshold << " (" << int(blackborderThreshold) << ")" << std::endl;
+
+	return blackborderThreshold;
 }
