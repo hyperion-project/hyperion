@@ -25,9 +25,7 @@ namespace hyperion
 		///                      outer pixels is blurred (black and color combined due to image scaling))
 		/// @param[in] blackborderThreshold The threshold which the blackborder detector should use
 		///
-		BlackBorderProcessor(
-				const Json::Value &blackborderConfig
-				);
+		BlackBorderProcessor(const Json::Value &blackborderConfig);
 
 		///
 		/// Return the current (detected) border

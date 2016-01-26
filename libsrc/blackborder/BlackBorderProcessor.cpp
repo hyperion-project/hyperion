@@ -1,10 +1,11 @@
+/*
 #include <iostream>
 #include <iomanip>
 using std::cout;
 using std::endl;
 using std::setw;
 using std::left;
-
+//*/
 // Blackborder includes
 #include <blackborder/BlackBorderProcessor.h>
 
@@ -51,7 +52,7 @@ bool BlackBorderProcessor::updateBorder(const BlackBorder & newDetectedBorder)
 
 //std::cout << "conf:" << deviceConfig.get("colorOrder", "rgb").asString();
 
-	std::cout << "c: " << setw(2) << _currentBorder.verticalSize << " " << setw(2) << _currentBorder.horizontalSize << " p: " << setw(2) << _previousDetectedBorder.verticalSize << " " << setw(2) << _previousDetectedBorder.horizontalSize << " n: " << setw(2) << newDetectedBorder.verticalSize << " " << setw(2) << newDetectedBorder.horizontalSize << " c:i " << setw(2) << _consistentCnt << ":" << setw(2) << _inconsistentCnt << std::endl;
+//	std::cout << "c: " << setw(2) << _currentBorder.verticalSize << " " << setw(2) << _currentBorder.horizontalSize << " p: " << setw(2) << _previousDetectedBorder.verticalSize << " " << setw(2) << _previousDetectedBorder.horizontalSize << " n: " << setw(2) << newDetectedBorder.verticalSize << " " << setw(2) << newDetectedBorder.horizontalSize << " c:i " << setw(2) << _consistentCnt << ":" << setw(2) << _inconsistentCnt << std::endl;
 
 	// set the consistency counter
 	if (newDetectedBorder == _previousDetectedBorder)
