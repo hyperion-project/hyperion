@@ -126,12 +126,12 @@ private:
 			delete _imageToLeds;
 
 			if (border.unknown)
-			{ std::cout << "---1---";
+			{
 				// Construct a new buffer and mapping
 				_imageToLeds = new hyperion::ImageToLedsMap(image.width(), image.height(), 0, 0, _ledString.leds());
 			}
 			else
-			{ std::cout << "---2---";
+			{
 				// Construct a new buffer and mapping
 				_imageToLeds = new hyperion::ImageToLedsMap(image.width(), image.height(), border.horizontalSize, border.verticalSize, _ledString.leds());
 			}
