@@ -12,7 +12,7 @@ using namespace hyperion;
 ImageProcessor::ImageProcessor(const LedString& ledString, const Json::Value & blackborderConfig) :
 	_ledString(ledString),
 	_enableBlackBorderRemoval(blackborderConfig.get("enable", true).asBool()),
-	_borderProcessor(new BlackBorderProcessor(/*600, 50, 1, blackborderThreshold,*/ blackborderConfig )),
+	_borderProcessor(new BlackBorderProcessor(blackborderConfig) ),
 	_imageToLeds(nullptr)
 {
 	// empty
