@@ -49,7 +49,6 @@ namespace hyperion
 		/// Constructs a black-border detector
 		/// @param[in] blackborderThreshold The threshold which the blackborder detector should use
 		///
-//		BlackBorderDetector(uint8_t blackborderThreshold);
 		BlackBorderDetector(double threshold);
 
 		///

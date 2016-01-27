@@ -11,14 +11,7 @@ using std::left;
 
 
 using namespace hyperion;
-/*
-BlackBorderProcessor::BlackBorderProcessor(const unsigned unknownFrameCnt,
-		const unsigned borderFrameCnt,
-		const unsigned blurRemoveCnt,
-		uint8_t blackborderThreshold,
-		const Json::Value &blackborderConfig
-		) :
-*/
+
 BlackBorderProcessor::BlackBorderProcessor(const Json::Value &blackborderConfig) :
 	_unknownSwitchCnt(blackborderConfig.get("unknownFrameCnt", 600).asUInt()),
 	_borderSwitchCnt(blackborderConfig.get("borderFrameCnt", 50).asUInt()),
