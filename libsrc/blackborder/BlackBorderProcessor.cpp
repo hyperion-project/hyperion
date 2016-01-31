@@ -15,7 +15,9 @@ using namespace hyperion;
 BlackBorderProcessor::BlackBorderProcessor(const Json::Value &blackborderConfig) :
 	_unknownSwitchCnt(blackborderConfig.get("unknownFrameCnt", 600).asUInt()),
 	_borderSwitchCnt(blackborderConfig.get("borderFrameCnt", 50).asUInt()),
+	_maxInconsistentCnt(blackborderConfig.get("maxInconsistentCnt", 10).asUInt()),
 	_blurRemoveCnt(blackborderConfig.get("blurRemoveCnt", 1).asUInt()),
+	_detectionMode(blackborderConfig.get("mode", "default").asString()),
 	_detector(blackborderConfig.get("threshold", 0.01).asDouble()),
 	_currentBorder({true, -1, -1}),
 	_previousDetectedBorder({true, -1, -1}),
@@ -56,7 +58,7 @@ bool BlackBorderProcessor::updateBorder(const BlackBorder & newDetectedBorder)
 	else
 	{
 		++_inconsistentCnt;
-		if (_inconsistentCnt <= 10)// few inconsistent frames
+		if (_inconsistentCnt <= _maxInconsistentCnt)// only few inconsistent frames
 		{
 			//discard the newDetectedBorder -> keep the consistent count for previousDetectedBorder
 			return false;

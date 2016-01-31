@@ -46,7 +46,14 @@ namespace hyperion
 		bool process(const Image<Pixel_T> & image)
 		{
 			// get the border for the single image
-			BlackBorder imageBorder = _detector.process(image);
+			BlackBorder imageBorder;
+			if (_detectionMode == "default") {
+				imageBorder = _detector.process(image);
+			} else if (_detectionMode == "classic") {
+				imageBorder = _detector.process_classic(image);
+			} else if (_detectionMode == "osd") {
+				imageBorder = _detector.process_osd(image);
+			}
 			// add blur to the border
 			if (imageBorder.horizontalSize > 0)
 			{
@@ -78,8 +85,14 @@ namespace hyperion
 		/// The number of horizontal/vertical borders detected before it becomes the current border
 		const unsigned _borderSwitchCnt;
 
+		// The number of frames that are "ignored" before a new border gets set as _previousDetectedBorder
+		const unsigned _maxInconsistentCnt;
+
 		/// The number of pixels to increase a detected border for removing blury pixels
 		unsigned _blurRemoveCnt;
+
+		/// The border detection mode
+		const std::string _detectionMode;
 
 		/// The blackborder detector
 		BlackBorderDetector _detector;
@@ -94,5 +107,6 @@ namespace hyperion
 		unsigned _consistentCnt;
 		/// The number of frame the previous detected border NOT matched the incomming border
 		unsigned _inconsistentCnt;
+
 	};
 } // end namespace hyperion
