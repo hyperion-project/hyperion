@@ -1,5 +1,6 @@
-/*
+//*
 #include <iostream>
+/*
 #include <iomanip>
 using std::cout;
 using std::endl;
@@ -24,6 +25,7 @@ BlackBorderProcessor::BlackBorderProcessor(const Json::Value &blackborderConfig)
 	_consistentCnt(0),
 	_inconsistentCnt(10)
 {
+	std::cout << "DETECTION MODE:" << _detectionMode << std::endl;
 	// empty
 }
 
@@ -44,8 +46,6 @@ bool BlackBorderProcessor::updateBorder(const BlackBorder & newDetectedBorder)
 // this "random effect" caused the old algorithm to switch to that smaller border immediatly, resulting in a too small border being detected
 // makes it look like the border detectionn is not working - since the new 3 line detection algorithm is more precise this became a problem specialy in dark scenes
 // wisc
-
-//std::cout << "conf:" << deviceConfig.get("colorOrder", "rgb").asString();
 
 //	std::cout << "c: " << setw(2) << _currentBorder.verticalSize << " " << setw(2) << _currentBorder.horizontalSize << " p: " << setw(2) << _previousDetectedBorder.verticalSize << " " << setw(2) << _previousDetectedBorder.horizontalSize << " n: " << setw(2) << newDetectedBorder.verticalSize << " " << setw(2) << newDetectedBorder.horizontalSize << " c:i " << setw(2) << _consistentCnt << ":" << setw(2) << _inconsistentCnt << std::endl;
 
