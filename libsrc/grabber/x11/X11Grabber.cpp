@@ -8,8 +8,9 @@
 // X11Grabber includes
 #include <grabber/X11Grabber.h>
 
-X11Grabber::X11Grabber(int cropLeft, int cropRight, int cropTop, int cropBottom, int horizontalPixelDecimation, int verticalPixelDecimation) :
+X11Grabber::X11Grabber(bool dominantColor, int cropLeft, int cropRight, int cropTop, int cropBottom, int horizontalPixelDecimation, int verticalPixelDecimation) :
     _imageResampler(),
+    _dominantColor(dominantColor),
     _cropLeft(cropLeft),
     _cropRight(cropRight),
     _cropTop(cropTop),
@@ -86,7 +87,7 @@ Image<ColorRgb> & X11Grabber::grab()
         return _image;
     }
 
-    _imageResampler.processImage(reinterpret_cast<const uint8_t *>(_xImage->data), _xImage->width, _xImage->height, _xImage->bytes_per_line, PIXELFORMAT_BGR32, _image);
+    _imageResampler.processImage(reinterpret_cast<const uint8_t *>(_xImage->data), _xImage->width, _xImage->height, _xImage->bytes_per_line, PIXELFORMAT_BGR32, _image, _dominantColor);
 
     return _image;
 }
