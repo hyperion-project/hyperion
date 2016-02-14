@@ -30,6 +30,7 @@ int main(int argc, char ** argv)
         ParameterSet & parameters = optionParser.getParameters();
 
         IntParameter           & argFps             = parameters.add<IntParameter>          ('f', "framerate",        "Capture frame rate [default=10]");
+	SwitchParameter<>      & argDominantColor   = parameters.add<SwitchParameter<>>     (0x0, "dominant-color",   "Extract the Dominant Color from the Screen");
         IntParameter           & argCropWidth       = parameters.add<IntParameter>          (0x0, "crop-width",       "Number of pixels to crop from the left and right sides of the picture before decimation [default=0]");
         IntParameter           & argCropHeight      = parameters.add<IntParameter>          (0x0, "crop-height",      "Number of pixels to crop from the top and the bottom of the picture before decimation [default=0]");
         IntParameter           & argCropLeft        = parameters.add<IntParameter>          (0x0, "crop-left",        "Number of pixels to crop from the left of the picture before decimation (overrides --crop-width)");
@@ -69,8 +70,10 @@ int main(int argc, char ** argv)
 
         // Create the X11 grabbing stuff
         int grabInterval = 1000 / argFps.getValue();
+	bool dominantColor = argDominantColor.isSet();
         X11Wrapper x11Wrapper(
                     grabInterval,
+		    dominantColor,
                     argCropLeft.getValue(),
                     argCropRight.getValue(),
                     argCropTop.getValue(),

@@ -16,7 +16,7 @@ class X11Grabber
 {
 public:
 
-    X11Grabber(int cropLeft, int cropRight, int cropTop, int cropBottom, int horizontalPixelDecimation, int verticalPixelDecimation);
+    X11Grabber(bool dominantColor, int cropLeft, int cropRight, int cropTop, int cropBottom, int horizontalPixelDecimation, int verticalPixelDecimation);
 
 	virtual ~X11Grabber();
 
@@ -29,6 +29,7 @@ public:
 private:
     ImageResampler _imageResampler;
 
+    bool _dominantColor;
     int _cropLeft;
     int _cropRight;
     int _cropTop;

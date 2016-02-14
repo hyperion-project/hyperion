@@ -23,7 +23,7 @@ public:
     void set3D(VideoMode mode);
 
 	void processImage(const uint8_t * data, int width, int height, int lineLength, PixelFormat pixelFormat,
-                      Image<ColorRgb> & outputImage) const;
+                      Image<ColorRgb> & outputImage, bool dominantColor = false) const;
 
 private:
 	static inline uint8_t clamp(int x);
