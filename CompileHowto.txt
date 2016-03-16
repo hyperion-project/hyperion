@@ -1,6 +1,6 @@
 # Install the required tools and dependencies
 sudo apt-get update
-sudo apt-get install git cmake build-essential libQt4-dev libusb-1.0-0-dev python-dev libQt4-dev
+sudo apt-get install git cmake build-essential libQt4-dev libusb-1.0-0-dev python-dev
 
 # RPI ONLY: when you build on the rapberry pi and include the dispmanx grabber (which is the default) 
 # you also need the firmware including headers installed. This downloads the firmware from the raspberrypi github
@@ -29,7 +29,7 @@ cmake ..
 cmake -DENABLE_DISPMANX=OFF -DENABLE_SPIDEV=OFF -DENABLE_X11=ON ..
 # as an alternative for the dispmanx grabber on non-rpi devices (e.g. cubox-i) you could try the framebuffer grabber
 cmake -DENABLE_DISPMANX=OFF -DENABLE_SPIDEV=OFF -DENABLE_FB=ON ..
-# Orange Pi deviced
+# Orange Pi devices
 cmake -DENABLE_DISPMANX=OFF -DENABLE_SPIDEV=OFF -DENABLE_X11=ON ..
 # for OSX build you need XCode, qt4 libraries and cmake. You can use macport (homebrew might work too) to install them
 sudo port install qt4-mac
