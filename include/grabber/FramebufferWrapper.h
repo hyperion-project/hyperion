@@ -33,7 +33,7 @@ public:
 	/// @param[in] updateRate_Hz  The image grab rate [Hz]
 	/// @param[in] hyperion  The instance of Hyperion used to write the led values
 	///
-	FramebufferWrapper(const std::string & device, const unsigned grabWidth, const unsigned grabHeight, const unsigned updateRate_Hz, Hyperion * hyperion);
+	FramebufferWrapper(const std::string & device, const unsigned grabWidth, const unsigned grabHeight, const unsigned updateRate_Hz, const int priority, Hyperion * hyperion);
 
 	///
 	/// Destructor of this framebuffer frame grabber. Releases any claimed resources.
@@ -67,6 +67,9 @@ public slots:
 	/// @param[in] mode The new video mode
 	///
 	void setVideoMode(const VideoMode videoMode);
+
+signals:
+	void emitImage(int priority, const Image<ColorRgb> & image, const int timeout_ms);
 
 private:
 	/// The update rate [Hz]
