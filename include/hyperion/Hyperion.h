@@ -17,6 +17,8 @@
 #include <hyperion/ColorCorrection.h>
 #include <hyperion/MessageForwarder.h>
 
+#include <utils/ColorAdjustment.h>
+
 // Effect engine includes
 #include <effectengine/EffectDefinition.h>
 
@@ -31,6 +33,7 @@ class RgbChannelCorrection;
 class MultiColorTransform;
 class MultiColorCorrection;
 class MultiColorTemperature;
+class ColorAdjustment;
 
 ///
 /// The main class of Hyperion. This gives other 'users' access to the attached LedDevice through
@@ -217,6 +220,8 @@ public:
 
 	static LedDevice * createColorSmoothing(const Json::Value & smoothingConfig, LedDevice * ledDevice);
 	static MessageForwarder * createMessageForwarder(const Json::Value & forwarderConfig);
+	
+	static ColorAdjustment * ColorAdjustment(const Json::Value & colorConfig);
 
 signals:
 	/// Signal which is emitted when a priority channel is actively cleared
@@ -249,6 +254,9 @@ private:
 	
 	/// The temperature from corrected colors to led colors
 	MultiColorCorrection * _raw2ledTemperature;
+	
+	/// The temperature from corrected colors to led colors
+	ColorAdjustment * _raw2ledAdjustment;
 	
 	/// The actual LedDevice
 	LedDevice * _device;
