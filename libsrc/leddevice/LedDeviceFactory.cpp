@@ -29,7 +29,7 @@
 #include "LedDevicePaintpack.h"
 #include "LedDevicePiBlaster.h"
 #include "LedDeviceSedu.h"
-#include "LedDeviceTest.h"
+#include "LedDeviceFile.h"
 #include "LedDeviceFadeCandy.h"
 #include "LedDeviceUdp.h"
 #include "LedDeviceHyperionUsbasp.h"
@@ -49,7 +49,7 @@
 
 LedDevice * LedDeviceFactory::construct(const Json::Value & deviceConfig)
 {
-	std::cout << "Device configuration: " << deviceConfig << std::endl;
+	std::cout << "LEDDEVICE INFO: configuration: " << deviceConfig << std::endl;
 
 	std::string type = deviceConfig.get("type", "UNSPECIFIED").asString();
 	std::transform(type.begin(), type.end(), type.begin(), ::tolower);
@@ -275,10 +275,10 @@ LedDevice * LedDeviceFactory::construct(const Json::Value & deviceConfig)
 
 		device = new LedDeviceAtmoOrb(output, switchOffOnBlack, transitiontime, port, numLeds, orbIds);
   }
-	else if (type == "test")
+	else if (type == "file")
 	{
-		const std::string output = deviceConfig["output"].asString();
-		device = new LedDeviceTest(output);
+		const std::string output = deviceConfig.get("output", "/dev/null").asString();
+		device = new LedDeviceFile(output);
 	}
 	else if (type == "fadecandy")
 	{
@@ -336,7 +336,7 @@ LedDevice * LedDeviceFactory::construct(const Json::Value & deviceConfig)
 #endif
 	else
 	{
-		std::cout << "Error: Unknown/Unimplemented device " << type << std::endl;
+		std::cout << "LEDDEVICE ERROR: Unknown/Unimplemented device " << type << std::endl;
 		// Unknown / Unimplemented device
 	}
 	return device;
