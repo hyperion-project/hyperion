@@ -54,9 +54,9 @@ public:
 	///
 	/// @return The current Saturation gain
 	///
-	ColorAdjustmentValues getRedChannelAdjustment() const;
-	ColorAdjustmentValues getGreenChannelAdjustment() const;
-	ColorAdjustmentValues getBlueChannelAdjustment() const;
+	//ColorAdjustmentValues getRedChannelAdjustment() const;
+	//ColorAdjustmentValues getGreenChannelAdjustment() const;
+	//ColorAdjustmentValues getBlueChannelAdjustment() const;
 
 	///
 	/// Apply the transform the the given RGB values.
