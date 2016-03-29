@@ -381,11 +381,7 @@ RgbChannelCorrection* Hyperion::createRgbChannelCorrection(const Json::Value& co
 
 ChannelAdjustment* Hyperion::createChannelAdjustment(const Json::Value& colorConfig)
 {
-	const int red  = colorConfig.get("redChannel", 0).asInt();
-	const int green = colorConfig.get("greenChannel", 0).asInt();
-	const int blue = colorConfig.get("blueChannel", 0).asInt();
-
-	ChannelAdjustment* adjustment = new ChannelAdjustment(threshold, gamma, blacklevel, whitelevel);
+	ChannelAdjustment* adjustment = new ChannelAdjustment();
 	return adjustment;
 }
 
