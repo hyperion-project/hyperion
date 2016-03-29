@@ -18,6 +18,8 @@
 #include <hyperion/ColorTransform.h>
 #include <hyperion/ColorCorrection.h>
 
+#include <utils/ColorAdjustment.h>
+
 // Leddevice includes
 #include <leddevice/LedDevice.h>
 #include <leddevice/LedDeviceFactory.h>
