@@ -103,6 +103,7 @@ ColorTransform * Hyperion::createColorTransform(const Json::Value & transformCon
 	return transform;
 }
 
+
 ColorCorrection * Hyperion::createColorCorrection(const Json::Value & correctionConfig)
 {
 	const std::string id = correctionConfig.get("id", "default").asString();
@@ -377,6 +378,17 @@ RgbChannelCorrection* Hyperion::createRgbChannelCorrection(const Json::Value& co
 	RgbChannelCorrection* correction = new RgbChannelCorrection(varR, varG, varB);
 	return correction;
 }
+
+ChannelAdjustment* Hyperion::createChannelAdjustment(const Json::Value& colorConfig)
+{
+	const int red  = colorConfig.get("redChannel", 0).asInt();
+	const int green = colorConfig.get("greenChannel", 0).asInt();
+	const int blue = colorConfig.get("blueChannel", 0).asInt();
+
+	ChannelAdjustment* adjustment = new ChannelAdjustment(threshold, gamma, blacklevel, whitelevel);
+	return adjustment;
+}
+
 
 LedString Hyperion::createLedString(const Json::Value& ledsConfig, const ColorOrder deviceOrder)
 {
