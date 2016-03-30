@@ -17,8 +17,7 @@
 #include <hyperion/ImageProcessorFactory.h>
 #include <hyperion/ColorTransform.h>
 #include <hyperion/ColorCorrection.h>
-
-#include <utils/ColorAdjustment.h>
+#include <hyperion/ColorAdjustment.h>
 
 // Leddevice includes
 #include <leddevice/LedDevice.h>
@@ -26,6 +25,7 @@
 
 #include "MultiColorTransform.h"
 #include "MultiColorCorrection.h"
+#include "MultiColorAdjustment.h"
 #include "LinearColorSmoothing.h"
 
 // effect engine includes
