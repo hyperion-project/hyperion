@@ -79,13 +79,13 @@
 					"greenChannel"	: 0,
 					"blueChannel"	: 0
 				},
-				"pureGreen"
+				"pureGreen" :
 				{
 					"redChannel"	: 0,
 					"greenChannel"	: 255,
 					"blueChannel"	: 0
 				},
-				"pureBlue"
+				"pureBlue" :
 				{
 					"redChannel"	: 0,
 					"greenChannel"	: 0,
