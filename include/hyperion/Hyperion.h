@@ -233,7 +233,7 @@ public:
 	static HslTransform * createHslTransform(const Json::Value & hslConfig);
 	static RgbChannelTransform * createRgbChannelTransform(const Json::Value& colorConfig);
 	static RgbChannelCorrection * createRgbChannelCorrection(const Json::Value& colorConfig);
-	static RgbChannelAdjustment * createRgbChannelAdjustment(const Json::Value& colorConfig);
+	static RgbChannelAdjustment * createRgbChannelAdjustment(const Json::Value& colorConfig, const RgbChannel color);
 
 	static LedDevice * createColorSmoothing(const Json::Value & smoothingConfig, LedDevice * ledDevice);
 	static MessageForwarder * createMessageForwarder(const Json::Value & forwarderConfig);
@@ -271,7 +271,7 @@ private:
 	MultiColorCorrection * _raw2ledTemperature;
 	
 	/// The adjustment from raw colors to led colors
-	MultiColoAdjustment * _raw2ledAdjustment;
+	MultiColorAdjustment * _raw2ledAdjustment;
 	
 	/// The actual LedDevice
 	LedDevice * _device;

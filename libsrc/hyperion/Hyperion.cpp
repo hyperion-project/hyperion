@@ -123,11 +123,11 @@ ColorCorrection * Hyperion::createColorCorrection(const Json::Value & correction
 
 ColorAdjustment * Hyperion::createColorAdjustment(const Json::Value & adjustmentConfig)
 {
-	const std::string id = transformConfig.get("id", "default").asString();
+	const std::string id = adjustmentConfig.get("id", "default").asString();
 
-	RgbChannelAdjustment * redAdjustment   = createRgbChannelAdjustment(adjustmentConfig["pureRed"]);
-	RgbChannelAdjustment * greenAdjustment = createRgbChannelAdjustment(adjustmentConfig["pureGreen"]);
-	RgbChannelAdjustment * blueAdjustment  = createRgbChannelAdjustment(adjustmentConfig["pureBlue"]);
+	RgbChannelAdjustment * redAdjustment   = createRgbChannelAdjustment(adjustmentConfig["pureRed"],RED);
+	RgbChannelAdjustment * greenAdjustment = createRgbChannelAdjustment(adjustmentConfig["pureGreen"],GREEN);
+	RgbChannelAdjustment * blueAdjustment  = createRgbChannelAdjustment(adjustmentConfig["pureBlue"],BLUE);
 
 	ColorAdjustment * adjustment = new ColorAdjustment();
 	adjustment->_id = id;
@@ -233,7 +233,7 @@ MultiColorCorrection * Hyperion::createLedColorsCorrection(const unsigned ledCnt
 	}
 	else if (!correctionConfig.isArray())
 	{
-		ColorCorrection * colorCorrection = createColorCorrection(colorConfig);
+		ColorCorrection * colorCorrection = createColorCorrection(correctionConfig);
 		correction->addCorrection(colorCorrection);
 		correction->setCorrectionForLed(colorCorrection->_id, 0, ledCnt-1);
 	}
@@ -307,7 +307,7 @@ MultiColorCorrection * Hyperion::createLedColorsTemperature(const unsigned ledCn
 	}
 	else if (!correctionConfig.isArray())
 	{
-		ColorCorrection * colorCorrection = createColorCorrection(colorConfig);
+		ColorCorrection * colorCorrection = createColorCorrection(correctionConfig);
 		correction->addCorrection(colorCorrection);
 		correction->setCorrectionForLed(colorCorrection->_id, 0, ledCnt-1);
 	}
@@ -477,11 +477,27 @@ RgbChannelCorrection* Hyperion::createRgbChannelCorrection(const Json::Value& co
 	return correction;
 }
 
-RgbChannelAdjustment* Hyperion::createRgbChannelAdjustment(const Json::Value& colorConfig)
+RgbChannelAdjustment* Hyperion::createRgbChannelAdjustment(const Json::Value& colorConfig, const RgbChannel color)
 {
-	const int varR = colorConfig.get("redChannel", 255).asInt();
-	const int varG = colorConfig.get("greenChannel", 255).asInt();
-	const int varB = colorConfig.get("blueChannel", 255).asInt();
+	int varR, varG, varB;
+	if (color == RED) 
+	{
+		varR = colorConfig.get("redChannel", 255).asInt();
+		varG = colorConfig.get("greenChannel", 0).asInt();
+		varB = colorConfig.get("blueChannel", 0).asInt();
+	}
+	else if (color == GREEN)
+	{
+		varR = colorConfig.get("redChannel", 0).asInt();
+		varG = colorConfig.get("greenChannel", 255).asInt();
+		varB = colorConfig.get("blueChannel", 0).asInt();
+	}		
+	else if (color == BLUE)
+	{
+		varR = colorConfig.get("redChannel", 0).asInt();
+		varG = colorConfig.get("greenChannel", 0).asInt();
+		varB = colorConfig.get("blueChannel", 255).asInt();
+	}
 
 	RgbChannelAdjustment* adjustment = new RgbChannelAdjustment(varR, varG, varB);
 	return adjustment;

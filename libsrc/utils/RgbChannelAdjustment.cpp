@@ -42,7 +42,7 @@ uint8_t RgbChannelAdjustment::getadjustmentG() const
 
 void RgbChannelAdjustment::setadjustmentG(uint8_t adjustG)
 {
-	_adjustG = _adjustG;
+	_adjustG = adjustG;
 	initializeMapping();
 }
 

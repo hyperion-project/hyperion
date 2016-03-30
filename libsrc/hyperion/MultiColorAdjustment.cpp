@@ -31,7 +31,7 @@ void MultiColorAdjustment::setAdjustmentForLed(const std::string& id, const unsi
 	assert(endLed < _ledAdjustments.size());
 
 	// Get the identified adjustment (don't care if is nullptr)
-	ColorAdjustment * adjustment = getAdjustmentid);
+	ColorAdjustment * adjustment = getAdjustment(id);
 	for (unsigned iLed=startLed; iLed<=endLed; ++iLed)
 	{
 		_ledAdjustments[iLed] = adjustment;
@@ -89,36 +89,36 @@ std::vector<ColorRgb> MultiColorAdjustment::applyAdjustment(const std::vector<Co
 		ColorRgb& color = ledColors[i];
 		
 		int RR = adjustment->_rgbRedAdjustment.adjustmentR(color.red);
-		int RG = adjustment->_rgbRedAdjustment.adjustmentG(color.green);
-		int RB = adjustment->_rgbRedAdjustment.adjustmentB(color.blue);
-		int GR = adjustment->_rgbGreenAdjustment.adjustmentR(color.red);
+		int RG = adjustment->_rgbRedAdjustment.adjustmentG(color.red);
+		int RB = adjustment->_rgbRedAdjustment.adjustmentB(color.red);
+		int GR = adjustment->_rgbGreenAdjustment.adjustmentR(color.green);
 		int GG = adjustment->_rgbGreenAdjustment.adjustmentG(color.green);
-		int GB = adjustment->_rgbGreenAdjustment.adjustmentB(color.blue);
-		int BR = adjustment->_rgbBlueAdjustment.adjustmentR(color.red);
-		int BG = adjustment->_rgbBlueAdjustment.adjustmentG(color.green);
+		int GB = adjustment->_rgbGreenAdjustment.adjustmentB(color.green);
+		int BR = adjustment->_rgbBlueAdjustment.adjustmentR(color.blue);
+		int BG = adjustment->_rgbBlueAdjustment.adjustmentG(color.blue);
 		int BB = adjustment->_rgbBlueAdjustment.adjustmentB(color.blue);
-		
+				
 		int ledR = RR + GR + BR;
-		int maxR = adjustment->_rgbRedAdjustment.getadjustmentR;
-		int ledG = GR + GG + GB;
-		int maxG = adjustment->_rgbGreenAdjustment.getadjustmentG;
-		int ledB = BR + BG + BB;
-		int maxB = adjustment->_rgbBlueAdjustment.getadjustmentB;
+		int maxR = (int)adjustment->_rgbRedAdjustment.getadjustmentR();
+		int ledG = RG + GG + BG;
+		int maxG = (int)adjustment->_rgbGreenAdjustment.getadjustmentG();
+		int ledB = RB + GB + BB;
+		int maxB = (int)adjustment->_rgbBlueAdjustment.getadjustmentB();
 		
 		if (ledR > maxR)
-		  color.red = maxR;
+		  color.red = (uint8_t)maxR;
 		else
-		  color.red = ledR;
+		  color.red = (uint8_t)ledR;
 		
 		if (ledG > maxG)
-		  color.green = maxG;
+		  color.green = (uint8_t)maxG;
 		else
-		  color.green = ledG;
+		  color.green = (uint8_t)ledG;
 		
 		if (ledB > maxB)
-		  color.blue = maxB;
+		  color.blue = (uint8_t)maxB;
 		else
-		  color.blue = ledB;
+		  color.blue = (uint8_t)ledB;
 	}
 	return ledColors;
 }
