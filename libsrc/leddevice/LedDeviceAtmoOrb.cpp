@@ -57,10 +57,10 @@ int LedDeviceAtmoOrb::write(const std::vector <ColorRgb> &ledValues) {
         if ((skipSmoothingDif != 0 && useOrbSmoothing) && (abs(color.red - lastRed) > skipSmoothingDif || abs(color.blue - lastBlue) > skipSmoothingDif ||
                 abs(color.green - lastGreen) > skipSmoothingDif))
         {
-            // Skip Orb smoothing when using  (command type 2)
+            // Skip Orb smoothing when using  (command type 4)
             for (unsigned int i = 0; i < orbIds.size(); i++) {
                 if (orbIds[i] == idx) {
-                    setColor(idx, color, 2);
+                    setColor(idx, color, 4);
                 }
             }
         }
