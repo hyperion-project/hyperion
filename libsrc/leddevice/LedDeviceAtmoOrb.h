@@ -48,7 +48,7 @@ public:
     ///
     /// @param output is the multicast address of Orbs
     ///
-    /// @param switchOffOnBlack turn off Orbs on black (default: false)
+    /// @param useOrbSmoothing use Orbs own (external) smoothing algorithm (default: false)
     ///
     /// @param transitiontime is optional and not used at the moment
     ///
@@ -58,11 +58,9 @@ public:
     ///
     /// @param array containing orb ids
     ///
-    LedDeviceAtmoOrb(const std::string &output, bool switchOffOnBlack =
-    false, int transitiontime = 0, int port = 49692, int numLeds = 24,
-                     std::vector<unsigned int> orbIds = std::vector < unsigned int
-
-    >());
+    LedDeviceAtmoOrb(const std::string &output, bool useOrbSmoothing =
+    false, int transitiontime = 0, int skipSmoothingDif = 0, int port = 49692, int numLeds = 24,
+                     std::vector<unsigned int> orbIds = std::vector < unsigned int>());
 
     ///
     /// Destructor of this device
@@ -87,11 +85,14 @@ private:
     /// String containing multicast group IP address
     QString multicastGroup;
 
-    /// Switch off when detecting black
-    bool switchOffOnBlack;
+    /// use Orbs own (external) smoothing algorithm
+    bool useOrbSmoothing;
 
     /// Transition time between colors (not implemented)
     int transitiontime;
+
+    // Maximum allowed color difference, will skip Orb (external) smoothing once reached
+    int skipSmoothingDif;
 
     /// Multicast port to send data to
     int multiCastGroupPort;
