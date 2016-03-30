@@ -48,9 +48,11 @@ public:
     ///
     /// @param output is the multicast address of Orbs
     ///
+    /// @param transitiontime is optional and not used at the moment
+    ///
     /// @param useOrbSmoothing use Orbs own (external) smoothing algorithm (default: false)
     ///
-    /// @param transitiontime is optional and not used at the moment
+    /// @param skipSmoothingDif  minimal color (0-255) difference to override smoothing so that if current and previously received colors are higher than set dif we override smoothing
     ///
     /// @param port is the multicast port.
     ///
