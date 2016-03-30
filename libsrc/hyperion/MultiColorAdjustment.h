@@ -62,5 +62,5 @@ private:
 	std::vector<ColorAdjustment*> _adjustment;
 
 	/// List with a pointer to the ColorAdjustment for each individual led
-	std::vector<ColorAdjustment*> _ledAdjustment;
+	std::vector<ColorAdjustment*> _ledAdjustments;
 };
