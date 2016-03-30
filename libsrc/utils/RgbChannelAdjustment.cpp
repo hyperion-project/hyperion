@@ -78,28 +78,28 @@ void RgbChannelAdjustment::initializeMapping()
 	for (int i = 0; i < 256; ++i)
 	{
 		int outputR = (i * _adjustR) / 255;
-    if (outputR > 255)
-			{
-				outputR = 255;
-			}
+    		if (outputR > 255)
+		{
+			outputR = 255;
+		}
 		_mappingR[i] = outputR;
 	}
 	for (int i = 0; i < 256; ++i)
 	{
 		int outputG = (i * _adjustG) / 255;
 		if (outputG > 255)
-			{
-				outputG = 255;
-			}
+		{
+			outputG = 255;
+		}
 		_mappingG[i] = outputG;
 	}
 	for (int i = 0; i < 256; ++i)
 	{
 		int outputB = (i * _adjustB) / 255;
 		if (outputB > 255)
-			{
-				outputB = 255;
-			}
+		{
+			outputB = 255;
+		}
 		_mappingB[i] = outputB;
 	}
 		
