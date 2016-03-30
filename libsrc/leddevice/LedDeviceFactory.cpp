@@ -251,7 +251,7 @@ LedDevice * LedDeviceFactory::construct(const Json::Value & deviceConfig)
 		const std::string output = deviceConfig["output"].asString();
 		const bool useOrbSmoothing = deviceConfig.get("useOrbSmoothing", false).asBool();
 		const int transitiontime = deviceConfig.get("transitiontime", 1).asInt();
-		const int skipSmoothingDif = deviceConfig.get("skipSmoothingDif", 0).asInt();
+		const int skipSmoothingDiff = deviceConfig.get("skipSmoothingDiff", 0).asInt();
 		const int port = deviceConfig.get("port", 1).asInt();
 		const int numLeds = deviceConfig.get("numLeds", 1).asInt();
 		const std::string orbId = deviceConfig["orbIds"].asString();
@@ -274,7 +274,7 @@ LedDevice * LedDeviceFactory::construct(const Json::Value & deviceConfig)
 		  orbIds.push_back(atoi(orbId.c_str()));
 		}
 
-		device = new LedDeviceAtmoOrb(output, useOrbSmoothing, transitiontime, skipSmoothingDif, port, numLeds, orbIds);
+		device = new LedDeviceAtmoOrb(output, useOrbSmoothing, transitiontime, skipSmoothingDiff, port, numLeds, orbIds);
 	}
 	else if (type == "file")
 	{

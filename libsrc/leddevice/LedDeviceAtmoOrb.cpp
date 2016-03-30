@@ -16,8 +16,8 @@ AtmoOrbLight::AtmoOrbLight(unsigned int id) {
 }
 
 LedDeviceAtmoOrb::LedDeviceAtmoOrb(const std::string &output, bool useOrbSmoothing,
-                                   int transitiontime, int skipSmoothingDif, int port, int numLeds, std::vector<unsigned int> orbIds) :
-        multicastGroup(output.c_str()), useOrbSmoothing(useOrbSmoothing), transitiontime(transitiontime), skipSmoothingDif(skipSmoothingDif),
+                                   int transitiontime, int skipSmoothingDiff, int port, int numLeds, std::vector<unsigned int> orbIds) :
+        multicastGroup(output.c_str()), useOrbSmoothing(useOrbSmoothing), transitiontime(transitiontime), skipSmoothingDiff(skipSmoothingDiff),
         multiCastGroupPort(port), numLeds(numLeds), orbIds(orbIds) {
     manager = new QNetworkAccessManager();
     groupAddress = QHostAddress(multicastGroup);
@@ -53,9 +53,9 @@ int LedDeviceAtmoOrb::write(const std::vector <ColorRgb> &ledValues) {
     unsigned int idx = 1;
     for (const ColorRgb &color : ledValues) {
 
-        // If color difference is higher than skipSmoothingDif than we skip Orb smoothing (if enabled) and send it right away
-        if ((skipSmoothingDif != 0 && useOrbSmoothing) && (abs(color.red - lastRed) > skipSmoothingDif || abs(color.blue - lastBlue) > skipSmoothingDif ||
-                abs(color.green - lastGreen) > skipSmoothingDif))
+        // If color difference is higher than skipSmoothingDiff than we skip Orb smoothing (if enabled) and send it right away
+        if ((skipSmoothingDiff != 0 && useOrbSmoothing) && (abs(color.red - lastRed) > skipSmoothingDiff || abs(color.blue - lastBlue) > skipSmoothingDiff ||
+                abs(color.green - lastGreen) > skipSmoothingDiff))
         {
             // Skip Orb smoothing when using  (command type 4)
             for (unsigned int i = 0; i < orbIds.size(); i++) {

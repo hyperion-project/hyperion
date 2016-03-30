@@ -52,7 +52,7 @@ public:
     ///
     /// @param useOrbSmoothing use Orbs own (external) smoothing algorithm (default: false)
     ///
-    /// @param skipSmoothingDif  minimal color (0-255) difference to override smoothing so that if current and previously received colors are higher than set dif we override smoothing
+    /// @param skipSmoothingDiff  minimal color (0-255) difference to override smoothing so that if current and previously received colors are higher than set dif we override smoothing
     ///
     /// @param port is the multicast port.
     ///
@@ -61,7 +61,7 @@ public:
     /// @param array containing orb ids
     ///
     LedDeviceAtmoOrb(const std::string &output, bool useOrbSmoothing =
-    false, int transitiontime = 0, int skipSmoothingDif = 0, int port = 49692, int numLeds = 24,
+    false, int transitiontime = 0, int skipSmoothingDiff = 0, int port = 49692, int numLeds = 24,
                      std::vector<unsigned int> orbIds = std::vector < unsigned int>());
 
     ///
@@ -94,7 +94,7 @@ private:
     int transitiontime;
 
     // Maximum allowed color difference, will skip Orb (external) smoothing once reached
-    int skipSmoothingDif;
+    int skipSmoothingDiff;
 
     /// Multicast port to send data to
     int multiCastGroupPort;
