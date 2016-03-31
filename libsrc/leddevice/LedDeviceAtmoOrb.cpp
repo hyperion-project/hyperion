@@ -54,8 +54,8 @@ int LedDeviceAtmoOrb::write(const std::vector <ColorRgb> &ledValues) {
     for (const ColorRgb &color : ledValues) {
 
         // If color difference is higher than skipSmoothingDiff than we skip Orb smoothing (if enabled) and send it right away
-        if ((skipSmoothingDiff != 0 && useOrbSmoothing) && (abs(color.red - lastRed) > skipSmoothingDiff || abs(color.blue - lastBlue) > skipSmoothingDiff ||
-                abs(color.green - lastGreen) > skipSmoothingDiff))
+        if ((skipSmoothingDiff != 0 && useOrbSmoothing) && (abs(color.red - lastRed) >= skipSmoothingDiff || abs(color.blue - lastBlue) >= skipSmoothingDiff ||
+                abs(color.green - lastGreen) >= skipSmoothingDiff))
         {
             // Skip Orb smoothing when using  (command type 4)
             for (unsigned int i = 0; i < orbIds.size(); i++) {
