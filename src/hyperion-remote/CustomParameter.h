@@ -27,6 +27,9 @@ typedef vlofgren::PODParameter<ColorTransformValues> TransformParameter;
 /// Data parameter for color correction values (list of three values)
 typedef vlofgren::PODParameter<ColorCorrectionValues> CorrectionParameter;
 
+/// Data parameter for color correction values (list of three values)
+typedef vlofgren::PODParameter<ColorAdjustmentValues> AdjustmentParameter;
+
 namespace vlofgren {
 	///
 	/// Translates a string (as passed on the commandline) to a vector of colors
