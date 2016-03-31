@@ -854,9 +854,9 @@ void Hyperion::update()
 
 	// Apply the correction and the transform to each led and color-channel
 	std::vector<ColorRgb> correctedColors = _raw2ledCorrection->applyCorrection(priorityInfo.ledColors);
-	std::vector<ColorRgb> temperatureColors = _raw2ledTemperature->applyCorrection(correctedColors);
-	std::vector<ColorRgb> adjustedColors = _raw2ledAdjustment->applyAdjustment(temperatureColors);
-	std::vector<ColorRgb> ledColors =_raw2ledTransform->applyTransform(adjustedColors);
+	std::vector<ColorRgb> adjustedColors = _raw2ledAdjustment->applyAdjustment(correctedColors);
+	std::vector<ColorRgb> temperatureColors = _raw2ledTemperature->applyCorrection(adjustedColors);
+	std::vector<ColorRgb> ledColors =_raw2ledTransform->applyTransform(temperatureColors);
 	const std::vector<Led>& leds = _ledString.leds();
 	int i = 0;
 	for (ColorRgb& color : ledColors)
