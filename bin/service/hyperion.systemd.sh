@@ -7,7 +7,7 @@ User=root
 Group=root
 UMask=007
 ExecStart=/opt/hyperion/bin/hyperiond /etc/hyperion.config.json
-ExecReload=/bin/kill $MAINPID
+ExecReload=/bin/kill -HUP $MAINPID
 Restart=on-failure
 TimeoutStopSec=10
  
