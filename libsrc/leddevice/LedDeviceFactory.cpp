@@ -49,7 +49,7 @@
 
 LedDevice * LedDeviceFactory::construct(const Json::Value & deviceConfig)
 {
-	std::cout << "Device configuration: " << deviceConfig << std::endl;
+	std::cout << "LEDDEVICE INFO: configuration: " << deviceConfig << std::endl;
 
 	std::string type = deviceConfig.get("type", "UNSPECIFIED").asString();
 	std::transform(type.begin(), type.end(), type.begin(), ::tolower);
@@ -246,35 +246,36 @@ LedDevice * LedDeviceFactory::construct(const Json::Value & deviceConfig)
 		}
 		device = new LedDevicePhilipsHue(output, username, switchOffOnBlack, transitiontime, lightIds);
 	}
-  else if (type == "atmoorb")
-  {
+	else if (type == "atmoorb")
+	{
 		const std::string output = deviceConfig["output"].asString();
-		const bool switchOffOnBlack = deviceConfig.get("switchOffOnBlack", true).asBool();
+		const bool useOrbSmoothing = deviceConfig.get("useOrbSmoothing", false).asBool();
 		const int transitiontime = deviceConfig.get("transitiontime", 1).asInt();
+		const int skipSmoothingDiff = deviceConfig.get("skipSmoothingDiff", 0).asInt();
 		const int port = deviceConfig.get("port", 1).asInt();
 		const int numLeds = deviceConfig.get("numLeds", 1).asInt();
-	  	const std::string orbId = deviceConfig["orbIds"].asString();
+		const std::string orbId = deviceConfig["orbIds"].asString();
 		std::vector<unsigned int> orbIds;
 
 		// If we find multiple Orb ids separate them and add to list
 		const std::string separator (",");
 		if (orbId.find(separator) != std::string::npos) {
-			std::stringstream ss(orbId);
-			std::vector<int> output;
-			unsigned int i;
-			while (ss >> i) {
-				orbIds.push_back(i);
-					if (ss.peek() == ',' || ss.peek() == ' ')
-					ss.ignore();
-			}
+		  std::stringstream ss(orbId);
+		  std::vector<int> output;
+		  unsigned int i;
+		  while (ss >> i) {
+			  orbIds.push_back(i);
+			  if (ss.peek() == ',' || ss.peek() == ' ')
+				  ss.ignore();
+		  }
 		}
 		else
 		{
-			orbIds.push_back(atoi(orbId.c_str()));
+		  orbIds.push_back(atoi(orbId.c_str()));
 		}
 
-		device = new LedDeviceAtmoOrb(output, switchOffOnBlack, transitiontime, port, numLeds, orbIds);
-  }
+		device = new LedDeviceAtmoOrb(output, useOrbSmoothing, transitiontime, skipSmoothingDiff, port, numLeds, orbIds);
+	}
 	else if (type == "file")
 	{
 		const std::string output = deviceConfig.get("output", "/dev/null").asString();
@@ -336,7 +337,7 @@ LedDevice * LedDeviceFactory::construct(const Json::Value & deviceConfig)
 #endif
 	else
 	{
-		std::cout << "Error: Unknown/Unimplemented device " << type << std::endl;
+		std::cout << "LEDDEVICE ERROR: Unknown/Unimplemented device " << type << std::endl;
 		// Unknown / Unimplemented device
 	}
 	return device;

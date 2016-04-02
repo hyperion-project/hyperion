@@ -67,20 +67,24 @@ int main(int argc, char * argv[])
 		SwitchParameter<>  & argClear      = parameters.add<SwitchParameter<> >('x', "clear"     , "Clear data for the priority channel provided by the -p option");
 		SwitchParameter<>  & argClearAll   = parameters.add<SwitchParameter<> >(0x0, "clearall"  , "Clear data for all active priority channels");
 		StringParameter    & argId         = parameters.add<StringParameter>   ('q', "qualifier" , "Identifier(qualifier) of the transform to set");
-		DoubleParameter    & argSaturation = parameters.add<DoubleParameter>   ('s', "saturation", "Set the HSV saturation gain of the leds");
-		DoubleParameter    & argValue      = parameters.add<DoubleParameter>   ('v', "value"     , "Set the HSV value gain of the leds");
+		DoubleParameter    & argSaturation = parameters.add<DoubleParameter>   ('s', "saturation", "!DEPRECATED! Will be removed soon! Set the HSV saturation gain of the leds");
+		DoubleParameter    & argValue      = parameters.add<DoubleParameter>   ('v', "value"     , "!DEPRECATED! Will be removed soon! Set the HSV value gain of the leds");
 		DoubleParameter    & argSaturationL = parameters.add<DoubleParameter>  ('u', "saturationL", "Set the HSL saturation gain of the leds");
 		DoubleParameter    & argLuminance  = parameters.add<DoubleParameter>   ('m', "luminance" , "Set the HSL luminance gain of the leds");
 		TransformParameter & argGamma      = parameters.add<TransformParameter>('g', "gamma"     , "Set the gamma of the leds (requires 3 space seperated values)");
 		TransformParameter & argThreshold  = parameters.add<TransformParameter>('t', "threshold" , "Set the threshold of the leds (requires 3 space seperated values between 0.0 and 1.0)");
-		TransformParameter & argBlacklevel = parameters.add<TransformParameter>('b', "blacklevel", "Set the blacklevel of the leds (requires 3 space seperated values which are normally between 0.0 and 1.0)");
-		TransformParameter & argWhitelevel = parameters.add<TransformParameter>('w', "whitelevel", "Set the whitelevel of the leds (requires 3 space seperated values which are normally between 0.0 and 1.0)");
+		TransformParameter & argBlacklevel = parameters.add<TransformParameter>('b', "blacklevel", "!DEPRECATED! Will be removed soon! Set the blacklevel of the leds (requires 3 space seperated values which are normally between 0.0 and 1.0)");
+		TransformParameter & argWhitelevel = parameters.add<TransformParameter>('w', "whitelevel", "!DEPRECATED! Will be removed soon! Set the whitelevel of the leds (requires 3 space seperated values which are normally between 0.0 and 1.0)");
 		SwitchParameter<>  & argPrint      = parameters.add<SwitchParameter<> >(0x0, "print"     , "Print the json input and output messages on stdout");
 		SwitchParameter<>  & argHelp       = parameters.add<SwitchParameter<> >('h', "help"      , "Show this help message and exit");
-		StringParameter    & argIdC        = parameters.add<StringParameter>   ('y', "qualifier" , "Identifier(qualifier) of the correction to set");
-		CorrectionParameter & argCorrection  = parameters.add<CorrectionParameter>('Y', "correction" , "Set the correction of the leds (requires 3 space seperated values between 0 and 255)");
-		StringParameter    & argIdT        = parameters.add<StringParameter>   ('z', "qualifier" , "Identifier(qualifier) of the temperature to set");
+		StringParameter    & argIdC        = parameters.add<StringParameter>   ('y', "qualifier" , "!DEPRECATED! Will be removed soon! Identifier(qualifier) of the correction to set");
+		CorrectionParameter & argCorrection  = parameters.add<CorrectionParameter>('Y', "correction" , "!DEPRECATED! Will be removed soon! Set the correction of the leds (requires 3 space seperated values between 0 and 255)");
+		StringParameter    & argIdT        = parameters.add<StringParameter>   ('z', "qualifier" , "Identifier(qualifier) of the temperature correction to set");
 		CorrectionParameter & argTemperature  = parameters.add<CorrectionParameter>('Z', "temperature" , "Set the temperature correction of the leds (requires 3 space seperated values between 0 and 255)");
+		StringParameter    & argIdA         = parameters.add<StringParameter>   ('j', "qualifier" , "Identifier(qualifier) of the adjustment to set");
+		AdjustmentParameter & argRAdjust = parameters.add<AdjustmentParameter>('R', "redAdjustment" , "Set the adjustment of the red color (requires 3 space seperated values between 0 and 255)");
+		AdjustmentParameter & argGAdjust = parameters.add<AdjustmentParameter>('G', "greenAdjustment", "Set the adjustment of the green color (requires 3 space seperated values between 0 and 255)");
+		AdjustmentParameter & argBAdjust = parameters.add<AdjustmentParameter>('B', "blueAdjustment", "Set the adjustment of the blue color (requires 3 space seperated values between 0 and 255)");
 
 		// set the default values
 		argAddress.setDefault(defaultServerAddress.toStdString());
@@ -100,9 +104,11 @@ int main(int argc, char * argv[])
 
 		// check if at least one of the available color transforms is set
 		bool colorTransform = argSaturation.isSet() || argValue.isSet() || argSaturationL.isSet() || argLuminance.isSet() || argThreshold.isSet() || argGamma.isSet() || argBlacklevel.isSet() || argWhitelevel.isSet();
-
+		bool colorAdjust = argRAdjust.isSet() || argGAdjust.isSet() || argBAdjust.isSet();
+		bool colorModding = colorTransform || colorAdjust || argCorrection.isSet() || argTemperature.isSet();
+		
 		// check that exactly one command was given
-        	int commandCount = count({argColor.isSet(), argImage.isSet(), argEffect.isSet(), argServerInfo.isSet(), argClear.isSet(), argClearAll.isSet(), colorTransform, argCorrection.isSet(), argTemperature.isSet()});
+        int commandCount = count({argColor.isSet(), argImage.isSet(), argEffect.isSet(), argServerInfo.isSet(), argClear.isSet(), argClearAll.isSet(), colorModding});
 		if (commandCount != 1)
 		{
 			std::cerr << (commandCount == 0 ? "No command found." : "Multiple commands found.") << " Provide exactly one of the following options:" << std::endl;
@@ -112,7 +118,7 @@ int main(int argc, char * argv[])
 			std::cerr << "  " << argServerInfo.usageLine() << std::endl;
 			std::cerr << "  " << argClear.usageLine() << std::endl;
 			std::cerr << "  " << argClearAll.usageLine() << std::endl;
-			std::cerr << "one or more of the available color transformations:" << std::endl;
+			std::cerr << "or one or more of the available color modding operations:" << std::endl;
 			std::cerr << "  " << argId.usageLine() << std::endl;
 			std::cerr << "  " << argSaturation.usageLine() << std::endl;
 			std::cerr << "  " << argValue.usageLine() << std::endl;
@@ -122,12 +128,14 @@ int main(int argc, char * argv[])
 			std::cerr << "  " << argGamma.usageLine() << std::endl;
 			std::cerr << "  " << argBlacklevel.usageLine() << std::endl;
 			std::cerr << "  " << argWhitelevel.usageLine() << std::endl;
-			std::cerr << "one or more of the available color corrections:" << std::endl;
 			std::cerr << "  " << argIdC.usageLine() << std::endl;
 			std::cerr << "  " << argCorrection.usageLine() << std::endl;
-			std::cerr << "or one or more of the available color temperature adjustment:" << std::endl;
 			std::cerr << "  " << argIdT.usageLine() << std::endl;
 			std::cerr << "  " << argTemperature.usageLine() << std::endl;
+			std::cerr << "  " << argIdA.usageLine() << std::endl;
+			std::cerr << "  " << argRAdjust.usageLine() << std::endl;
+			std::cerr << "  " << argGAdjust.usageLine() << std::endl;
+			std::cerr << "  " << argBAdjust.usageLine() << std::endl;
 			return 1;
 		}
 
@@ -160,23 +168,68 @@ int main(int argc, char * argv[])
 		{
 			connection.clearAll();
 		}
-		else if (colorTransform)
-		{
-			std::string transId;
-			double saturation, value, saturationL, luminance;
-			ColorTransformValues threshold, gamma, blacklevel, whitelevel;
+		else if (colorModding)
+		{	
+			if (argCorrection.isSet())
+			{
+				std::string corrId;
+				ColorCorrectionValues correction;
 
-			if (argId.isSet())         transId    = argId.getValue();
-			if (argSaturation.isSet()) saturation = argSaturation.getValue();
-			if (argValue.isSet())      value      = argValue.getValue();
-			if (argSaturationL.isSet()) saturationL = argSaturationL.getValue();
-			if (argLuminance.isSet())  luminance      = argLuminance.getValue();
-			if (argThreshold.isSet())  threshold  = argThreshold.getValue();
-			if (argGamma.isSet())      gamma      = argGamma.getValue();
-			if (argBlacklevel.isSet()) blacklevel = argBlacklevel.getValue();
-			if (argWhitelevel.isSet()) whitelevel = argWhitelevel.getValue();
+				if (argIdC.isSet())	corrId    = argIdC.getValue();
+				if (argCorrection.isSet())  correction = argCorrection.getValue();
+
+				connection.setCorrection(
+						argIdC.isSet()		? &corrId : nullptr,
+						argCorrection.isSet()   ? &correction  : nullptr);
+			}
+	
+			if (argTemperature.isSet())
+			{
+				std::string tempId;
+				ColorCorrectionValues temperature;
+
+				if (argIdT.isSet())	tempId    = argIdT.getValue();
+				if (argTemperature.isSet())  temperature = argTemperature.getValue();
 			
-			connection.setTransform(
+				connection.setTemperature(
+						argIdT.isSet()		? &tempId : nullptr,
+						argTemperature.isSet()  ? &temperature  : nullptr);
+			}
+			
+			if (colorAdjust)
+			{
+				std::string adjustId;
+				ColorAdjustmentValues redChannel, greenChannel, blueChannel;
+
+				if (argIdA.isSet())			adjustId    = argIdA.getValue();
+				if (argRAdjust.isSet())  	redChannel  = argRAdjust.getValue();
+				if (argGAdjust.isSet())		greenChannel = argGAdjust.getValue();
+				if (argBAdjust.isSet()) 	blueChannel = argBAdjust.getValue();
+			
+				connection.setAdjustment(
+						argIdA.isSet()		? &adjustId    : nullptr,
+						argRAdjust.isSet()	? &redChannel  : nullptr,
+						argGAdjust.isSet()	? &greenChannel : nullptr,
+						argBAdjust.isSet()	? &blueChannel : nullptr);		
+				
+			}
+			if (colorTransform)
+			{
+				std::string transId;
+				double saturation, value, saturationL, luminance;
+				ColorTransformValues threshold, gamma, blacklevel, whitelevel;
+
+				if (argId.isSet())         transId    = argId.getValue();
+				if (argSaturation.isSet()) saturation = argSaturation.getValue();
+				if (argValue.isSet())      value      = argValue.getValue();
+				if (argSaturationL.isSet()) saturationL = argSaturationL.getValue();
+				if (argLuminance.isSet())  luminance      = argLuminance.getValue();
+				if (argThreshold.isSet())  threshold  = argThreshold.getValue();
+				if (argGamma.isSet())      gamma      = argGamma.getValue();
+				if (argBlacklevel.isSet()) blacklevel = argBlacklevel.getValue();
+				if (argWhitelevel.isSet()) whitelevel = argWhitelevel.getValue();
+			
+				connection.setTransform(
 						argId.isSet()         ? &transId    : nullptr,
 						argSaturation.isSet() ? &saturation : nullptr,
 						argValue.isSet()      ? &value      : nullptr,
@@ -186,30 +239,7 @@ int main(int argc, char * argv[])
 						argGamma.isSet()      ? &gamma      : nullptr,
 						argBlacklevel.isSet() ? &blacklevel : nullptr,
 						argWhitelevel.isSet() ? &whitelevel : nullptr);
-		}
-		else if (argCorrection.isSet())
-		{
-			std::string corrId;
-			ColorCorrectionValues correction;
-
-			if (argIdC.isSet())	corrId    = argIdC.getValue();
-			if (argCorrection.isSet())  correction = argCorrection.getValue();
-
-			connection.setCorrection(
-						argIdC.isSet()		? &corrId : nullptr,
-						argCorrection.isSet()   ? &correction  : nullptr);
-		}
-		else if (argTemperature.isSet())
-		{
-			std::string tempId;
-			ColorCorrectionValues temperature;
-
-			if (argIdT.isSet())	tempId    = argIdT.getValue();
-			if (argTemperature.isSet())  temperature = argTemperature.getValue();
-			
-			connection.setTemperature(
-						argIdT.isSet()		? &tempId : nullptr,
-						argTemperature.isSet()  ? &temperature  : nullptr);
+			}
 		}
 	}
 	catch (const std::runtime_error & e)
