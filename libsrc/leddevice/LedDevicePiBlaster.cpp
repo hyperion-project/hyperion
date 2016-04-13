@@ -67,11 +67,12 @@ int LedDevicePiBlaster::open(bool report)
 //      0               4             P1-7
 //      1              17             P1-11
 //      2              18             P1-12
-//      3              21             P1-13
-//      4              22             P1-15
-//      5              23             P1-16
-//      6              24             P1-18
-//      7              25             P1-22
+//      4              27             P1-??
+//      5              21             P1-13
+//      6              22             P1-15
+//      7              23             P1-16
+//      8              24             P1-18
+//      9              25             P1-22
 int LedDevicePiBlaster::write(const std::vector<ColorRgb> & ledValues)
 {
 	// Attempt to open if not yet opened
