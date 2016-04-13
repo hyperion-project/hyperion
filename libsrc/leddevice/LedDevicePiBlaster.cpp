@@ -85,27 +85,30 @@ int LedDevicePiBlaster::write(const std::vector<ColorRgb> & ledValues)
 	unsigned colorIdx = 0;
 	for (unsigned iPin=0; iPin<iPins.size(); ++iPin)
 	{
-		double pwmDutyCycle = 0.0;
-		switch (_channelAssignment[iPin])
-		{
-		case 'r':
-			pwmDutyCycle = ledValues[colorIdx].red / 255.0;
-			++colorIdx;
-			break;
-		case 'g':
-			pwmDutyCycle = ledValues[colorIdx].green / 255.0;
-			++colorIdx;
-			break;
-		case 'b':
-			pwmDutyCycle = ledValues[colorIdx].blue / 255.0;
-			++colorIdx;
-			break;
-		default:
-			continue;
-		}
+		colorIdx = iPin/3;
+		if (colorIdx < ledValues.size()) {
+			double pwmDutyCycle = 0.0;
+			switch (_channelAssignment[iPin])
+			{
+			case 'r':
+				pwmDutyCycle = ledValues[colorIdx].red / 255.0;
+				++colorIdx;
+				break;
+			case 'g':
+				pwmDutyCycle = ledValues[colorIdx].green / 255.0;
+				++colorIdx;
+				break;
+			case 'b':
+				pwmDutyCycle = ledValues[colorIdx].blue / 255.0;
+				++colorIdx;
+				break;
+			default:
+				continue;
+			}
 
-		fprintf(_fid, "%i=%f\n", iPins[iPin], pwmDutyCycle);
-		fflush(_fid);
+			fprintf(_fid, "%i=%f\n", iPins[iPin], pwmDutyCycle);
+			fflush(_fid);
+		}
 	}
 
 	return 0;
