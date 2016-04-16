@@ -49,7 +49,7 @@
 
 LedDevice * LedDeviceFactory::construct(const Json::Value & deviceConfig)
 {
-	std::cout << "LEDDEVICE INFO: configuration: " << deviceConfig << std::endl;
+//	std::cout << "LEDDEVICE INFO: configuration: " << deviceConfig << std::endl;
 
 	std::string type = deviceConfig.get("type", "UNSPECIFIED").asString();
 	std::transform(type.begin(), type.end(), type.begin(), ::tolower);
@@ -206,11 +206,22 @@ LedDevice * LedDeviceFactory::construct(const Json::Value & deviceConfig)
 	{
 		const std::string output     = deviceConfig.get("output",     "").asString();
 		const std::string assignment = deviceConfig.get("assignment", "").asString();
+		const Json::Value gpioMapping = deviceConfig.get("gpiomap", Json::nullValue);
 
-		LedDevicePiBlaster * devicePiBlaster = new LedDevicePiBlaster(output, assignment);
-		devicePiBlaster->open();
+		if (gpioMapping.isNull() ) {
+			printf ("gpioMap is Null\n");
+			LedDevicePiBlaster * devicePiBlaster = new LedDevicePiBlaster(output, assignment);
+			devicePiBlaster->open();
 
-		device = devicePiBlaster;
+			device = devicePiBlaster;
+		}
+		else if (gpioMapping.isArray() ) {
+			printf ("gpioMap is Array\n");
+			LedDevicePiBlaster * devicePiBlaster = new LedDevicePiBlaster(output, gpioMapping);
+			devicePiBlaster->open();
+
+			device = devicePiBlaster;
+		}
 	}
 	else if (type == "sedu")
 	{

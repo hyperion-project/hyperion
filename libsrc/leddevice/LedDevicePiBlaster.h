@@ -4,6 +4,9 @@
 // STL includes
 #include <cstdio>
 
+// jsoncpp includes
+#include <json/json.h>
+
 // Hyperion-Leddevice includes
 #include <leddevice/LedDevice.h>
 
@@ -17,6 +20,7 @@ public:
 	/// @param channelAssignment The RGB-Channel assignment (8 characters long)
 	///
 	LedDevicePiBlaster(const std::string & deviceName, const std::string & channelAssignment);
+	LedDevicePiBlaster(const std::string & deviceName, const Json::Value & gpioMapping);
 
 	virtual ~LedDevicePiBlaster();
 
@@ -53,6 +57,10 @@ private:
 	/// String with eight characters with the rgb-channel assignment per pwm-channel
 	/// ('r' = red, 'g' = green, 'b' = blue, ' ' = empty)
 	const std::string _channelAssignment;
+
+        const Json::Value _gpioMapping;
+	int _gpio_to_led[64];
+	char _gpio_to_color[64];
 
 	/// File-Pointer to the PiBlaster device
 	FILE * _fid;

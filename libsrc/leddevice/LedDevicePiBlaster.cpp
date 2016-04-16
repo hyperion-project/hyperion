@@ -3,6 +3,9 @@
 #include <cerrno>
 #include <cstring>
 
+// jsoncpp includes
+#include <json/json.h>
+
 // QT includes
 #include <QFile>
 
@@ -15,6 +18,34 @@ LedDevicePiBlaster::LedDevicePiBlaster(const std::string & deviceName, const std
 	_fid(nullptr)
 {
 	// empty
+}
+
+LedDevicePiBlaster::LedDevicePiBlaster(const std::string & deviceName, const Json::Value & gpioMapping) :
+//	_gpioMapping(gpioMapping),
+	_deviceName(deviceName),
+	_fid(nullptr)
+{
+	// empty
+	printf ("hi there\n");
+
+// { "gpio" : 4, "ledindex" : 0, "ledcolor" : "r" },
+
+	for (unsigned int i=0; i < (sizeof(_gpio_to_led)/sizeof(_gpio_to_led[0])); i++ )
+	{
+		_gpio_to_led[i] = -1;
+		_gpio_to_color[i] = 'z';
+//		printf (".");
+	}
+
+	for (const Json::Value& gpioMap : gpioMapping)
+	{
+		const int gpio = gpioMap["gpio"].asInt();
+		const int ledindex = gpioMap.get("ledindex",-1).asInt();
+		const std::string ledcolor = gpioMap["ledcolor"].asString();
+//		printf ("got gpio %d ledindex %d color %c\n", gpio,ledindex, ledcolor[0]);
+		_gpio_to_led[gpio] = ledindex;
+		_gpio_to_color[gpio] = ledcolor[0]; // 1st char of string
+	}
 }
 
 LedDevicePiBlaster::~LedDevicePiBlaster()
@@ -86,22 +117,21 @@ int LedDevicePiBlaster::write(const std::vector<ColorRgb> & ledValues)
 	unsigned colorIdx = 0;
 	for (unsigned iPin=0; iPin<iPins.size(); ++iPin)
 	{
-		colorIdx = iPin/3;
-		if (colorIdx < ledValues.size()) {
+		colorIdx = _gpio_to_led[ iPins[iPin] ];
+		if (colorIdx >= 0) {
+//		if (colorIdx < ledValues.size()) {
 			double pwmDutyCycle = 0.0;
-			switch (_channelAssignment[iPin])
+//			printf ("iPin %d colorIdx %d color %c\n", iPin, colorIdx, _gpio_to_color[ iPins[iPin] ] ) ;
+			switch (_gpio_to_color[ iPins[iPin] ]) 
 			{
 			case 'r':
 				pwmDutyCycle = ledValues[colorIdx].red / 255.0;
-				++colorIdx;
 				break;
 			case 'g':
 				pwmDutyCycle = ledValues[colorIdx].green / 255.0;
-				++colorIdx;
 				break;
 			case 'b':
 				pwmDutyCycle = ledValues[colorIdx].blue / 255.0;
-				++colorIdx;
 				break;
 			default:
 				continue;
