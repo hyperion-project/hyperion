@@ -54,11 +54,6 @@ private:
 	/// The name of the output device (very likely '/dev/pi-blaster')
 	const std::string _deviceName;
 
-	/// String with eight characters with the rgb-channel assignment per pwm-channel
-	/// ('r' = red, 'g' = green, 'b' = blue, ' ' = empty)
-	const std::string _channelAssignment;
-
-        const Json::Value _gpioMapping;
 	int _gpio_to_led[64];
 	char _gpio_to_color[64];
 
