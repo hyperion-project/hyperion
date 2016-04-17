@@ -23,7 +23,8 @@ LedDevicePiBlaster::LedDevicePiBlaster(const std::string & deviceName, const Jso
 // -1 is invalid
 // z is also meaningless
 #define TABLE_SZ sizeof(_gpio_to_led)/sizeof(_gpio_to_led[0])
-	for (unsigned int i=0; i < (sizeof(_gpio_to_led)/sizeof(_gpio_to_led[0])); i++ )
+//	for (unsigned int i=0; i < (sizeof(_gpio_to_led)/sizeof(_gpio_to_led[0])); i++ )
+	for (unsigned int i=0; i < TABLE_SZ; i++ )
 	{
 		_gpio_to_led[i] = -1;
 		_gpio_to_color[i] = 'z';
@@ -106,17 +107,20 @@ int LedDevicePiBlaster::write(const std::vector<ColorRgb> & ledValues)
 		return -1;
 	}
 
-	std::vector<int> iPins = {4, 17, 18, 27, 21, 22, 23, 24, 25};
+	std::vector<int> iPins = {4, 17, 18, 27, 21, 22, 23, 24, 25, 10, 9, 11};
 
 	int valueIdx = -1;
-	for (unsigned iPin=0; iPin<iPins.size(); ++iPin)
+//	for (unsigned iPin=0; iPin<iPins.size(); ++iPin)
+	for (unsigned int i=0; i < TABLE_SZ; i++ )
 	{
-		valueIdx = _gpio_to_led[ iPins[iPin] ];
+//		valueIdx = _gpio_to_led[ iPins[iPin] ];
+		valueIdx = _gpio_to_led[ i ];
 		if ( (valueIdx >= 0) && (valueIdx < (signed) ledValues.size()) ) 
 		{
 			double pwmDutyCycle = 0.0;
 //			printf ("iPin %d valueIdx %d color %c\n", iPin, valueIdx, _gpio_to_color[ iPins[iPin] ] ) ;
-			switch (_gpio_to_color[ iPins[iPin] ]) 
+//			switch (_gpio_to_color[ iPins[iPin] ]) 
+			switch (_gpio_to_color[ i ]) 
 			{
 			case 'r':
 				pwmDutyCycle = ledValues[valueIdx].red / 255.0;
@@ -137,7 +141,8 @@ int LedDevicePiBlaster::write(const std::vector<ColorRgb> & ledValues)
 				continue;
 			}
 
-			fprintf(_fid, "%i=%f\n", iPins[iPin], pwmDutyCycle);
+//			fprintf(_fid, "%i=%f\n", iPins[iPin], pwmDutyCycle);
+			fprintf(_fid, "%i=%f\n", i, pwmDutyCycle);
 			fflush(_fid);
 		}
 	}

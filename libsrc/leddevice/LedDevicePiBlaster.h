@@ -17,9 +17,8 @@ public:
 	/// Constructs the PiBlaster device which writes to the indicated device and for the assigned
 	/// channels
 	/// @param deviceName The name of the output device
-	/// @param channelAssignment The RGB-Channel assignment (8 characters long)
+	/// @param gpioMapping The RGB-Channel assignment json object
 	///
-	LedDevicePiBlaster(const std::string & deviceName, const std::string & channelAssignment);
 	LedDevicePiBlaster(const std::string & deviceName, const Json::Value & gpioMapping);
 
 	virtual ~LedDevicePiBlaster();
