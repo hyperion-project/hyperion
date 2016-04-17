@@ -209,17 +209,16 @@ LedDevice * LedDeviceFactory::construct(const Json::Value & deviceConfig)
 		const Json::Value gpioMapping = deviceConfig.get("gpiomap", Json::nullValue);
 
 		if (assignment.length() > 0) {
-			printf ("ERROR: Sorry, the configuration syntax has changed in this version\n");
+			std::cout << "ERROR: Sorry, the configuration syntax has changed in this version." << std::endl;
 			exit(EXIT_FAILURE);
 		}
 		if (! gpioMapping.isNull() ) {
-			printf ("gpioMap is Array\n");
 			LedDevicePiBlaster * devicePiBlaster = new LedDevicePiBlaster(output, gpioMapping);
 			devicePiBlaster->open();
 
 			device = devicePiBlaster;
 		} else {
-			printf ("ERROR: no gpiomap defined.\n");
+			std::cout << "ERROR: no gpiomap defined." << std::endl;
 			exit(EXIT_FAILURE);
 		}
 	}
