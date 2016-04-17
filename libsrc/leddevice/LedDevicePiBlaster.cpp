@@ -107,7 +107,7 @@ int LedDevicePiBlaster::write(const std::vector<ColorRgb> & ledValues)
 		return -1;
 	}
 
-	std::vector<int> iPins = {4, 17, 18, 27, 21, 22, 23, 24, 25, 10, 9, 11};
+//	std::vector<int> iPins = {4, 17, 18, 27, 21, 22, 23, 24, 25, 10, 9, 11};
 
 	int valueIdx = -1;
 //	for (unsigned iPin=0; iPin<iPins.size(); ++iPin)
@@ -158,15 +158,18 @@ int LedDevicePiBlaster::switchOff()
 		return -1;
 	}
 
-	std::vector<int> iPins = {4, 17, 18, 27, 21, 22, 23, 24, 25};
+//	std::vector<int> iPins = {4, 17, 18, 27, 21, 22, 23, 24, 25};
 
 	int valueIdx = -1;
-	for (unsigned iPin=0; iPin<iPins.size(); ++iPin)
+//	for (unsigned iPin=0; iPin<iPins.size(); ++iPin)
+	for (unsigned int i=0; i < TABLE_SZ; i++ )
 	{
-		valueIdx = _gpio_to_led[ iPins[iPin] ];
+//		valueIdx = _gpio_to_led[ iPins[iPin] ];
+		valueIdx = _gpio_to_led[ i ];
 		if (valueIdx >= 0)
 		{
-			fprintf(_fid, "%i=%f\n", iPins[iPin], 0.0);
+//			fprintf(_fid, "%i=%f\n", iPins[iPin], 0.0);
+			fprintf(_fid, "%i=%f\n", i, 0.0);
 			fflush(_fid);
 		}
 	}
