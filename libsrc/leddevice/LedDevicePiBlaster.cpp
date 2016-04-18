@@ -2,6 +2,8 @@
 // STL includes
 #include <cerrno>
 #include <cstring>
+#include <csignal>
+
 
 // jsoncpp includes
 #include <json/json.h>
@@ -17,13 +19,15 @@ LedDevicePiBlaster::LedDevicePiBlaster(const std::string & deviceName, const Jso
 	_fid(nullptr)
 {
 
+	signal(SIGPIPE,  SIG_IGN);
+
 // initialise the mapping tables
 // -1 is invalid
 // z is also meaningless
 // { "gpio" : 4, "ledindex" : 0, "ledcolor" : "r" },
-#define TABLE_SZ sizeof(_gpio_to_led)/sizeof(_gpio_to_led[0])
+	#define TABLE_SZ sizeof(_gpio_to_led)/sizeof(_gpio_to_led[0])
 
-	for (unsigned int i=0; i < TABLE_SZ; i++ )
+	for (int i=0; i <  TABLE_SZ; i++ )
 	{
 		_gpio_to_led[i] = -1;
 		_gpio_to_color[i] = 'z';
@@ -130,8 +134,16 @@ int LedDevicePiBlaster::write(const std::vector<ColorRgb> & ledValues)
 			}
 
 //			fprintf(_fid, "%i=%f\n", iPins[iPin], pwmDutyCycle);
-			fprintf(_fid, "%i=%f\n", i, pwmDutyCycle);
-			fflush(_fid);
+
+			if ( (fprintf(_fid, "%i=%f\n", i, pwmDutyCycle) < 0) 
+			  || (fflush(_fid) < 0)) {
+				if (_fid != nullptr)
+				{
+					fclose(_fid);
+					_fid = nullptr;
+					return -1;
+				}
+			}
 		}
 	}
 
