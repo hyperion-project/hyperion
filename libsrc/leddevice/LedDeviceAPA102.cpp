@@ -12,20 +12,26 @@
 // hyperion local includes
 #include "LedDeviceAPA102.h"
 
-LedDeviceAPA102::LedDeviceAPA102(const std::string& outputDevice, const unsigned baudrate) :
+LedDeviceAPA102::LedDeviceAPA102(const std::string& outputDevice, const unsigned baudrate, const unsigned ledcount) :
 	LedSpiDevice(outputDevice, baudrate, 500000),
 	_ledBuffer(0)
 {
-	// empty
+	_ledcount = ledcount;
 }
 
 int LedDeviceAPA102::write(const std::vector<ColorRgb> &ledValues)
 {
+	const unsigned int max_leds = std::max(ledValues.size(), _ledcount);
 	const unsigned int startFrameSize = 4;
-	const unsigned int endFrameSize = std::max<unsigned int>(((ledValues.size() + 15) / 16), 4);
-	const unsigned int mLedCount = (ledValues.size() * 4) + startFrameSize + endFrameSize;
-	if(_ledBuffer.size() != mLedCount){
-		_ledBuffer.resize(mLedCount, 0xFF);
+//	const unsigned int endFrameSize = std::max<unsigned int>(((ledValues.size() + 15) / 16), 4);
+//	const unsigned int APAbufferSize = (ledValues.size() * 4) + startFrameSize + endFrameSize;
+	const unsigned int endFrameSize = std::max<unsigned int>(((max_leds + 15) / 16), 4);
+	const unsigned int APAbufferSize = (max_leds * 4) + startFrameSize + endFrameSize;
+
+	printf ("ledValues.size() %d _ledcount %d max_leds %d APAbufferSize %d\n",
+		ledValues.size(), _ledcount, max_leds, APAbufferSize);
+	if(_ledBuffer.size() != APAbufferSize){
+		_ledBuffer.resize(APAbufferSize, 0xFF);
 		_ledBuffer[0] = 0x00; 
 		_ledBuffer[1] = 0x00; 
 		_ledBuffer[2] = 0x00; 
