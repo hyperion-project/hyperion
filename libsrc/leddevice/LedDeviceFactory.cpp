@@ -124,7 +124,7 @@ LedDevice * LedDeviceFactory::construct(const Json::Value & deviceConfig)
 	{
 		const std::string output = deviceConfig["output"].asString();
 		const unsigned rate      = deviceConfig["rate"].asInt();
-		const unsigned ledcount  = deviceConfig["leds"].asInt();
+		const unsigned ledcount  = deviceConfig.get("leds",0).asInt();
 
 		LedDeviceAPA102* deviceAPA102 = new LedDeviceAPA102(output, rate, ledcount);
 		deviceAPA102->open();

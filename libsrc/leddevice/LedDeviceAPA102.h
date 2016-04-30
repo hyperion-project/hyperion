@@ -39,5 +39,7 @@ private:
 
 	/// The buffer containing the packed RGB values
 	std::vector<uint8_t> _ledBuffer;
-	unsigned int _ledcount;
+	unsigned int _HW_ledcount;
+	unsigned int _mLedCount;
+
 };
