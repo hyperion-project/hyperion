@@ -206,6 +206,8 @@ elif [ $OS_OPENELEC -eq 1 ]; then
 	#modify all old installs with a logfile output
 	sed -i 's|/dev/null|/storage/logfiles/hyperion.log|g' /storage/.config/autostart.sh
 	# only add to start script if hyperion is not present yet
+	mkdir /storage/logfiles 2>/dev/null
+	touch /storage/.config/autostart.sh 2>/dev/null
 	if [ `cat /storage/.config/autostart.sh 2>/dev/null | grep hyperiond | wc -l` -eq 0 ]; then
 		echo '---> Adding Hyperion to OpenELEC autostart.sh'
 		echo "/storage/hyperion/bin/hyperiond.sh /storage/.config/hyperion.config.json > /storage/logfiles/hyperion.log 2>&1 &" >> /storage/.config/autostart.sh
