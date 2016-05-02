@@ -24,13 +24,12 @@ int LedDeviceAPA102::write(const std::vector<ColorRgb> &ledValues)
 	_mLedCount = ledValues.size();
 	const unsigned int max_leds = std::max(_mLedCount, _HW_ledcount);
 	const unsigned int startFrameSize = 4;
-//	const unsigned int endFrameSize = std::max<unsigned int>(((ledValues.size() + 15) / 16), 4);
-//	const unsigned int APAbufferSize = (ledValues.size() * 4) + startFrameSize + endFrameSize;
 	const unsigned int endFrameSize = std::max<unsigned int>(((max_leds + 15) / 16), 4);
 	const unsigned int APAbufferSize = (max_leds * 4) + startFrameSize + endFrameSize;
 
-	printf ("_mLedCount %d _HW_ledcount %d max_leds %d APAbufferSize %d\n",
-		_mLedCount, _HW_ledcount, max_leds, APAbufferSize);
+//	printf ("_mLedCount %d _HW_ledcount %d max_leds %d APAbufferSize %d\n",
+//		_mLedCount, _HW_ledcount, max_leds, APAbufferSize);
+
 	if(_ledBuffer.size() != APAbufferSize){
 		_ledBuffer.resize(APAbufferSize, 0xFF);
 		_ledBuffer[0] = 0x00; 
@@ -52,6 +51,5 @@ int LedDeviceAPA102::write(const std::vector<ColorRgb> &ledValues)
 
 int LedDeviceAPA102::switchOff()
 {
-//	return write(std::vector<ColorRgb>(_ledBuffer.size(), ColorRgb{0,0,0}));
 	return write(std::vector<ColorRgb>(_mLedCount, ColorRgb{0,0,0}));
 }
