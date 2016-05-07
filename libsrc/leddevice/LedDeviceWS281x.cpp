@@ -3,7 +3,7 @@
 #include "LedDeviceWS281x.h"
 
 // Constructor
-LedDeviceWS281x::LedDeviceWS281x(const int gpio, const int leds, const uint32_t freq, const int dmanum, const int pwmchannel, const int invert)
+LedDeviceWS281x::LedDeviceWS281x(const int gpio, const int leds, const uint32_t freq, const int dmanum, const int pwmchannel, const int invert, const int rgbw)
 {
 	initialized = false;
 	led_string.freq = freq;
@@ -17,7 +17,11 @@ LedDeviceWS281x::LedDeviceWS281x(const int gpio, const int leds, const uint32_t 
 	led_string.channel[chan].invert = invert;
 	led_string.channel[chan].count = leds;
 	led_string.channel[chan].brightness = 255;
-	led_string.channel[chan].strip_type = WS2811_STRIP_RGB;
+	if (rgbw == 1) {
+		led_string.channel[chan].strip_type = SK6812_STRIP_RGBW;
+	} else {
+		led_string.channel[chan].strip_type = WS2811_STRIP_RGB;
+	}
 
 	led_string.channel[!chan].gpionum = 0;
 	led_string.channel[!chan].invert = invert;
@@ -42,7 +46,8 @@ int LedDeviceWS281x::write(const std::vector<ColorRgb> &ledValues)
 	{
 		if (idx >= led_string.channel[chan].count)
 			break;
-		led_string.channel[chan].leds[idx++] = ((uint32_t)color.red << 16) + ((uint32_t)color.green << 8) + color.blue;
+		uint32_t white = 42 << ;
+		led_string.channel[chan].leds[idx++] = white + ((uint32_t)color.red << 16) + ((uint32_t)color.green << 8) + color.blue;
 	}
 	while (idx < led_string.channel[chan].count)
 		led_string.channel[chan].leds[idx++] = 0;

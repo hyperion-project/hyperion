@@ -18,9 +18,10 @@ public:
 	/// @param dmanum The DMA channel to use, default is 5
 	/// @param pwmchannel The pwm channel to use
 	/// @param invert Invert the output line to support an inverting level shifter
+	/// @param rgbw   Send 32 bit rgbw colour data for sk6812
 
 	///
-	LedDeviceWS281x(const int gpio, const int leds, const uint32_t freq, int dmanum, int pwmchannel, int invert);
+	LedDeviceWS281x(const int gpio, const int leds, const uint32_t freq, int dmanum, int pwmchannel, int invert, int rgbw);
 
 	///
 	/// Destructor of the LedDevice, waits for DMA to complete and then cleans up
