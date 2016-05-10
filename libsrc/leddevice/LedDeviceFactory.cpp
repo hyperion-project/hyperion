@@ -340,6 +340,7 @@ LedDevice * LedDeviceFactory::construct(const Json::Value & deviceConfig)
 	{
 		std::cout << "LEDDEVICE ERROR: Unknown/Unimplemented device " << type << std::endl;
 		// Unknown / Unimplemented device
+		exit(1);
 	}
 	return device;
 }
