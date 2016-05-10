@@ -27,8 +27,8 @@ int LedDeviceAPA102::write(const std::vector<ColorRgb> &ledValues)
 	const unsigned int endFrameSize = std::max<unsigned int>(((max_leds + 15) / 16), 4);
 	const unsigned int APAbufferSize = (max_leds * 4) + startFrameSize + endFrameSize;
 
-//	printf ("_mLedCount %d _HW_ledcount %d max_leds %d APAbufferSize %d\n",
-//		_mLedCount, _HW_ledcount, max_leds, APAbufferSize);
+//printf ("_mLedCount %d _HW_ledcount %d max_leds %d APAbufferSize %d\n",
+//	_mLedCount, _HW_ledcount, max_leds, APAbufferSize);
 
 	if(_ledBuffer.size() != APAbufferSize){
 		_ledBuffer.resize(APAbufferSize, 0xFF);
@@ -38,14 +38,31 @@ int LedDeviceAPA102::write(const std::vector<ColorRgb> &ledValues)
 		_ledBuffer[3] = 0x00; 
 	}
 	
-	for (unsigned iLed=1; iLed<=_mLedCount; ++iLed) {
-		const ColorRgb& rgb = ledValues[iLed-1];
-		_ledBuffer[iLed*4]   = 0xFF;
-		_ledBuffer[iLed*4+1] = rgb.red;
-		_ledBuffer[iLed*4+2] = rgb.green;
-		_ledBuffer[iLed*4+3] = rgb.blue;
+	unsigned iLed=0;
+	for (iLed=0; iLed < _mLedCount; ++iLed) {
+		const ColorRgb& rgb = ledValues[iLed];
+		_ledBuffer[4+iLed*4]   = 0xFF;
+		_ledBuffer[4+iLed*4+1] = rgb.red;
+		_ledBuffer[4+iLed*4+2] = rgb.green;
+		_ledBuffer[4+iLed*4+3] = rgb.blue;
 	}
 
+	for ( ; iLed < max_leds; ++iLed) {
+		_ledBuffer[4+iLed*4]   = 0xFF;
+		_ledBuffer[4+iLed*4+1] = 0x00;
+		_ledBuffer[4+iLed*4+2] = 0x00;
+		_ledBuffer[4+iLed*4+3] = 0x00;
+	}
+
+/*
+for (unsigned i=0; i< _ledBuffer.size(); i+=4) {
+	printf ("i %2d led %2d RGB 0x0%02x%02x%02x%02x\n",i, i/4-1,
+		_ledBuffer[i+0],
+		_ledBuffer[i+1],
+		_ledBuffer[i+2],
+		_ledBuffer[i+3]);
+}
+*/
 	return writeBytes(_ledBuffer.size(), _ledBuffer.data());
 }
 
