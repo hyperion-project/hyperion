@@ -46,8 +46,14 @@ int LedDeviceWS281x::write(const std::vector<ColorRgb> &ledValues)
 	{
 		if (idx >= led_string.channel[chan].count)
 			break;
+		unsigned red = color.red;
+		unsigned green = color.green;
+		unsigned blue = color.blue;
+// dodgy colour correction
+
 		uint32_t white = 0;
-		led_string.channel[chan].leds[idx++] = white + ((uint32_t)color.red << 16) + ((uint32_t)color.green << 8) + color.blue;
+		led_string.channel[chan].leds[idx++] = 
+			((uint32_t)white << 24) + ((uint32_t)color.red << 16) + ((uint32_t)color.green << 8) + color.blue;
 	}
 	while (idx < led_string.channel[chan].count)
 		led_string.channel[chan].leds[idx++] = 0;
