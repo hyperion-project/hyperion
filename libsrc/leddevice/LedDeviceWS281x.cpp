@@ -46,14 +46,22 @@ int LedDeviceWS281x::write(const std::vector<ColorRgb> &ledValues)
 	{
 		if (idx >= led_string.channel[chan].count)
 			break;
+		unsigned white = 0;
 		unsigned red = color.red;
 		unsigned green = color.green;
 		unsigned blue = color.blue;
 // dodgy colour correction
 
-		uint32_t white = 0;
+		if (led_string.channel[chan].strip_type == SK6812_STRIP_RGBW) {
+			white = std::min(red, green);
+			white = std::min(white, blue);
+			red -= white;
+			green -= white;
+			blue -= white;
+		}
+
 		led_string.channel[chan].leds[idx++] = 
-			((uint32_t)white << 24) + ((uint32_t)color.red << 16) + ((uint32_t)color.green << 8) + color.blue;
+			((uint32_t)white << 24) + ((uint32_t)red << 16) + ((uint32_t)green << 8) + blue;
 	}
 	while (idx < led_string.channel[chan].count)
 		led_string.channel[chan].leds[idx++] = 0;
