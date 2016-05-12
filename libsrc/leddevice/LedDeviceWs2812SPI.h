@@ -41,4 +41,12 @@ private:
 	/// the number of leds (needed when switching off)
 	size_t mLedCount;
 	std::vector<uint8_t> _spiBuffer;
+
+        uint8_t bitpair_to_byte[4] = {
+                0b10001000,
+                0b10001100,
+                0b11001000,
+                0b11001100,
+        };
+
 };

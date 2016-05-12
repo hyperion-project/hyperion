@@ -27,43 +27,33 @@ LedDeviceWs2812SPI::LedDeviceWs2812SPI(const std::string& outputDevice, const un
 
 int LedDeviceWs2812SPI::write(const std::vector<ColorRgb> &ledValues)
 {
-	uint8_t bitpair_to_byte[] = {
-		0b10001000,
-		0b10001100,
-		0b11001000,
-		0b11001100,
-	};
-
 	mLedCount = ledValues.size();
+
 // 3 colours, 4 spi bytes per colour + 3 frame end latch bytes
-	unsigned spi_size = mLedCount * 3 * 4 + 3;
+#define COLOURS_PER_LED		3
+#define SPI_BYTES_PER_COLOUR	4
+#define SPI_BYTES_PER_LED 	COLOURS_PER_LED * SPI_BYTES_PER_COLOUR
+
+	unsigned spi_size = mLedCount * SPI_BYTES_PER_LED + 3;
 	if(_spiBuffer.size() != spi_size){
                 _spiBuffer.resize(spi_size, 0x00);
 	}
 
 	unsigned spi_ptr = 0;
-        for (int iLed=0; iLed < mLedCount; ++iLed) {
-                const ColorRgb& rgb = ledValues[iLed];
+        for (unsigned i=0; i< mLedCount; ++i) {
+		uint32_t colorBits = ((unsigned int)ledValues[i].red << 16) 
+			| ((unsigned int)ledValues[i].green << 8) 
+			| ledValues[i].blue;
 
-		unsigned a = rgb.red;
-		_spiBuffer[spi_ptr++] = bitpair_to_byte[(a&0b11000000)>>6];
-		_spiBuffer[spi_ptr++] = bitpair_to_byte[(a&0b00110000)>>4];
-		_spiBuffer[spi_ptr++] = bitpair_to_byte[(a&0b00001100)>>2];
-		_spiBuffer[spi_ptr++] = bitpair_to_byte[(a&0b00000011)>>0];
-
-		a = rgb.green;
-		_spiBuffer[spi_ptr++] = bitpair_to_byte[(a&0b11000000)>>6];
-		_spiBuffer[spi_ptr++] = bitpair_to_byte[(a&0b00110000)>>4];
-		_spiBuffer[spi_ptr++] = bitpair_to_byte[(a&0b00001100)>>2];
-		_spiBuffer[spi_ptr++] = bitpair_to_byte[(a&0b00000011)>>0];
-
-		a = rgb.blue;
-		_spiBuffer[spi_ptr++] = bitpair_to_byte[(a&0b11000000)>>6];
-		_spiBuffer[spi_ptr++] = bitpair_to_byte[(a&0b00110000)>>4];
-		_spiBuffer[spi_ptr++] = bitpair_to_byte[(a&0b00001100)>>2];
-		_spiBuffer[spi_ptr++] = bitpair_to_byte[(a&0b00000011)>>0];
+		for (int j=SPI_BYTES_PER_LED - 1; j>=0; j--) {
+			_spiBuffer[spi_ptr+j] = bitpair_to_byte[ colorBits & 0x3 ];
+			colorBits >>= 2;
+		}
+		spi_ptr += SPI_BYTES_PER_LED;
         }
-
+	_spiBuffer[spi_ptr++] = 0;
+	_spiBuffer[spi_ptr++] = 0;
+	_spiBuffer[spi_ptr++] = 0;
 
 	return writeBytes(spi_size, _spiBuffer.data());
 }
