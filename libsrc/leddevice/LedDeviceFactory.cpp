@@ -147,9 +147,8 @@ LedDevice * LedDeviceFactory::construct(const Json::Value & deviceConfig)
 	{
 		const std::string output = deviceConfig["output"].asString();
 		const unsigned rate      = deviceConfig.get("rate",2857143).asInt();
-		const unsigned latchtime      = deviceConfig.get("latchtime",500000).asInt();
 
-		LedDeviceWs2812SPI* deviceWs2812SPI = new LedDeviceWs2812SPI(output, rate, latchtime);
+		LedDeviceWs2812SPI* deviceWs2812SPI = new LedDeviceWs2812SPI(output, rate);
 		deviceWs2812SPI->open();
 
 		device = deviceWs2812SPI;

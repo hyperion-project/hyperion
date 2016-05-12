@@ -12,14 +12,7 @@
 #include "LedDeviceWs2812SPI.h"
 
 LedDeviceWs2812SPI::LedDeviceWs2812SPI(const std::string& outputDevice, const unsigned baudrate) :
-	LedSpiDevice(outputDevice, baudrate, 500000),
-	mLedCount(0)
-{
-	// empty
-}
-
-LedDeviceWs2812SPI::LedDeviceWs2812SPI(const std::string& outputDevice, const unsigned baudrate, const unsigned latchTime) :
-	LedSpiDevice(outputDevice, baudrate, latchTime),
+	LedSpiDevice(outputDevice, baudrate, 0),
 	mLedCount(0)
 {
 	// empty
