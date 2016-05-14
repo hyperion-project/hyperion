@@ -42,6 +42,7 @@ qt5_use_modules(jsonserver Widgets Network)
 endif(ENABLE_QT5)
 
 target_link_libraries(jsonserver
+		bonjour
 		hyperion
 		hyperion-utils
         jsoncpp

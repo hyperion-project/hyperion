@@ -5,6 +5,12 @@
 #include <jsonserver/JsonServer.h>
 #include "JsonClientConnection.h"
 
+//#ifdef ENABLE_ZEROCONF
+#include <bonjour/bonjourserviceregister.h>
+#include <bonjour/bonjourrecord.h>
+BonjourServiceRegister *bonjourRegister_json;
+//#endif
+
 JsonServer::JsonServer(Hyperion *hyperion, uint16_t port) :
 	QObject(),
 	_hyperion(hyperion),
@@ -29,6 +35,10 @@ JsonServer::JsonServer(Hyperion *hyperion, uint16_t port) :
 
 	// make sure the resources are loaded (they may be left out after static linking
 	Q_INIT_RESOURCE(JsonSchemas);
+
+	bonjourRegister_json = new BonjourServiceRegister();
+	bonjourRegister_json->registerService(BonjourRecord("hyperiond json Server on loungepi",
+					QLatin1String("_hyperiond_json._tcp"), QString()), port);
 }
 
 JsonServer::~JsonServer()

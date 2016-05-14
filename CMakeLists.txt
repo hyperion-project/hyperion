@@ -7,6 +7,9 @@ cmake_minimum_required(VERSION 2.8)
 #set(CMAKE_TOOLCHAIN_FILE /opt/raspberrypi/Toolchain-RaspberryPi.cmake)
 
 # set the build options
+option(ENABLE_ZEROCONF "Enable the avahi/zeroconf announce" OFF)
+message(STATUS "ENABLE_ZEROCONF = " ${ENABLE_ZEROCONF})
+
 option(ENABLE_AMLOGIC "Enable the AMLOGIC video grabber" OFF)
 message(STATUS "ENABLE_AMLOGIC = " ${ENABLE_AMLOGIC})
 
