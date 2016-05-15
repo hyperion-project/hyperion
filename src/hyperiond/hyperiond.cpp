@@ -47,6 +47,11 @@
 // Effect engine includes
 #include <effectengine/EffectEngine.h>
 
+#ifdef ENABLE_ZEROCONF
+#include <bonjour/bonjourserviceregister.h>
+#include <bonjour/bonjourrecord.h>
+#endif
+
 // JsonServer includes
 #include <jsonserver/JsonServer.h>
 
@@ -195,7 +200,14 @@ int main(int argc, char** argv)
 		const Json::Value & jsonServerConfig = config["jsonServer"];
 		jsonServer = new JsonServer(&hyperion, jsonServerConfig["port"].asUInt());
 		std::cout << "INFO: Json server created and started on port " << jsonServer->getPort() << std::endl;
+#ifdef ENABLE_ZEROCONF
+		BonjourServiceRegister *bonjourRegister_json;
+		bonjourRegister_json = new BonjourServiceRegister();
+		bonjourRegister_json->registerService(BonjourRecord("hyperiond json Server on loungepi",
+                                        QLatin1String("_hyperiond_json._tcp"), QString()), jsonServerConfig["port"].asUInt());
+#endif
 	}
+
 
 #ifdef ENABLE_PROTOBUF
 	// Create Proto server if configuration is present

@@ -34,4 +34,8 @@ if (ENABLE_PROTOBUF)
 	target_link_libraries(hyperiond protoserver)
 endif (ENABLE_PROTOBUF)
 
+if(ENABLE_ZEROCONF)
+	target_link_libraries(hyperiond bonjour)
+endif(ENABLE_ZEROCONF)
+
 install ( TARGETS hyperiond DESTINATION "${CMAKE_SOURCE_DIR}/deploy/bin" )
