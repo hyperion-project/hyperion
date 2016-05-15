@@ -50,6 +50,7 @@
 #ifdef ENABLE_ZEROCONF
 #include <bonjour/bonjourserviceregister.h>
 #include <bonjour/bonjourrecord.h>
+#include <QHostInfo>
 #endif
 
 // JsonServer includes
@@ -201,10 +202,15 @@ int main(int argc, char** argv)
 		jsonServer = new JsonServer(&hyperion, jsonServerConfig["port"].asUInt());
 		std::cout << "INFO: Json server created and started on port " << jsonServer->getPort() << std::endl;
 #ifdef ENABLE_ZEROCONF
+//		const std::string mDNSDescr = jsonServerConfig.get("mDNSDescr", "hyperiond json").asString();
+		const std::string hostname = QHostInfo::localHostName().toStdString();
+		const std::string mDNSDescr = jsonServerConfig.get("mDNSDescr", hostname).asString();
+		const std::string mDNSService = jsonServerConfig.get("mDNSService", "_hyperiond_json._tcp").asString();
 		BonjourServiceRegister *bonjourRegister_json;
 		bonjourRegister_json = new BonjourServiceRegister();
-		bonjourRegister_json->registerService(BonjourRecord("hyperiond json Server on loungepi",
-                                        QLatin1String("_hyperiond_json._tcp"), QString()), jsonServerConfig["port"].asUInt());
+		bonjourRegister_json->registerService(BonjourRecord(mDNSDescr.c_str(), mDNSService.c_str(),
+					QString()), jsonServerConfig["port"].asUInt());
+		std::cout << "INFO: Json mDNS responder started" << std::endl;
 #endif
 	}
 
@@ -217,6 +223,17 @@ int main(int argc, char** argv)
 		const Json::Value & protoServerConfig = config["protoServer"];
 		protoServer = new ProtoServer(&hyperion, protoServerConfig["port"].asUInt() );
 		std::cout << "INFO: Proto server created and started on port " << protoServer->getPort() << std::endl;
+#ifdef ENABLE_ZEROCONF
+//		const std::string mDNSDescr = protoServerConfig.get("mDNSDescr", "hyperiond proto").asString();
+		const std::string hostname = QHostInfo::localHostName().toStdString();
+		const std::string mDNSDescr = protoServerConfig.get("mDNSDescr", hostname).asString();
+		const std::string mDNSService = protoServerConfig.get("mDNSService", "_hyperiond_proto._tcp").asString();
+		BonjourServiceRegister *bonjourRegister_proto;
+		bonjourRegister_proto = new BonjourServiceRegister();
+		bonjourRegister_proto->registerService(BonjourRecord(mDNSDescr.c_str(), mDNSService.c_str(),
+					QString()), protoServerConfig["port"].asUInt());
+		std::cout << "INFO: Proto mDNS responder started" << std::endl;
+#endif
 	}
 #endif
 
