@@ -6,7 +6,7 @@
 #include <xbmcvideochecker/XBMCVideoChecker.h>
 
 // Request player example:
-// {"id":666,"jsonrpc":"2.0","method":"Player.GetActivePlayers"}
+// {"jsonrpc":"2.0","method":"Player.GetActivePlayers", "id":666}
 // {"id":666,"jsonrpc":"2.0","result":[{"playerid":1,"type":"video"}]}
 
 // Request playing item example:
