@@ -1,22 +1,47 @@
 # Define the main-project name
-project(Hyperion)
+project(hyperiond)
 
 # define the minimum cmake version (as required by cmake)
 cmake_minimum_required(VERSION 2.8)
 
 #set(CMAKE_TOOLCHAIN_FILE /opt/raspberrypi/Toolchain-RaspberryPi.cmake)
 
+SET ( DEFAULT_AMLOGIC    OFF )
+SET ( DEFAULT_DISPMANX   OFF )
+SET ( DEFAULT_FB         OFF )
+SET ( DEFAULT_OSX        OFF )
+SET ( DEFAULT_X11        OFF )
+SET ( DEFAULT_WS2812BPWM OFF )
+SET ( DEFAULT_WS281XPWM  OFF )
+
+if (APPLE)
+	SET ( DEFAULT_OSX ON )
+else ()
+	if ( ${PLATFORM} STREQUAL "rpi" )
+		SET ( DEFAULT_DISPMANX   ON )
+		SET ( DEFAULT_WS2812BPWM ON )
+		SET ( DEFAULT_WS281XPWM  ON )
+	elseif ( ${PLATFORM} STREQUAL "wetek" )
+		SET ( DEFAULT_AMLOGIC    ON )
+		SET ( DEFAULT_FB         ON )
+	elseif ( ${PLATFORM} STREQUAL "x86" )
+		SET ( DEFAULT_X11        ON )
+	elseif ( ${PLATFORM} STREQUAL "imx6" )
+		SET ( DEFAULT_FB         ON )
+	endif()
+endif ()
+
 # set the build options
-option(ENABLE_AMLOGIC "Enable the AMLOGIC video grabber" OFF)
+option(ENABLE_AMLOGIC "Enable the AMLOGIC video grabber" ${DEFAULT_AMLOGIC} )
 message(STATUS "ENABLE_AMLOGIC = " ${ENABLE_AMLOGIC})
 
-option(ENABLE_DISPMANX "Enable the RPi dispmanx grabber" ON)
+option(ENABLE_DISPMANX "Enable the RPi dispmanx grabber" ${DEFAULT_DISPMANX} )
 message(STATUS "ENABLE_DISPMANX = " ${ENABLE_DISPMANX})
 
-option(ENABLE_FB "Enable the framebuffer grabber" OFF)
+option(ENABLE_FB "Enable the framebuffer grabber" ${DEFAULT_FB} )
 message(STATUS "ENABLE_FB = " ${ENABLE_FB})
 
-option(ENABLE_OSX "Enable the osx grabber" OFF)
+option(ENABLE_OSX "Enable the osx grabber" ${DEFAULT_OSX} )
 message(STATUS "ENABLE_OSX = " ${ENABLE_OSX})
 
 option(ENABLE_PROTOBUF "Enable PROTOBUF server" ON)
@@ -31,13 +56,13 @@ message(STATUS "ENABLE_TINKERFORGE = " ${ENABLE_TINKERFORGE})
 option(ENABLE_V4L2 "Enable the V4L2 grabber" ON)
 message(STATUS "ENABLE_V4L2 = " ${ENABLE_V4L2})
 
-option(ENABLE_WS2812BPWM   "Enable the WS2812b-PWM device" OFF)
+option(ENABLE_WS2812BPWM   "Enable the WS2812b-PWM device" ${DEFAULT_WS2812BPWM} )
 message(STATUS "ENABLE_WS2812BPWM = " ${ENABLE_WS2812BPWM})
 
-option(ENABLE_WS281XPWM   "Enable the WS281x-PWM device" OFF)
+option(ENABLE_WS281XPWM   "Enable the WS281x-PWM device" ${DEFAULT_WS281XPWM} )
 message(STATUS "ENABLE_WS281XPWM = " ${ENABLE_WS281XPWM})
 
-option(ENABLE_X11 "Enable the X11 grabber" OFF)
+option(ENABLE_X11 "Enable the X11 grabber" ${DEFAULT_X11})
 message(STATUS "ENABLE_X11 = " ${ENABLE_X11})
 
 option(ENABLE_QT5 "Enable QT5" OFF)
@@ -48,19 +73,19 @@ message(STATUS "ENABLE_TESTS = " ${ENABLE_TESTS})
 
 if(ENABLE_V4L2 AND NOT ENABLE_PROTOBUF)
 	message(FATAL_ERROR "V4L2 grabber requires PROTOBUF. Disable V4L2 or enable PROTOBUF")
-endif(ENABLE_V4L2 AND NOT ENABLE_PROTOBUF)
+endif()
 
 if(ENABLE_FB AND ENABLE_DISPMANX)
 	message(FATAL_ERROR "dispmanx grabber and framebuffer grabber cannot be used at the same time")
-endif(ENABLE_FB AND ENABLE_DISPMANX)
+endif()
 
 if(ENABLE_FB AND ENABLE_OSX)
 	message(FATAL_ERROR "osx grabber and framebuffer grabber cannot be used at the same time")
-endif(ENABLE_FB AND ENABLE_OSX)
+endif()
 
 if(ENABLE_OSX AND ENABLE_DISPMANX)
 	message(FATAL_ERROR "dispmanx grabber and osx grabber cannot be used at the same time")
-endif(ENABLE_OSX AND ENABLE_DISPMANX)
+endif()
 
 if (DEFINED INSTALL_PREFIX)
 	SET( ENABLE_SYSTEM_INSTALL ON)

@@ -36,6 +36,7 @@ endif ()
 
 install ( TARGETS hyperiond DESTINATION "${DEPLOY_DIR}/bin" )
 install ( DIRECTORY ${CMAKE_SOURCE_DIR}/effects DESTINATION "${DEPLOY_DIR}/share/hyperion/" )
+install ( DIRECTORY ${CMAKE_SOURCE_DIR}/bin/service DESTINATION "${DEPLOY_DIR}/share/hyperion/" )
 
 if (ENABLE_SYSTEM_INSTALL)
 	install ( TARGETS hyperiond DESTINATION "bin" )
