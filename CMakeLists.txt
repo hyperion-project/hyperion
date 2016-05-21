@@ -62,6 +62,9 @@ if(ENABLE_OSX AND ENABLE_DISPMANX)
 	message(FATAL_ERROR "dispmanx grabber and osx grabber cannot be used at the same time")
 endif(ENABLE_OSX AND ENABLE_DISPMANX)
 
+option(ENABLE_SYSTEM_INSTALL "enables make install" OFF)
+message(STATUS "ENABLE_SYSTEM_INSTALL = " ${ENABLE_SYSTEM_INSTALL})
+
 
 SET ( PROTOBUF_INSTALL_BIN_DIR ${CMAKE_BINARY_DIR}/proto )
 SET ( PROTOBUF_INSTALL_LIB_DIR ${CMAKE_BINARY_DIR}/proto )

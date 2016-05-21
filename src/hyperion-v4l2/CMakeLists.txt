@@ -62,3 +62,6 @@ endif(ENABLE_QT5)
 
 
 install ( TARGETS ${PROJECT_NAME} DESTINATION "${CMAKE_SOURCE_DIR}/deploy/bin" )
+if (ENABLE_SYSTEM_INSTALL)
+	install ( TARGETS ${PROJECT_NAME} DESTINATION "hyperion/bin" )
+endif()

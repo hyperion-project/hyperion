@@ -35,3 +35,8 @@ if (ENABLE_PROTOBUF)
 endif (ENABLE_PROTOBUF)
 
 install ( TARGETS hyperiond DESTINATION "${CMAKE_SOURCE_DIR}/deploy/bin" )
+
+if (ENABLE_SYSTEM_INSTALL)
+	install ( TARGETS hyperiond DESTINATION "hyperion/bin" )
+	install ( DIRECTORY ${CMAKE_SOURCE_DIR}/effects DESTINATION "hyperion/" )
+endif()
