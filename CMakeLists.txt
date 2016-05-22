@@ -1,5 +1,5 @@
 # Define the main-project name
-project(hyperiond)
+project(hyperion)
 
 # define the minimum cmake version (as required by cmake)
 cmake_minimum_required(VERSION 2.8)
@@ -89,10 +89,7 @@ if(ENABLE_OSX AND ENABLE_DISPMANX)
 endif()
 
 if (DEFINED INSTALL_PREFIX)
-	SET( ENABLE_SYSTEM_INSTALL ON)
 	SET( CMAKE_INSTALL_PREFIX "${INSTALL_PREFIX}" )
-else()
-	SET(ENABLE_SYSTEM_INSTALL OFF)
 endif()
 
 SET ( PROTOBUF_INSTALL_BIN_DIR ${CMAKE_BINARY_DIR}/proto )
