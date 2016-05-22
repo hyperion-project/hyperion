@@ -65,11 +65,11 @@ void HslTransform::transform(uint8_t & red, uint8_t & green, uint8_t & blue) con
 			saturation = s;
 
 		float l = luminance * _luminanceGain;
+		if (l < _luminanceMinimum)
+			l = _luminanceMinimum;
 		if (l > 1.0f)
 			luminance = 1.0f;
-		else if (l < _luminanceMinimum)
-			luminance = _luminanceMinimum;
-		else
+		else 
 			luminance = l;
 				
 		hsl2rgb(hue, saturation, luminance, red, green, blue);
