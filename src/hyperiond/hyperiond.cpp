@@ -129,8 +129,8 @@ int main(int argc, char** argv)
 		// Get the parameters for the bootsequence
 		const std::string effectName = effectConfig["effect"].asString();
 		const unsigned duration_ms   = effectConfig["duration_ms"].asUInt();
-		const int priority           = (duration_ms != 0) ? 0 : effectConfig.get("priority",990).asInt();
-		const int bootcolor_priority = (priority > 990) ? priority+1 : 990;
+		const int priority           = (duration_ms != 0) ? 0 : effectConfig.get("priority",700).asInt();
+		const int bootcolor_priority = (priority > 700) ? priority+1 : 700;
 
 		// clear the leds
 		ColorRgb boot_color = ColorRgb::BLACK;
@@ -231,6 +231,11 @@ int main(int argc, char** argv)
 			frameGrabberConfig["frequency_Hz"].asUInt(),
 			frameGrabberConfig.get("priority",900).asInt(),
 			&hyperion);
+		dispmanx->setCropping(
+					frameGrabberConfig.get("cropLeft", 0).asInt(),
+					frameGrabberConfig.get("cropRight", 0).asInt(),
+					frameGrabberConfig.get("cropTop", 0).asInt(),
+					frameGrabberConfig.get("cropBottom", 0).asInt());
 
 		if (xbmcVideoChecker != nullptr)
 		{
