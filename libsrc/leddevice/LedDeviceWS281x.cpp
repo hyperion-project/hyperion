@@ -18,7 +18,7 @@ LedDeviceWS281x::LedDeviceWS281x(const int gpio, const int leds, const uint32_t 
 	led_string.channel[chan].count = leds;
 	led_string.channel[chan].brightness = 255;
 	if (rgbw == 1) {
-		led_string.channel[chan].strip_type = SK6812_STRIP_RGBW;
+		led_string.channel[chan].strip_type = SK6812_STRIP_GRBW;
 	} else {
 		led_string.channel[chan].strip_type = WS2811_STRIP_RGB;
 	}
