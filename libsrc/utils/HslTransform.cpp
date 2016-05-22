@@ -52,7 +52,7 @@ double HslTransform::getLuminanceMinimum() const
 
 void HslTransform::transform(uint8_t & red, uint8_t & green, uint8_t & blue) const
 {
-	if (_saturationGain != 1.0 || _luminanceGain != 1.0)
+	if (_saturationGain != 1.0 || _luminanceGain != 1.0 || _luminanceMinimum != 0.0)
 	{
 		uint16_t hue;
 		float saturation, luminance;
