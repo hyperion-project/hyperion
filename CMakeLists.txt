@@ -6,6 +6,7 @@ cmake_minimum_required(VERSION 2.8)
 
 #set(CMAKE_TOOLCHAIN_FILE /opt/raspberrypi/Toolchain-RaspberryPi.cmake)
 
+
 SET ( DEFAULT_AMLOGIC    OFF )
 SET ( DEFAULT_DISPMANX   OFF )
 SET ( DEFAULT_FB         OFF )
@@ -189,3 +190,5 @@ configure_file( "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in" "${
 
 add_custom_target(uninstall COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
 
+# enable make package - no code after this line !
+include (${CMAKE_CURRENT_SOURCE_DIR}/cmake/packages.cmake)
