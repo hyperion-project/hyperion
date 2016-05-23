@@ -1,6 +1,6 @@
 # cmake file for generating distribution packages
 
-SET ( CPACK_GENERATOR "DEB" "RPM" "TGZ" )
+SET ( CPACK_GENERATOR "DEB" "TGZ" "STGZ" ) # "RPM" 
 
 SET ( CPACK_PACKAGE_NAME "hyperion" )
 SET ( CPACK_PACKAGE_DESCRIPTION_SUMMARY "Hyperion is an opensource 'AmbiLight' implementation" )
