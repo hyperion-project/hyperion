@@ -12,6 +12,8 @@ add_library(hyperion-utils
 		${CURRENT_SOURCE_DIR}/ColorRgb.cpp
 		${CURRENT_HEADER_DIR}/ColorRgba.h
 		${CURRENT_SOURCE_DIR}/ColorRgba.cpp
+		${CURRENT_HEADER_DIR}/ColorRgbw.h
+		${CURRENT_SOURCE_DIR}/ColorRgbw.cpp
 		${CURRENT_HEADER_DIR}/Image.h
 		${CURRENT_HEADER_DIR}/Sleep.h
 
@@ -31,6 +33,9 @@ add_library(hyperion-utils
 		${CURRENT_SOURCE_DIR}/RgbChannelCorrection.cpp
 		${CURRENT_HEADER_DIR}/RgbChannelAdjustment.h
 		${CURRENT_SOURCE_DIR}/RgbChannelAdjustment.cpp
+
+		${CURRENT_HEADER_DIR}/RgbToRgbw.h
+		${CURRENT_SOURCE_DIR}/RgbToRgbw.cpp
 
 		${CURRENT_HEADER_DIR}/jsonschema/JsonFactory.h
 		${CURRENT_HEADER_DIR}/jsonschema/JsonSchemaChecker.h
