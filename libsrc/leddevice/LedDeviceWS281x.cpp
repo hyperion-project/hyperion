@@ -7,6 +7,7 @@ LedDeviceWS281x::LedDeviceWS281x(const int gpio, const int leds, const uint32_t 
 {
 	_whiteAlgorithm = whiteAlgorithm;
 std::cout << "whiteAlgorithm :" << whiteAlgorithm << ":\n";
+
 	initialized = false;
 	led_string.freq = freq;
 	led_string.dmanum = dmanum;
@@ -48,43 +49,19 @@ int LedDeviceWS281x::write(const std::vector<ColorRgb> &ledValues)
 	{
 		if (idx >= led_string.channel[chan].count)
 			break;
+
 		_temp_rgbw.red = color.red;
 		_temp_rgbw.green = color.green;
 		_temp_rgbw.blue = color.blue;
 		_temp_rgbw.white = 0;
 
-		Rgb_to_Rgbw(color, &_temp_rgbw, _whiteAlgorithm);
-
-		unsigned white = 0;
-		unsigned red = color.red;
-		unsigned green = color.green;
-		unsigned blue = color.blue;
-// dodgy colour correction
 		if (led_string.channel[chan].strip_type == SK6812_STRIP_GRBW) {
-// pretty dumb - assumes its linear (but its more like exponential
-			if (_whiteAlgorithm == "subtract_minimum") {
-				white = std::min(red, green);
-				white = std::min(white, blue);
-				red -= white;
-				green -= white;
-				blue -= white;
-			} 
-			else if (_whiteAlgorithm == "sub_min_warm_adjust") {
-				white = std::min(red, green);
-				white = std::min(white, blue);
-				red -= white;
-				green -= white;
-				blue -= white;
-			}
-			else if ( (_whiteAlgorithm == "") || (_whiteAlgorithm == "white_off") ) {
-				white = 0;
-			}
+			Rgb_to_Rgbw(color, &_temp_rgbw, _whiteAlgorithm);
 		}
 
 		led_string.channel[chan].leds[idx++] = 
-			((uint32_t)white << 24) + ((uint32_t)red << 16) + ((uint32_t)green << 8) + blue;
-//		led_string.channel[chan].leds[idx++] = 
-//			((uint32_t)white << 24) + ((uint32_t)red << 16) + ((uint32_t)green << 8) + blue;
+			((uint32_t)_temp_rgbw.white << 24) + ((uint32_t)_temp_rgbw.red << 16) + ((uint32_t)_temp_rgbw.green << 8) + _temp_rgbw.blue;
+
 	}
 	while (idx < led_string.channel[chan].count)
 		led_string.channel[chan].leds[idx++] = 0;
