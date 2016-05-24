@@ -58,4 +58,3 @@ echo "- done"
 # hypercon compat
 mkdir -p /opt/hyperion/config
 ln -sf /usr/share/hyperion/effects /opt/hyperion/effects
-ln -sf /etc/hyperion/hyperion.config.json /opt/hyperion/config/hyperion.config.json
