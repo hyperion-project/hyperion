@@ -1,32 +1,39 @@
 # Define the main-project name
-project(hyperiond)
+project(hyperion)
 
 # define the minimum cmake version (as required by cmake)
 cmake_minimum_required(VERSION 2.8)
 
 #set(CMAKE_TOOLCHAIN_FILE /opt/raspberrypi/Toolchain-RaspberryPi.cmake)
 
+
 SET ( DEFAULT_AMLOGIC    OFF )
 SET ( DEFAULT_DISPMANX   OFF )
 SET ( DEFAULT_FB         OFF )
 SET ( DEFAULT_OSX        OFF )
 SET ( DEFAULT_X11        OFF )
+SET ( DEFAULT_SPIDEV     OFF )
 SET ( DEFAULT_WS2812BPWM OFF )
 SET ( DEFAULT_WS281XPWM  OFF )
 
 if (APPLE)
 	SET ( DEFAULT_OSX ON )
 else ()
-	if ( ${PLATFORM} STREQUAL "rpi" )
+	if ( "${PLATFORM}" STREQUAL "rpi" )
+		SET ( DEFAULT_DISPMANX   ON )
+		SET ( DEFAULT_SPIDEV     ON )
+	elseif ( "${PLATFORM}" STREQUAL "rpi-pwm" )
 		SET ( DEFAULT_DISPMANX   ON )
 		SET ( DEFAULT_WS2812BPWM ON )
 		SET ( DEFAULT_WS281XPWM  ON )
-	elseif ( ${PLATFORM} STREQUAL "wetek" )
+		SET ( DEFAULT_SPIDEV     ON )
+	elseif ( "${PLATFORM}" STREQUAL "wetek" )
 		SET ( DEFAULT_AMLOGIC    ON )
 		SET ( DEFAULT_FB         ON )
-	elseif ( ${PLATFORM} STREQUAL "x86" )
+	elseif ( "${PLATFORM}" STREQUAL "x86" )
 		SET ( DEFAULT_X11        ON )
-	elseif ( ${PLATFORM} STREQUAL "imx6" )
+		SET ( DEFAULT_FB         ON )
+	elseif ( "${PLATFORM}" STREQUAL "imx6" )
 		SET ( DEFAULT_FB         ON )
 	endif()
 endif ()
@@ -47,7 +54,7 @@ message(STATUS "ENABLE_OSX = " ${ENABLE_OSX})
 option(ENABLE_PROTOBUF "Enable PROTOBUF server" ON)
 message(STATUS "ENABLE_PROTOBUF = " ${ENABLE_PROTOBUF})
 
-option(ENABLE_SPIDEV   "Enable the SPIDEV device" ON)
+option(ENABLE_SPIDEV   "Enable the SPIDEV device" ${DEFAULT_SPIDEV} )
 message(STATUS "ENABLE_SPIDEV   = " ${ENABLE_SPIDEV})
 
 option(ENABLE_TINKERFORGE "Enable the TINKERFORGE device" ON)
@@ -87,13 +94,6 @@ if(ENABLE_OSX AND ENABLE_DISPMANX)
 	message(FATAL_ERROR "dispmanx grabber and osx grabber cannot be used at the same time")
 endif()
 
-if (DEFINED INSTALL_PREFIX)
-	SET( ENABLE_SYSTEM_INSTALL ON)
-	SET( CMAKE_INSTALL_PREFIX "${INSTALL_PREFIX}" )
-else()
-	SET(ENABLE_SYSTEM_INSTALL OFF)
-endif()
-
 SET ( PROTOBUF_INSTALL_BIN_DIR ${CMAKE_BINARY_DIR}/proto )
 SET ( PROTOBUF_INSTALL_LIB_DIR ${CMAKE_BINARY_DIR}/proto )
 
@@ -124,7 +124,7 @@ endif()
 # Define the global output path of binaries
 SET(LIBRARY_OUTPUT_PATH    ${PROJECT_BINARY_DIR}/lib)
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
-SET(DEPLOY_DIR "${CMAKE_SOURCE_DIR}/deploy/hyperion" )
+
 file(MAKE_DIRECTORY ${LIBRARY_OUTPUT_PATH})
 file(MAKE_DIRECTORY ${EXECUTABLE_OUTPUT_PATH})
 
@@ -189,3 +189,5 @@ configure_file( "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in" "${
 
 add_custom_target(uninstall COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
 
+# enable make package - no code after this line !
+include (${CMAKE_CURRENT_SOURCE_DIR}/cmake/packages.cmake)

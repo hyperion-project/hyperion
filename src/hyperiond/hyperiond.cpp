@@ -7,6 +7,7 @@
 #include <QCoreApplication>
 #include <QResource>
 #include <QLocale>
+#include <QFile>
 
 // config includes
 #include "HyperionConfig.h"
@@ -114,7 +115,17 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	const std::string configFile = argv[1];
+	int argvId = 1;
+	for ( int i=1; i<argc;i++)
+	{
+		if ( QFile::exists(argv[i]) )
+		{
+			argvId = i;
+			break;
+		}
+	}
+
+	const std::string configFile = argv[argvId];
 	std::cout << "INFO: Selected configuration file: " << configFile.c_str() << std::endl;
 	const Json::Value config = loadConfig(configFile);
 
@@ -129,8 +140,8 @@ int main(int argc, char** argv)
 		// Get the parameters for the bootsequence
 		const std::string effectName = effectConfig["effect"].asString();
 		const unsigned duration_ms   = effectConfig["duration_ms"].asUInt();
-		const int priority           = (duration_ms != 0) ? 0 : effectConfig.get("priority",700).asInt();
-		const int bootcolor_priority = (priority > 700) ? priority+1 : 700;
+		const int priority           = (duration_ms != 0) ? 0 : effectConfig.get("priority",990).asInt();
+		const int bootcolor_priority = (priority > 990) ? priority+1 : 990;
 
 		// clear the leds
 		ColorRgb boot_color = ColorRgb::BLACK;
