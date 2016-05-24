@@ -30,26 +30,33 @@ EffectEngine::EffectEngine(Hyperion * hyperion, const Json::Value & jsonEffectCo
 	connect(_hyperion, SIGNAL(allChannelsCleared()), this, SLOT(allChannelsCleared()));
 
 	// read all effects
+	bool effectPathExists = false;
 	const Json::Value & paths = jsonEffectConfig["paths"];
 	for (Json::UInt i = 0; i < paths.size(); ++i)
 	{
 		const std::string & path = paths[i].asString();
 		QDir directory(QString::fromStdString(path));
-		if (!directory.exists())
+		if (directory.exists())
 		{
-			std::cerr << "EFFECTENGINE ERROR: Effect directory can not be loaded: " << path << std::endl;
-			continue;
-		}
-
-		QStringList filenames = directory.entryList(QStringList() << "*.json", QDir::Files, QDir::Name | QDir::IgnoreCase);
-		foreach (const QString & filename, filenames)
-		{
-			EffectDefinition def;
-			if (loadEffectDefinition(path, filename.toStdString(), def))
+			effectPathExists = true;
+			int efxCount = 0;
+			QStringList filenames = directory.entryList(QStringList() << "*.json", QDir::Files, QDir::Name | QDir::IgnoreCase);
+			foreach (const QString & filename, filenames)
 			{
-				_availableEffects.push_back(def);
+				EffectDefinition def;
+				if (loadEffectDefinition(path, filename.toStdString(), def))
+				{
+					_availableEffects.push_back(def);
+					efxCount++;
+				}
 			}
+			std::cerr << "EFFECTENGINE INFO: " << efxCount << " effects loaded from directory " << path << std::endl;
 		}
+	}
+
+	if (!effectPathExists)
+	{
+		std::cerr << "EFFECTENGINE ERROR: no usuable effect directories found" << std::endl;
 	}
 
 	// initialize the python interpreter
