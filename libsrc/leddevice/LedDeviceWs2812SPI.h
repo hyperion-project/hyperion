@@ -7,22 +7,23 @@
 #include "LedSpiDevice.h"
 
 ///
-/// Implementation of the LedDevice interface for writing to APA102 led device.
+/// Implementation of the LedDevice interface for writing to Ws2801 led device.
 ///
-/// APA102 is
-///
-class LedDeviceAPA102 : public LedSpiDevice
+class LedDeviceWs2812SPI : public LedSpiDevice
 {
 public:
 	///
-	/// Constructs the LedDevice for a string containing leds of the type APA102
+	/// Constructs the LedDevice for a string containing leds of the type Ws2812SPI
 	///
 	/// @param outputDevice The name of the output device (eg '/etc/SpiDev.0.0')
 	/// @param baudrate The used baudrate for writing to the output device
 	///
-	LedDeviceAPA102(const std::string& outputDevice,
-					const unsigned baudrate, const unsigned ledcount );
+	LedDeviceWs2812SPI(const std::string& outputDevice,
+					const unsigned baudrate);
 
+	LedDeviceWs2812SPI(const std::string& outputDevice,
+					const unsigned baudrate,
+					const unsigned latchTime);
 
 	///
 	/// Writes the led color values to the led-device
@@ -37,9 +38,9 @@ public:
 
 private:
 
-	/// The buffer containing the packed RGB values
-	std::vector<uint8_t> _ledBuffer;
-	unsigned int _HW_ledcount;
-	unsigned int _mLedCount;
+	/// the number of leds (needed when switching off)
+	size_t mLedCount;
+	std::vector<uint8_t> _spiBuffer;
 
+        uint8_t bitpair_to_byte[4];
 };

@@ -17,7 +17,7 @@ struct addrinfo hints, *servinfo, *p;
 //char udpbuffer[1024];
 int sockfd;
 int ledprotocol;
-int leds_per_pkt;
+unsigned leds_per_pkt;
 int update_number;
 int fragment_number;
 
@@ -155,6 +155,47 @@ int LedDeviceUdp::write(const std::vector<ColorRgb> & ledValues)
 		}
 		
 	}
+
+	if (ledprotocol == 3) {
+		udpPtr = 0;
+		unsigned int ledCtr = 0;
+		unsigned int fragments = 1;
+		unsigned int datasize = ledValues.size() * 3;
+		if (ledValues.size() > leds_per_pkt) {
+			fragments = (ledValues.size() / leds_per_pkt) + 1;
+		}
+		fragment_number = 1;
+		udpbuffer[udpPtr++] = 0x9C;
+		udpbuffer[udpPtr++] = 0xDA;
+		udpbuffer[udpPtr++] = datasize/256;	// high byte
+		udpbuffer[udpPtr++] = datasize%256;	// low byte
+		udpbuffer[udpPtr++] = fragment_number++;
+		udpbuffer[udpPtr++] = fragments;
+
+
+		for (const ColorRgb& color : ledValues)
+		{
+			if (udpPtr<4090) {
+				udpbuffer[udpPtr++] = color.red;
+				udpbuffer[udpPtr++] = color.green;
+				udpbuffer[udpPtr++] = color.blue;
+			}
+			ledCtr++;
+			if ( (ledCtr % leds_per_pkt == 0) || (ledCtr == ledValues.size()) ) {
+				udpbuffer[udpPtr++] = 0x36;
+				sendto(sockfd, udpbuffer, udpPtr, 0, p->ai_addr, p->ai_addrlen);
+				memset(udpbuffer, 0, sizeof udpbuffer);
+				udpPtr = 0;
+				udpbuffer[udpPtr++] = 0x9C;
+				udpbuffer[udpPtr++] = 0xDA;
+				udpbuffer[udpPtr++] = datasize/256;	// high byte
+				udpbuffer[udpPtr++] = datasize%256;	// low byte
+				udpbuffer[udpPtr++] = fragment_number++;
+				udpbuffer[udpPtr++] = fragments;
+			}
+		}
+	}
+
 	return 0;
 }
 

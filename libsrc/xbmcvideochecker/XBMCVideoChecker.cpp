@@ -6,7 +6,7 @@
 #include <xbmcvideochecker/XBMCVideoChecker.h>
 
 // Request player example:
-// {"id":666,"jsonrpc":"2.0","method":"Player.GetActivePlayers"}
+// {"jsonrpc":"2.0","method":"Player.GetActivePlayers", "id":666}
 // {"id":666,"jsonrpc":"2.0","result":[{"playerid":1,"type":"video"}]}
 
 // Request playing item example:
@@ -25,7 +25,7 @@ XBMCVideoChecker::XBMCVideoChecker(const std::string & address, uint16_t port, b
 	QObject(),
 	_address(QString::fromStdString(address)),
 	_port(port),
-	_activePlayerRequest(R"({"id":666,"jsonrpc":"2.0","method":"Player.GetActivePlayers"})"),
+	_activePlayerRequest(R"({"jsonrpc":"2.0","method":"Player.GetActivePlayers", "id":666})"),
 	_currentPlayingItemRequest(R"({"id":667,"jsonrpc":"2.0","method":"Player.GetItem","params":{"playerid":%1,"properties":["file"]}})"),
 	_checkScreensaverRequest(R"({"id":668,"jsonrpc":"2.0","method":"XBMC.GetInfoBooleans","params":{"booleans":["System.ScreenSaverActive"]}})"),
 	_getStereoscopicMode(R"({"jsonrpc":"2.0","method":"GUI.GetProperties","params":{"properties":["stereoscopicmode"]},"id":669})"),
@@ -61,7 +61,7 @@ void XBMCVideoChecker::receiveReply()
 
 	std::cout << "KODICHECK INFO: Kodi Message: " << reply.toStdString() << std::endl;
 
-	if (reply.contains("\"method\":\"Player.OnPlay\""))
+	if (reply.contains("\"method\":\"Player.OnPlay\"") || reply.contains("\"method\":\"Playlist.OnAdd\""))
 	{
 		// send a request for the current player state
 		_socket.write(_activePlayerRequest.toUtf8());

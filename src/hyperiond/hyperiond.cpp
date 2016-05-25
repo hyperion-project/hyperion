@@ -7,6 +7,7 @@
 #include <QCoreApplication>
 #include <QResource>
 #include <QLocale>
+#include <QFile>
 
 // config includes
 #include "HyperionConfig.h"
@@ -114,7 +115,17 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	const std::string configFile = argv[1];
+	int argvId = 1;
+	for ( int i=1; i<argc;i++)
+	{
+		if ( QFile::exists(argv[i]) )
+		{
+			argvId = i;
+			break;
+		}
+	}
+
+	const std::string configFile = argv[argvId];
 	std::cout << "INFO: Selected configuration file: " << configFile.c_str() << std::endl;
 	const Json::Value config = loadConfig(configFile);
 
@@ -231,6 +242,11 @@ int main(int argc, char** argv)
 			frameGrabberConfig["frequency_Hz"].asUInt(),
 			frameGrabberConfig.get("priority",900).asInt(),
 			&hyperion);
+		dispmanx->setCropping(
+					frameGrabberConfig.get("cropLeft", 0).asInt(),
+					frameGrabberConfig.get("cropRight", 0).asInt(),
+					frameGrabberConfig.get("cropTop", 0).asInt(),
+					frameGrabberConfig.get("cropBottom", 0).asInt());
 
 		if (xbmcVideoChecker != nullptr)
 		{

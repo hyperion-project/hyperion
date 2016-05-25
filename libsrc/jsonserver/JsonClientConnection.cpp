@@ -455,6 +455,7 @@ void JsonClientConnection::handleServerInfoCommand(const Json::Value &)
 		transform["valueGain"]      = colorTransform->_hsvTransform.getValueGain();
 		transform["saturationLGain"] = colorTransform->_hslTransform.getSaturationGain();
 		transform["luminanceGain"]   = colorTransform->_hslTransform.getLuminanceGain();
+		transform["luminanceMinimum"]   = colorTransform->_hslTransform.getLuminanceMinimum();
 
 		Json::Value & threshold = transform["threshold"];
 		threshold.append(colorTransform->_rgbRedTransform.getThreshold());
@@ -528,6 +529,21 @@ void JsonClientConnection::handleServerInfoCommand(const Json::Value &)
 
 		activeEffects.append(activeEffect);
 	}
+	
+	// collect active led colors
+	Json::Value & activeLedColors = info["activeLedColors"] = Json::Value(Json::arrayValue);
+	foreach (int priority, activePriorities) {
+		const Hyperion::InputInfo & priorityInfo = _hyperion->getPriorityInfo(priority);
+ 		int i=0;
+		Json::Value LEDcolor;
+		for (auto it = priorityInfo.ledColors.begin(); it!=priorityInfo.ledColors.end(); ++it, ++i) {		    
+			LEDcolor[std::to_string(i)].append(it->red);
+			LEDcolor[std::to_string(i)].append(it->green);
+			LEDcolor[std::to_string(i)].append(it->blue);		    
+		}
+		
+		activeLedColors.append(LEDcolor);
+	}
 
 	// send the result
 	sendMessage(result);
@@ -588,6 +604,11 @@ void JsonClientConnection::handleTransformCommand(const Json::Value &message)
 	if (transform.isMember("luminanceGain"))
 	{
 		colorTransform->_hslTransform.setLuminanceGain(transform["luminanceGain"].asDouble());
+	}
+
+	if (transform.isMember("luminanceMinimum"))
+	{
+		colorTransform->_hslTransform.setLuminanceMinimum(transform["luminanceMinimum"].asDouble());
 	}
 
 	if (transform.isMember("threshold"))
