@@ -1,6 +1,6 @@
 # Install the required tools and dependencies
 sudo apt-get update
-sudo apt-get install git cmake build-essential libQt4-dev libusb-1.0-0-dev python-dev libxrender-dev
+sudo apt-get install git cmake build-essential libqt4-dev libusb-1.0-0-dev python-dev libxrender-dev
 
 # RPI ONLY: when you build on the rapberry pi and include the dispmanx grabber (which is the default) 
 # you also need the firmware including headers installed. This downloads the firmware from the raspberrypi github
@@ -45,17 +45,36 @@ sudo brew install cmake
 cmake -DENABLE_DISPMANX=OFF -DENABLE_SPIDEV=OFF -DENABLE_V4L2=OFF -DENABLE_OSX=ON ..
 
 # run make to build Hyperion
-make
-# or if you have a system with more then 1 cpu core
-make -j 4
-# "4" is  the number of cpu cores (e.g. 4 on RPi2 and RPi3), this makes compile faster
+# "$(nproc)" is  the number of cpu cores (e.g. 4 on RPi2 and RPi3), this makes compile faster
+make -j $(nproc)
+
+# test hyperion
+./bin/hyperiond ../config/hyperion.config.json
 
 #after compile, to remove any stuff not needed for a release version.
 strip bin/*
 
-# The binaries are build in "$HYPERION_DIR/build/bin". You could copy those to /usr/bin
-sudo cp ./bin/hyperion-remote /usr/bin/
-sudo cp ./bin/hyperiond /usr/bin/
+# The binaries are build in "$HYPERION_DIR/build/bin". You could copy those to /opt/hyperion/bin
+sudo mkdir /opt/hyperion/bin -p
+sudo cp ./bin/hyperion-remote /opt/hyperion/bin/
+sudo cp ./bin/hyperiond /opt/hyperion/bin/
+sudo cp ./bin/hyperion-v4l2 /opt/hyperion/bin/
 
-# Copy the effect folder (if you did not use the normal installation methode before)
+# create links to the binaries
+sudo ln -fs /opt/hyperion/bin/hyperiond /usr/bin/hyperiond
+sudo ln -fs /opt/hyperion/bin/hyperion-remote /usr/bin/hyperion-remote
+sudo ln -fs /opt/hyperion/bin/hyperion-v4l2 /usr/bin/hyperion-v4l2
+
+# Copy the effect folder (if you did not use the normal installation method before)
 sudo mkdir -p /opt/hyperion/effects && sudo cp -R ../effects/ /opt/hyperion/
+
+# Copy config file (optional, generate yours with hypercon)
+sudo mkdir -p /opt/hyperion/config && sudo cp ../config/hyperion.config.json /opt/hyperion/config/
+sudo ln -fs /opt/hyperion/config/hyperion.config.json /etc/hyperion.config.json
+
+# Copy systemd script (raspbian jessie only)
+sudo cp ../bin/service/hyperion.systemd.sh /etc/systemd/system/hyperion.service
+
+# Start and enable hyperion
+systemctl start hyperion.service
+systemctl enable hyperion.service
