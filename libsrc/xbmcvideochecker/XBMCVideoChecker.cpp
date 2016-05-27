@@ -193,6 +193,11 @@ void XBMCVideoChecker::receiveReply()
 			_xbmcVersion = regex.cap(1).toInt();
 		}
 	}
+	else if (reply.contains("picture") && reply.contains("\"method\":\"Playlist.OnAdd\""))
+	{
+		// picture viewer is playing
+		setGrabbingMode(_grabPhoto ? GRABBINGMODE_PHOTO : GRABBINGMODE_OFF);
+	}
 }
 
 void XBMCVideoChecker::connected()
