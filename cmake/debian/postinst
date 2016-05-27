@@ -7,6 +7,7 @@ install_file()
 
 	if [ -e "$dest" ] && ! cmp --quiet "$src" "$dest"
 	then
+		echo "INFO: $dest exists, new version copied to ${dest}.new"
 		cp "$src" "${dest}.new"
 	else
 		cp "$src" "${dest}"
@@ -20,6 +21,9 @@ mkdir -p /etc/hyperion
 install_file /usr/share/hyperion/config/hyperion.config.json /etc/hyperion/hyperion.config.json
 
 
+start_msg=""
+restart_msg=""
+
 if grep -m1 systemd /proc/1/comm > /dev/null
 then
 	# systemd
@@ -27,6 +31,10 @@ then
 	systemctl stop hyperion 2> /dev/null
 	install_file /usr/share/hyperion/service/hyperion.systemd.sh /etc/systemd/system/hyperion.service
 	systemctl -q enable hyperion.service
+
+	start_msg="systemctl start hyperion"
+	restart_msg="systemctl restart hyperion"
+	echo ""
 #		if [ $OS_OSMC -eq 1 ]; then
 #			echo '---> Modify systemd script for OSMC usage'
 #			# Wait until kodi is sarted (for kodi checker)
@@ -36,14 +44,16 @@ then
 #			sed -i 's/Group=osmc/Group=root/g' /etc/systemd/system/hyperion.service
 #			systemctl -q daemon-reload
 #		fi
-	systemctl start hyperion
+#	systemctl start hyperion
 
 elif [ -e /sbin/initctl ]
 then
 	# upstart
 	install_file /usr/share/hyperion/service/hyperion.initctl.sh /etc/init/hyperion.conf
 	initctl reload-configuration
-	initctl start hyperion
+#	initctl start hyperion
+	start_msg="initctl start hyperion"
+	restart_msg="initctl restart hyperion"
 
 else
 	# sysV
@@ -51,10 +61,19 @@ else
 	install_file /usr/share/hyperion/service/hyperion.init.sh /etc/init.d/hyperion
 	chmod +x /etc/init.d/hyperion
 	update-rc.d hyperion defaults 98 02
-	service hyperion start
+#	service hyperion start
+	start_msg="service hyperion start"
+	restart_msg="service hyperion restart"
 fi
-echo "- done"
+
+echo "-----------------------------------------------------------------------------"
+echo "- hyperion is installed, please check your configuration in /etc/hyperion/  "
+echo "- if you want to activate hyperion on startup, activate/restart service     "
+echo "- start  : $start_msg "
+echo "- restart: $restart_msg"
+echo "-----------------------------------------------------------------------------"
+
 
 # hypercon compat
-mkdir -p /opt/hyperion/config
-ln -sf /usr/share/hyperion/effects /opt/hyperion/effects
+#mkdir -p /opt/hyperion/config
+#ln -sf /usr/share/hyperion/effects /opt/hyperion/effects
