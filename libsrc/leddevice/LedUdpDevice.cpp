@@ -8,6 +8,7 @@
 #include <fcntl.h>
 #include <sys/ioctl.h>
 
+#include <QStringList>
 #include <QUdpSocket>
 #include <QHostInfo>
 #include <QDebug>
