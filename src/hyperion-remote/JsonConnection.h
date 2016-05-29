@@ -84,6 +84,11 @@ public:
 	void clearAll();
 
 	///
+	/// Restart Hyperion
+	///
+	void Restart();
+
+	///
 	/// Set the color transform of the leds
 	///
 	/// @note Note that providing a NULL will leave the settings on the server unchanged
@@ -156,7 +161,7 @@ private:
 	///
 	/// @return The returned reply
 	///
-	Json::Value sendMessage(const Json::Value & message);
+	Json::Value sendMessage(const Json::Value & message, bool skipreply = false);
 
 	///
 	/// Parse a reply message
