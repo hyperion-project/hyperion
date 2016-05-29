@@ -248,6 +248,8 @@ void JsonClientConnection::handleMessage(const std::string &messageString)
 		handleClearCommand(message);
 	else if (command == "clearall")
 		handleClearallCommand(message);
+	else if (command == "restart")
+		handleRestartHyperionCommand(message);
 	else if (command == "transform")
 		handleTransformCommand(message);
 	else if (command == "correction")
@@ -617,6 +619,12 @@ void JsonClientConnection::handleClearallCommand(const Json::Value & message)
 
 	// send reply
 	sendSuccessReply();
+}
+
+void JsonClientConnection::handleRestartHyperionCommand(const Json::Value &message)
+{
+	sendSuccessReply();
+	_hyperion->restartHyperion();
 }
 
 void JsonClientConnection::handleTransformCommand(const Json::Value &message)
