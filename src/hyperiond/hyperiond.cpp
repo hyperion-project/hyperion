@@ -10,6 +10,9 @@
 #include <QLocale>
 #include <QFile>
 
+// getoptPlusPLus includes
+#include <getoptPlusPlus/getoptpp.h>
+
 // config includes
 #include "HyperionConfig.h"
 
@@ -59,6 +62,10 @@
 #include <boblightserver/BoblightServer.h>
 #include <sys/prctl.h> 
 
+using namespace vlofgren;
+
+std::vector<pid_t> hyperionChilds;
+
 void signal_handler(const int signum)
 {
 	QCoreApplication::quit();
@@ -91,22 +98,24 @@ Json::Value loadConfig(const std::string & configFile)
 	return jsonConfig;
 }
 
-void startNewHyperion(std::string hyperionFile, std::string configFile)
+void startNewHyperion(int parentPid, std::string hyperionFile, std::string configFile)
 {
-	if ( fork() == 0 )
+	pid_t cpid=0;
+	if ( (cpid=fork()) == 0 )
 	{
-		sleep(5);
-		execl(hyperionFile.c_str(), "hyperiond_spawned", configFile.c_str(), NULL);
+		sleep(3);
+		execl(hyperionFile.c_str(), hyperionFile.c_str(), "--parent", QString::number(parentPid).toStdString().c_str(), configFile.c_str(), NULL);
 		exit(0);
 	}
-	
+	hyperionChilds.push_back(cpid);
+
 }
 
 
 int main(int argc, char** argv)
 {
 	std::cout
-		<< "Hyperion Ambilight Deamon (" << getpid() << " " << getppid() << ")" << std::endl
+		<< "Hyperion Ambilight Deamon (" << getpid() << ")" << std::endl
 		<< "\tVersion   : " << HYPERION_VERSION_ID << std::endl
 		<< "\tBuild Time: " << __DATE__ << " " << __TIME__ << std::endl;
 
@@ -115,47 +124,51 @@ int main(int argc, char** argv)
 
 	signal(SIGINT,  signal_handler);
 	signal(SIGTERM, signal_handler);
+	signal(SIGCHLD, signal_handler);
 
 	// force the locale
 	setlocale(LC_ALL, "C");
 	QLocale::setDefault(QLocale::c());
 
-	if (argc < 2)
+	OptionsParser optionParser("X11 capture application for Hyperion");
+	ParameterSet & parameters = optionParser.getParameters();
+
+	IntParameter           & argParentPid             = parameters.add<IntParameter>          (0x0, "parent",        "pid of parent hyperiond");
+
+	argParentPid.setDefault(0);
+	optionParser.parse(argc, const_cast<const char **>(argv));
+	const std::vector<std::string> configFiles = optionParser.getFiles();
+
+	if (configFiles.size() == 0)
 	{
 		std::cout << "ERROR: Missing required configuration file. Usage:" << std::endl;
-		std::cout << "hyperiond [config.file]" << std::endl;
+		std::cout << "hyperiond <options ...> [config.file ...]" << std::endl;
 		return 1;
 	}
 
-	if (std::string(argv[0]) == "hyperiond_spawned" )
+	
+	if (argParentPid.getValue() > 0 )
 	{
-		std::cout << "hyperiond client" << std::endl;
+		std::cout << "hyperiond client, parent is pid " << argParentPid.getValue() << std::endl;
 		prctl(PR_SET_PDEATHSIG, SIGHUP);
 	}
 	
-	int argvId = 0;
-	for ( int i=1; i<argc;i++)
-	{
-		if ( QFile::exists(argv[i]) )
+	int argvId = -1;
+	for(size_t idx=0; idx < configFiles.size(); idx++) {
+		if ( QFile::exists(configFiles[idx].c_str()))
 		{
-			if ( argvId == 0 )
-			{
-				argvId = i;
-			}
-			else
-			{
-				startNewHyperion(argv[0], argv[i]);
-			}
+			if (argvId < 0) argvId=idx;
+			else startNewHyperion(getpid(), argv[0], configFiles[idx].c_str());
 		}
 	}
 	
-	if ( argvId == 0)
+	if ( argvId < 0)
 	{
 		std::cout << "ERROR: No valid config found " << std::endl;
 		return 1;
 	}
 	
-	const std::string configFile = argv[argvId];
+	const std::string configFile = configFiles[argvId];
 	std::cout << "INFO: Selected configuration file: " << configFile.c_str() << std::endl;
 	const Json::Value config = loadConfig(configFile);
 
