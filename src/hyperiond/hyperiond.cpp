@@ -64,8 +64,6 @@
 
 using namespace vlofgren;
 
-std::vector<pid_t> hyperionChilds;
-
 void signal_handler(const int signum)
 {
 	QCoreApplication::quit();
@@ -100,15 +98,12 @@ Json::Value loadConfig(const std::string & configFile)
 
 void startNewHyperion(int parentPid, std::string hyperionFile, std::string configFile)
 {
-	pid_t cpid=0;
-	if ( (cpid=fork()) == 0 )
+	if ( fork() == 0 )
 	{
 		sleep(3);
 		execl(hyperionFile.c_str(), hyperionFile.c_str(), "--parent", QString::number(parentPid).toStdString().c_str(), configFile.c_str(), NULL);
 		exit(0);
 	}
-	hyperionChilds.push_back(cpid);
-
 }
 
 
