@@ -2,6 +2,7 @@
 #include <cassert>
 #include <csignal>
 #include <vector>
+#include <unistd.h>
 
 // QT includes
 #include <QCoreApplication>
@@ -89,10 +90,21 @@ Json::Value loadConfig(const std::string & configFile)
 	return jsonConfig;
 }
 
+void startNewHyperion(std::string hyperionFile, std::string configFile)
+{
+	if ( fork() == 0 )
+	{
+		sleep(5);
+		execl(hyperionFile.c_str(), hyperionFile.c_str(), configFile.c_str(), NULL);
+		exit(0);
+	}
+}
+
+
 int main(int argc, char** argv)
 {
 	std::cout
-		<< "Hyperion Ambilight Deamon" << std::endl
+		<< "Hyperion Ambilight Deamon (" << getpid() << ")" << std::endl
 		<< "\tVersion   : " << HYPERION_VERSION_ID << std::endl
 		<< "\tBuild Time: " << __DATE__ << " " << __TIME__ << std::endl;
 
@@ -113,16 +125,28 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	int argvId = 1;
+	int argvId = 0;
 	for ( int i=1; i<argc;i++)
 	{
 		if ( QFile::exists(argv[i]) )
 		{
-			argvId = i;
-			break;
+			if ( argvId == 0 )
+			{
+				argvId = i;
+			}
+			else
+			{
+				startNewHyperion(argv[0], argv[i]);
+			}
 		}
 	}
-
+	
+	if ( argvId == 0)
+	{
+		std::cout << "ERROR: No valid config found " << std::endl;
+		return 1;
+	}
+	
 	const std::string configFile = argv[argvId];
 	std::cout << "INFO: Selected configuration file: " << configFile.c_str() << std::endl;
 	const Json::Value config = loadConfig(configFile);
