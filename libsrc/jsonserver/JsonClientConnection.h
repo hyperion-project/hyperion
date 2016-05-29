@@ -107,6 +107,13 @@ private:
 	void handleClearallCommand(const Json::Value & message);
 
 	///
+	/// Handle an incoming JSON Restart message
+	///
+	/// @param message the incoming message
+	///
+	void handleRestartHyperionCommand(const Json::Value & message);
+
+	///
 	/// Handle an incoming JSON Transform message
 	///
 	/// @param message the incoming message
