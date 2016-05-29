@@ -31,6 +31,8 @@
 // effect engine includes
 #include <effectengine/EffectEngine.h>
 
+// Hyperion Restart Code
+int const Hyperion::_HYPERION_RESTART = -123456789;
 
 ColorOrder Hyperion::createColorOrder(const Json::Value &deviceConfig)
 {
@@ -817,6 +819,12 @@ void Hyperion::clearall()
 
 	// send clearall signal to the effect engine
 	_effectEngine->allChannelsCleared();
+}
+
+void Hyperion::restartHyperion()
+{
+	qDebug() << "HYPERION INFO: Restart Hyperion ...";
+	QCoreApplication::exit( Hyperion::_HYPERION_RESTART);
 }
 
 int Hyperion::getCurrentPriority() const
