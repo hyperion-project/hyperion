@@ -192,6 +192,21 @@ void JsonConnection::clearAll()
 	parseReply(reply);
 }
 
+void JsonConnection::Restart()
+{
+	std::cout << "Restart Hyperion ..." << std::endl;
+
+	// create command
+	Json::Value command;
+	command["command"] = "restart";
+
+	// send command message
+	Json::Value reply = sendMessage(command, true);
+
+	// parse reply message
+	parseReply(reply);
+}
+
 void JsonConnection::setTransform(std::string * transformId, double * saturation, double * value, double * saturationL, double * luminance, double * luminanceMin, ColorTransformValues *threshold, ColorTransformValues *gamma, ColorTransformValues *blacklevel, ColorTransformValues *whitelevel)
 {
 	std::cout << "Set color transforms" << std::endl;
@@ -373,7 +388,7 @@ void JsonConnection::setAdjustment(std::string * adjustmentId, ColorAdjustmentVa
 	parseReply(reply);
 }
 
-Json::Value JsonConnection::sendMessage(const Json::Value & message)
+Json::Value JsonConnection::sendMessage(const Json::Value & message, bool skipreply)
 {
 	// serialize message (FastWriter already appends a newline)
 	std::string serializedMessage = Json::FastWriter().write(message);
@@ -391,35 +406,45 @@ Json::Value JsonConnection::sendMessage(const Json::Value & message)
 		throw std::runtime_error("Error while writing data to host");
 	}
 
-	// read reply data
-	QByteArray serializedReply;
-	while (!serializedReply.contains('\n'))
+	if (!skipreply)
 	{
-		// receive reply
-		if (!_socket.waitForReadyRead())
+		// read reply data
+		QByteArray serializedReply;
+		while (!serializedReply.contains('\n'))
 		{
-			throw std::runtime_error("Error while reading data from host");
+			// receive reply
+			if (!_socket.waitForReadyRead())
+			{
+				throw std::runtime_error("Error while reading data from host");
+			}
+
+			serializedReply += _socket.readAll();
+		}
+		int bytes = serializedReply.indexOf('\n') + 1;     // Find the end of message
+
+		// print reply if requested
+		if (_printJson)
+		{
+			std::cout << "Reply: " << std::string(serializedReply.data(), bytes);
 		}
 
-		serializedReply += _socket.readAll();
+		// parse reply data
+		Json::Reader jsonReader;
+		Json::Value reply;
+		if (!jsonReader.parse(serializedReply.constData(), serializedReply.constData() + bytes, reply))
+		{
+			throw std::runtime_error("Error while parsing reply: invalid json");
+		}
+		
+		return reply;
 	}
-	int bytes = serializedReply.indexOf('\n') + 1;     // Find the end of message
-
-	// print reply if requested
-	if (_printJson)
+	else
 	{
-		std::cout << "Reply: " << std::string(serializedReply.data(), bytes);
+		Json::Value reply;
+		reply["success"] = true;
+		
+		return reply;
 	}
-
-	// parse reply data
-	Json::Reader jsonReader;
-	Json::Value reply;
-	if (!jsonReader.parse(serializedReply.constData(), serializedReply.constData() + bytes, reply))
-	{
-		throw std::runtime_error("Error while parsing reply: invalid json");
-	}
-
-	return reply;
 }
 
 bool JsonConnection::parseReply(const Json::Value &reply)
