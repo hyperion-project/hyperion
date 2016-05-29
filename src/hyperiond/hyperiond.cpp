@@ -57,6 +57,7 @@
 
 // BoblightServer includes
 #include <boblightserver/BoblightServer.h>
+#include <sys/prctl.h> 
 
 void signal_handler(const int signum)
 {
@@ -95,16 +96,17 @@ void startNewHyperion(std::string hyperionFile, std::string configFile)
 	if ( fork() == 0 )
 	{
 		sleep(5);
-		execl(hyperionFile.c_str(), hyperionFile.c_str(), configFile.c_str(), NULL);
+		execl(hyperionFile.c_str(), "hyperiond_spawned", configFile.c_str(), NULL);
 		exit(0);
 	}
+	
 }
 
 
 int main(int argc, char** argv)
 {
 	std::cout
-		<< "Hyperion Ambilight Deamon (" << getpid() << ")" << std::endl
+		<< "Hyperion Ambilight Deamon (" << getpid() << " " << getppid() << ")" << std::endl
 		<< "\tVersion   : " << HYPERION_VERSION_ID << std::endl
 		<< "\tBuild Time: " << __DATE__ << " " << __TIME__ << std::endl;
 
@@ -125,6 +127,12 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
+	if (std::string(argv[0]) == "hyperiond_spawned" )
+	{
+		std::cout << "hyperiond client" << std::endl;
+		prctl(PR_SET_PDEATHSIG, SIGHUP);
+	}
+	
 	int argvId = 0;
 	for ( int i=1; i<argc;i++)
 	{
