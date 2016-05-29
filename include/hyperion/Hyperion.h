@@ -111,6 +111,10 @@ public:
 	/// Get the list of active effects
 	/// @return The list of active effects
 	const std::list<ActiveEffectDefinition> &getActiveEffects();
+	
+	/// restart Hyperion
+	static void restartHyperion();	
+	static int const _HYPERION_RESTART;
 
 public slots:
 	///
