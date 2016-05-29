@@ -11,7 +11,6 @@
 #include <QStringList>
 #include <QUdpSocket>
 #include <QHostInfo>
-#include <QDebug>
 
 // Local Hyperion includes
 #include "LedUdpDevice.h"
@@ -36,13 +35,6 @@ LedUdpDevice::LedUdpDevice(const std::string& outputDevice, const unsigned baudr
 	    // use the first IP address
 	}
 	_port = _list.at(1).toInt();
-if (0) {
-	qDebug() << _list;
-	qDebug() << _list[0];
-	qDebug() << _list[1];
-	qDebug() << _address;
-	qDebug() << _port;
-}
 }
 
 LedUdpDevice::~LedUdpDevice()
