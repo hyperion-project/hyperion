@@ -6,6 +6,7 @@
         <file alias="schema-serverinfo">schema/schema-serverinfo.json</file>
         <file alias="schema-clear">schema/schema-clear.json</file>
         <file alias="schema-clearall">schema/schema-clearall.json</file>
+	    <file alias="schema-restart">schema/schema-restart.json</file>
         <file alias="schema-transform">schema/schema-transform.json</file>
         <file alias="schema-correction">schema/schema-correction.json</file>
         <file alias="schema-temperature">schema/schema-temperature.json</file>
