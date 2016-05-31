@@ -3,6 +3,7 @@ add_executable(hyperiond
 		hyperiond.cpp)
 
 target_link_libraries(hyperiond
+		getoptPlusPlus
 		hyperion
 		xbmcvideochecker
 		effectengine
@@ -12,26 +13,31 @@ target_link_libraries(hyperiond
 
 if (ENABLE_DISPMANX)
 	target_link_libraries(hyperiond dispmanx-grabber)
-endif (ENABLE_DISPMANX)
+endif ()
 
 if (ENABLE_FB)
 	target_link_libraries(hyperiond framebuffer-grabber)
-endif (ENABLE_FB)
+endif ()
 
 if (ENABLE_OSX)
 	target_link_libraries(hyperiond osx-grabber)
-endif (ENABLE_OSX)
+endif ()
 
 if (ENABLE_V4L2)
 	target_link_libraries(hyperiond v4l2-grabber)
-endif (ENABLE_V4L2)
+endif ()
 
 if (ENABLE_AMLOGIC)
 	target_link_libraries(hyperiond amlogic-grabber)
-endif (ENABLE_AMLOGIC)
+endif ()
 
 if (ENABLE_PROTOBUF)
 	target_link_libraries(hyperiond protoserver)
-endif (ENABLE_PROTOBUF)
+endif ()
 
-install ( TARGETS hyperiond DESTINATION "${CMAKE_SOURCE_DIR}/deploy/bin" )
+install ( TARGETS hyperiond DESTINATION "bin" COMPONENT ambilight )
+install ( DIRECTORY ${CMAKE_SOURCE_DIR}/effects     DESTINATION "share/hyperion/" COMPONENT  ambilight )
+install ( DIRECTORY ${CMAKE_SOURCE_DIR}/bin/service DESTINATION "share/hyperion/" COMPONENT  ambilight )
+install ( DIRECTORY ${CMAKE_SOURCE_DIR}/config      DESTINATION "share/hyperion/" COMPONENT  ambilight )
+
+
