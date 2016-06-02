@@ -131,7 +131,7 @@ if [ $CPU_RPI -eq 1 ] && [ $OS_OPENELEC -eq 1 ]; then
 fi
  
 # compatibility layer to move old configs to new config dir
-if [ -f "/opt/hyperion" ] && [ $OS_OPENELEC -ne 1 ]; then
+if [ -f "/opt/hyperion" ]; then
 	mv /opt/hyperion/config/*.json /etc/hyperion 2>/dev/null 
 	sed -i "s|/opt/hyperion/effects|/usr/share/hyperion/effects|g" /etc/hyperion/*.json
 		if [ $USE_INITCTL -eq 1 ]; then
