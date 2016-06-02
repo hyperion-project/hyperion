@@ -160,7 +160,7 @@
 	{
 		"paths" : 
 		[
-			"/usr/share/hyperion/effects"
+			"/opt/hyperion/effects"
 		]
 	},
 
