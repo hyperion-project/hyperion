@@ -36,7 +36,6 @@ then
 	# upstart
 	$HYPERION_RUNNING && initctl stop hyperion
 	install_file /usr/share/hyperion/service/hyperion.initctl.sh /etc/init/hyperion.conf || SERVICE_POSTFIX=".new"
-	sed -i 's;/opt/hyperion/hyperion.config.json;/etc/hyperion/hyperion.config.json;g' /etc/init/hyperion.conf${SERVICE_POSTFIX}
 	initctl reload-configuration
 	start_msg="initctl start hyperion"
 	$HYPERION_RUNNING && initctl start hyperion
@@ -47,7 +46,6 @@ then
 	# systemd
 	$HYPERION_RUNNING && systemctl stop hyperion 2> /dev/null
 	install_file /usr/share/hyperion/service/hyperion.systemd.sh /etc/systemd/system/hyperion.service || SERVICE_POSTFIX=".new"
-	sed -i 's;/opt/hyperion/hyperion.config.json;/etc/hyperion/hyperion.config.json;g' /etc/systemd/system/hyperion.service${SERVICE_POSTFIX}
 	systemctl -q enable hyperion.service
 	start_msg="systemctl start hyperion"
 	$HYPERION_RUNNING && systemctl start hyperion
@@ -68,7 +66,6 @@ else
 	# sysV
 	$HYPERION_RUNNING && service hyperion stop 2>/dev/null
 	install_file /usr/share/hyperion/service/hyperion.init.sh /etc/init.d/hyperion || SERVICE_POSTFIX=".new"
-	sed -i 's;/opt/hyperion/hyperion.config.json;/etc/hyperion/hyperion.config.json;g' /etc/init.d/hyperion${SERVICE_POSTFIX}
 	chmod +x /etc/init.d/hyperion
 	update-rc.d hyperion defaults 98 02
 	start_msg="service hyperion start"
