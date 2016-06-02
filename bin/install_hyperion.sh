@@ -84,9 +84,6 @@ if [ $OS_OPENELEC -eq 1 ]; then
 elif [ $USE_INITCTL -eq 1 ]; then
 	/sbin/initctl stop hyperion 2>/dev/null
 	SERVICEP="/etc/init"
-elif [ $USE_SERVICE -eq 1 ]; then
-	/usr/sbin/service hyperion stop 2>/dev/null
-	SERVICEP="/etc/init.d"
 elif [ $USE_SYSTEMD -eq 1 ]; then
 	service hyperion stop 2>/dev/null
 	SERVICEP="/etc/systemd/system"
@@ -95,12 +92,15 @@ elif [ $USE_SYSTEMD -eq 1 ]; then
 	#Bad workaround for Jessie (systemd) users that used the old official script for install
 	update-rc.d -f hyperion remove 2>/dev/null
 	rm /etc/init.d/hyperion 2>/dev/null
+elif [ $USE_SERVICE -eq 1 ]; then
+	/usr/sbin/service hyperion stop 2>/dev/null
+	SERVICEP="/etc/init.d"
 fi
 
 #Install dependencies for Hyperion and setup preperation
 if [ $OS_OPENELEC -ne 1 ]; then
 	echo '---> Install/Update Hyperion dependencies (This may take a while)'
-	apt-get -qq update && apt-get -qq --yes install libqtcore4 libqtgui4 libqt4-network libusb-1.0-0 ca-certificates libavahi-compat-libdnssd-dev libavahi-qt4-dev libavahi-core-dev
+	apt-get -qq update && apt-get -qq --yes install libqtcore4 libqtgui4 libqt4-network libusb-1.0-0 ca-certificates
 	mkdir /etc/hyperion 2>/dev/null
 fi
 
@@ -136,12 +136,15 @@ if [ -f "/opt/hyperion" ] && [ $OS_OPENELEC -ne 1 ]; then
 	sed -i "s|/opt/hyperion/effects|/usr/share/hyperion/effects|g" /etc/hyperion/*.json
 		if [ $USE_INITCTL -eq 1 ]; then
 			sed -i "s|/opt/hyperion/hyperion.config.json|/etc/hyperion/hyperion.config.json|g" $SERVICEP/hyperion.conf
+			initctl reload-configuration
 		elif [ $OS_OPENELEC -eq 1 ]; then
 			sleep 0
 		elif [ $USE_SYSTEMD -eq 1 ]; then
 			sed -i "s|/opt/hyperion/hyperion.config.json|/etc/hyperion/hyperion.config.json|g" $SERVICEP/hyperion.service
+			systemctl -q daemon-reload
 		elif [ $USE_SERVICE -eq 1 ]; then
 			sed -i "s|/opt/hyperion/hyperion.config.json|/etc/hyperion/hyperion.config.json|g" $SERVICEP/hyperion
+			update-rc.d hyperion defaults 98 02
 		fi
 fi
 
