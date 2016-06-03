@@ -77,6 +77,8 @@ private:
 
 	void setScreensaverMode(bool isOnScreensaver);
 
+	void setPauseMode(bool isOnPause);
+	
 	/// Set the video mode
 	void setVideoMode(VideoMode videoMode);
 
@@ -129,6 +131,9 @@ private:
 	/// Flag indicating if XBMC is on screensaver
 	bool _previousScreensaverMode;
 
+	/// Flag indicating if XBMC player is at pause
+	bool _previousPauseMode;
+	
 	/// Previous emitted grab mode
 	GrabbingMode _previousGrabbingMode;
 
