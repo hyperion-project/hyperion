@@ -23,7 +23,7 @@ fi
 #Set welcome message
 if [ $BETA -eq 1 ]; then
 	WMESSAGE="echo This script will update Hyperion to the latest BETA"
-else WMESSAGE="echo This script will install/update Hyperion Ambilight"
+else WMESSAGE="echo This script will install/update Hyperion Ambient Light"
 fi
 
 #Welcome message
@@ -135,14 +135,17 @@ if [ -f "/opt/hyperion" ]; then
 	mv /opt/hyperion/config/*.json /etc/hyperion 2>/dev/null 
 	sed -i "s|/opt/hyperion/effects|/usr/share/hyperion/effects|g" /etc/hyperion/*.json
 		if [ $USE_INITCTL -eq 1 ]; then
+			sed -i "s|/etc/hyperion.config.json|/etc/hyperion/hyperion.config.json|g" $SERVICEP/hyperion.conf
 			sed -i "s|/opt/hyperion/hyperion.config.json|/etc/hyperion/hyperion.config.json|g" $SERVICEP/hyperion.conf
 			initctl reload-configuration
 		elif [ $OS_OPENELEC -eq 1 ]; then
 			sleep 0
 		elif [ $USE_SYSTEMD -eq 1 ]; then
+			sed -i "s|/etc/hyperion.config.json|/etc/hyperion/hyperion.config.json|g" $SERVICEP/hyperion.service
 			sed -i "s|/opt/hyperion/hyperion.config.json|/etc/hyperion/hyperion.config.json|g" $SERVICEP/hyperion.service
 			systemctl -q daemon-reload
 		elif [ $USE_SERVICE -eq 1 ]; then
+			sed -i "s|/etc/hyperion.config.json|/etc/hyperion/hyperion.config.json|g" $SERVICEP/hyperion
 			sed -i "s|/opt/hyperion/hyperion.config.json|/etc/hyperion/hyperion.config.json|g" $SERVICEP/hyperion
 			update-rc.d hyperion defaults 98 02
 		fi
