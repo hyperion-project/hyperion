@@ -41,7 +41,7 @@ public:
 	/// @param grabScreensaver Whether or not to grab when the XBMC screensaver is activated
 	/// @param enable3DDetection Wheter or not to enable the detection of 3D movies playing
 	///
-	XBMCVideoChecker(const std::string & address, uint16_t port, bool grabVideo, bool grabPhoto, bool grabAudio, bool grabMenu, bool grabScreensaver, bool enable3DDetection);
+	XBMCVideoChecker(const std::string & address, uint16_t port, bool grabVideo, bool grabPhoto, bool grabAudio, bool grabMenu, bool grabScreensaver, bool grabPause, bool enable3DDetection);
 
 	///
 	/// Start polling XBMC
@@ -119,6 +119,9 @@ private:
 
 	/// Flag indicating whether or not to grab when the XBMC screensaver is activated
 	const bool _grabScreensaver;
+	
+	/// Flag indicating whether or not to grab when the XBMC videoplayer is at pause state
+	const bool _grabPause;
 
 	/// Flag indicating wheter or not to enable the detection of 3D movies playing
 	const bool _enable3DDetection;

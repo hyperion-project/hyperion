@@ -21,7 +21,7 @@
 // {"jsonrpc":"2.0","method":"GUI.GetProperties","params":{"properties":["stereoscopicmode"]},"id":669}
 // {"id":669,"jsonrpc":"2.0","result":{"stereoscopicmode":{"label":"Nebeneinander","mode":"split_vertical"}}}
 
-XBMCVideoChecker::XBMCVideoChecker(const std::string & address, uint16_t port, bool grabVideo, bool grabPhoto, bool grabAudio, bool grabMenu, bool grabScreensaver, bool enable3DDetection) :
+XBMCVideoChecker::XBMCVideoChecker(const std::string & address, uint16_t port, bool grabVideo, bool grabPhoto, bool grabAudio, bool grabMenu, bool grabScreensaver, bool grabPause, bool enable3DDetection) :
 	QObject(),
 	_address(QString::fromStdString(address)),
 	_port(port),
@@ -36,6 +36,7 @@ XBMCVideoChecker::XBMCVideoChecker(const std::string & address, uint16_t port, b
 	_grabAudio(grabAudio),
 	_grabMenu(grabMenu),
 	_grabScreensaver(grabScreensaver),
+	_grabPause(grabPause),
 	_enable3DDetection(enable3DDetection),
 	_previousScreensaverMode(false),
 	_previousGrabbingMode(GRABBINGMODE_INVALID),
@@ -72,6 +73,11 @@ void XBMCVideoChecker::receiveReply()
 		// the player has stopped
 		setGrabbingMode(_grabMenu ? GRABBINGMODE_MENU : GRABBINGMODE_OFF);
 		setVideoMode(VIDEO_2D);
+	}
+	else if (reply.contains("\"method\":\"Player.OnPause\""))
+	{
+		// player at pause
+		setPauseMode(!_grabPause);
 	}
 	else if (reply.contains("\"method\":\"GUI.OnScreensaverActivated\""))
 	{
@@ -285,6 +291,11 @@ void XBMCVideoChecker::setGrabbingMode(GrabbingMode newGrabbingMode)
 	{
 		emit grabbingMode(newGrabbingMode);
 	}
+	// only emit the new state when we want to grab in pause mode
+	if (!_previousPauseMode)
+	{
+		emit grabbingMode(newGrabbingMode);
+	}
 	_previousGrabbingMode = newGrabbingMode;
 }
 
@@ -298,6 +309,18 @@ void XBMCVideoChecker::setScreensaverMode(bool isOnScreensaver)
 
 	emit grabbingMode(isOnScreensaver ? GRABBINGMODE_OFF : _previousGrabbingMode);
 	_previousScreensaverMode = isOnScreensaver;
+}
+
+void XBMCVideoChecker::setPauseMode(bool isOnPause)
+{
+	if (isOnPause == _previousPauseMode)
+	{
+		// no change
+		return;
+	}
+
+	emit grabbingMode(isOnPause ? GRABBINGMODE_OFF : _previousGrabbingMode);
+	_previousPauseMode = isOnPause;
 }
 
 void XBMCVideoChecker::setVideoMode(VideoMode newVideoMode)
