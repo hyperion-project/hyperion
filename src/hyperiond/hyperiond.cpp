@@ -178,6 +178,7 @@ void startXBMCVideoChecker(const Json::Value &config, XBMCVideoChecker* xbmcVide
 			videoCheckerConfig["grabPictures"].asBool(),
 			videoCheckerConfig["grabAudio"].asBool(),
 			videoCheckerConfig["grabMenu"].asBool(),
+			videoCheckerConfig["grabPause"].asBool(),
 			videoCheckerConfig.get("grabScreensaver", true).asBool(),
 			videoCheckerConfig.get("enable3DDetection", true).asBool());
 
