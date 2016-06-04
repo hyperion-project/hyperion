@@ -3,7 +3,6 @@
 	"script" : "udp.py",
 	"args" :
 	{
-		"ListenPort" : 2801,
-		"ListenIP" : "239.255.28.01" 
+		"ListenPort" : 2391
 	}
 }
