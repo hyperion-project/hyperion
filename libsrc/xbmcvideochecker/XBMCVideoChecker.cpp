@@ -38,8 +38,8 @@ XBMCVideoChecker::XBMCVideoChecker(const std::string & address, uint16_t port, b
 	_grabScreensaver(grabScreensaver),
 	_grabPause(grabPause),
 	_enable3DDetection(enable3DDetection),
-	_previousPauseMode(false),
 	_previousScreensaverMode(false),
+	_previousPauseMode(false),
 	_previousGrabbingMode(GRABBINGMODE_INVALID),
 	_previousVideoMode(VIDEO_2D),
 	_xbmcVersion(0)
