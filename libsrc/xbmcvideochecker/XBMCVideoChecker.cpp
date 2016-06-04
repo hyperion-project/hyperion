@@ -39,7 +39,6 @@ XBMCVideoChecker::XBMCVideoChecker(const std::string & address, uint16_t port, b
 	_grabPause(grabPause),
 	_enable3DDetection(enable3DDetection),
 	_previousScreensaverMode(false),
-	_previousPauseMode(false),
 	_previousGrabbingMode(GRABBINGMODE_INVALID),
 	_previousVideoMode(VIDEO_2D),
 	_xbmcVersion(0)
@@ -78,7 +77,7 @@ void XBMCVideoChecker::receiveReply()
 	else if (reply.contains("\"method\":\"Player.OnPause\""))
 	{
 		// player at pause
-		setPauseMode(!_grabPause);
+		setGrabbingMode(_grabPause ? GRABBINGMODE_PAUSE : GRABBINGMODE_OFF);
 	}
 	else if (reply.contains("\"method\":\"GUI.OnScreensaverActivated\""))
 	{
@@ -279,6 +278,9 @@ void XBMCVideoChecker::setGrabbingMode(GrabbingMode newGrabbingMode)
 	case GRABBINGMODE_MENU:
 		std::cout << "KODICHECK INFO: switching to MENU mode" << std::endl;
 		break;
+	case GRABBINGMODE_PAUSE:
+		std::cout << "KODICHECK INFO: switching to PAUSE mode" << std::endl;
+		break;
 	case GRABBINGMODE_OFF:
 		std::cout << "KODICHECK INFO: switching to OFF mode" << std::endl;
 		break;
@@ -289,11 +291,6 @@ void XBMCVideoChecker::setGrabbingMode(GrabbingMode newGrabbingMode)
 
 	// only emit the new state when we want to grab in screensaver mode or when the screensaver is deactivated
 	if (!_previousScreensaverMode)
-	{
-		emit grabbingMode(newGrabbingMode);
-	}
-	// only emit the new state when we want to grab in pause mode
-	if (!_previousPauseMode)
 	{
 		emit grabbingMode(newGrabbingMode);
 	}
@@ -310,18 +307,6 @@ void XBMCVideoChecker::setScreensaverMode(bool isOnScreensaver)
 
 	emit grabbingMode(isOnScreensaver ? GRABBINGMODE_OFF : _previousGrabbingMode);
 	_previousScreensaverMode = isOnScreensaver;
-}
-
-void XBMCVideoChecker::setPauseMode(bool isOnPause)
-{
-	if (isOnPause == _previousPauseMode)
-	{
-		// no change
-		return;
-	}
-
-	emit grabbingMode(isOnPause ? GRABBINGMODE_OFF : _previousGrabbingMode);
-	_previousPauseMode = isOnPause;
 }
 
 void XBMCVideoChecker::setVideoMode(VideoMode newVideoMode)
