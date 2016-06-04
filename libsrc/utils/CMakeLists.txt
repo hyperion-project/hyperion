@@ -16,6 +16,11 @@ add_library(hyperion-utils
 	${CURRENT_HEADER_DIR}/Image.h
 	${CURRENT_HEADER_DIR}/Sleep.h
 
+	${CURRENT_HEADER_DIR}/Logger.h
+	${CURRENT_SOURCE_DIR}/Logger.cpp
+	${CURRENT_HEADER_DIR}/Profiler.h
+	${CURRENT_SOURCE_DIR}/Profiler.cpp
+
 	${CURRENT_HEADER_DIR}/PixelFormat.h
 	${CURRENT_HEADER_DIR}/VideoMode.h
 
