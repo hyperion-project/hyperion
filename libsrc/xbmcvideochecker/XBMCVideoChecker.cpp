@@ -21,7 +21,7 @@
 // {"jsonrpc":"2.0","method":"GUI.GetProperties","params":{"properties":["stereoscopicmode"]},"id":669}
 // {"id":669,"jsonrpc":"2.0","result":{"stereoscopicmode":{"label":"Nebeneinander","mode":"split_vertical"}}}
 
-XBMCVideoChecker::XBMCVideoChecker(const std::string & address, uint16_t port, bool grabVideo, bool grabPhoto, bool grabAudio, bool grabMenu, bool grabScreensaver, bool grabPause, bool enable3DDetection) :
+XBMCVideoChecker::XBMCVideoChecker(const std::string & address, uint16_t port, bool grabVideo, bool grabPhoto, bool grabAudio, bool grabMenu, bool grabPause, bool grabScreensaver, bool enable3DDetection) :
 	QObject(),
 	_address(QString::fromStdString(address)),
 	_port(port),
@@ -35,8 +35,8 @@ XBMCVideoChecker::XBMCVideoChecker(const std::string & address, uint16_t port, b
 	_grabPhoto(grabPhoto),
 	_grabAudio(grabAudio),
 	_grabMenu(grabMenu),
-	_grabScreensaver(grabScreensaver),
 	_grabPause(grabPause),
+	_grabScreensaver(grabScreensaver),
 	_enable3DDetection(enable3DDetection),
 	_previousScreensaverMode(false),
 	_previousGrabbingMode(GRABBINGMODE_INVALID),
