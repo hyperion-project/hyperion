@@ -10,7 +10,7 @@
 #endif
 
 // profiler
-#define PROFILER_BLOCK_EXECUTION_TIME() Profiler DEBUG_PROFILE_BLOCK_EXECUTION_TIME_messure_object(__FILE__, _FUNCNAME_, __LINE__ );
+#define PROFILER_BLOCK_EXECUTION_TIME Profiler DEBUG_PROFILE__BLOCK__EXECUTION__TIME_messure_object(__FILE__, _FUNCNAME_, __LINE__ );
 #define PROFILER_TIMER_START(stopWatchName)   Profiler::TimerStart(stopWatchName, __FILE__, _FUNCNAME_, __LINE__);
 #define PROFILER_TIMER_GET(stopWatchName)    Profiler::TimerGetTime(stopWatchName, __FILE__, _FUNCNAME_, __LINE__);
 #define PROFILER_TIMER_GET_IF(condition, stopWatchName) { if (condition) {Profiler::TimerGetTime(stopWatchName, __FILE__, _FUNCNAME_, __LINE__);} }
@@ -19,7 +19,7 @@
 class Profiler
 {
 public:
-	Profiler(Logger *logger, const char* sourceFile, const char* func, unsigned int line);
+	Profiler(const char* sourceFile, const char* func, unsigned int line);
 	~Profiler();
 
 	static void TimerStart(const std::string stopWatchName, const char* sourceFile, const char* func, unsigned int line);

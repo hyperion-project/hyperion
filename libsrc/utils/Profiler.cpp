@@ -17,7 +17,7 @@ Logger* Profiler::_logger = nullptr;
 
 
 
-std::string getBaseName( std::string sourceFile)
+std::string profiler_getBaseName( std::string sourceFile)
 {
 	QFileInfo fi( sourceFile.c_str() );
 	return fi.fileName().toStdString();
@@ -30,7 +30,7 @@ double getClockDelta(clock_t start)
 
 
 
-Profiler::Profiler(Logger *logger, const char* sourceFile, const char* func, unsigned int line) :
+Profiler::Profiler(const char* sourceFile, const char* func, unsigned int line) :
 	_file(sourceFile),
 	_func(func),
 	_line(line),
@@ -71,7 +71,7 @@ void Profiler::TimerStart(const std::string timerName, const char* sourceFile, c
 		else
 		{
 			_logger->Message(Logger::DEBUG, sourceFile, func, line, "ERROR timer '%s' started in multiple locations. First occurence %s:%d:%s()",
-			                 timerName.c_str(), getBaseName(ret.first->second.sourceFile).c_str(), ret.first->second.line, ret.first->second.func );
+			                 timerName.c_str(), profiler_getBaseName(ret.first->second.sourceFile).c_str(), ret.first->second.line, ret.first->second.func );
 		}
 	}
 	else
@@ -88,7 +88,7 @@ void Profiler::TimerGetTime(const std::string timerName, const char* sourceFile,
 	if (ret != GlobalProfilerMap.end())
 	{
 		_logger->Message(Logger::DEBUG, sourceFile, func, line, "timer '%s' started at %s:%d:%s() took %f s execution time until here", timerName.c_str(),
-		                 getBaseName(ret->second.sourceFile).c_str(), ret->second.line, ret->second.func, getClockDelta(ret->second.startTime) );
+		                 profiler_getBaseName(ret->second.sourceFile).c_str(), ret->second.line, ret->second.func, getClockDelta(ret->second.startTime) );
 	}
 	else
 	{
