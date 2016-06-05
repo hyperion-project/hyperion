@@ -1,3 +1,4 @@
+#include "HyperionConfig.h"
 #include "utils/Profiler.h"
 
 #include <QFileInfo>

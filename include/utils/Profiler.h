@@ -5,6 +5,9 @@
 #include <time.h>
 #include <map>
 
+#ifndef ENABLE_PROFILER
+	#error "Profiler is not for productive code, enable it via cmake or remove header include"
+#endif
 
 // profiler
 #define PROFILER_BLOCK_EXECUTION_TIME() Profiler DEBUG_PROFILE_BLOCK_EXECUTION_TIME_messure_object(__FILE__, _FUNCNAME_, __LINE__ );
