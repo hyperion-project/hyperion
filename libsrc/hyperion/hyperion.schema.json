@@ -288,7 +288,7 @@
                     "type" : "boolean",
                     "required" : true
                 },
-				"grabPause" : {
+		"grabPause" : {
                     "type" : "boolean",
                     "required" : false
                 },
