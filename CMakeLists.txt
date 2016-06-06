@@ -4,7 +4,9 @@ project(hyperion)
 # define the minimum cmake version (as required by cmake)
 cmake_minimum_required(VERSION 2.8)
 
-#set(CMAKE_TOOLCHAIN_FILE /opt/raspberrypi/Toolchain-RaspberryPi.cmake)
+IF ( POLICY CMP0026 )
+	CMAKE_POLICY( SET CMP0026 OLD )
+ENDIF()
 
 
 SET ( DEFAULT_AMLOGIC    OFF )
@@ -55,8 +57,6 @@ message(STATUS "ENABLE_FB = " ${ENABLE_FB})
 option(ENABLE_OSX "Enable the osx grabber" ${DEFAULT_OSX} )
 message(STATUS "ENABLE_OSX = " ${ENABLE_OSX})
 
-set(ENABLE_PROTOBUF  ON)
-
 option(ENABLE_SPIDEV   "Enable the SPIDEV device" ${DEFAULT_SPIDEV} )
 message(STATUS "ENABLE_SPIDEV   = " ${ENABLE_SPIDEV})
 
@@ -80,6 +80,9 @@ message(STATUS "ENABLE_QT5 = " ${ENABLE_QT5})
 
 option(ENABLE_TESTS "Compile additional test applications" OFF)
 message(STATUS "ENABLE_TESTS = " ${ENABLE_TESTS})
+
+option(ENABLE_PROFILER "enable profiler capabilities - not for release code" OFF)
+message(STATUS "ENABLE_PROFILER = " ${ENABLE_PROFILER})
 
 
 if(ENABLE_FB AND ENABLE_DISPMANX)
