@@ -1,0 +1,8 @@
+{
+	"name" : "xmas2",
+	"script" : "xmas2.py",
+	"args" :
+	{
+		"sleepTime" : 0.75
+	}
+}

@@ -1,0 +1,14 @@
+{
+	"name" : "Clock Hands",
+	"script" : "clock.py",
+	"args" :
+	{
+		"sleep_time" : 0.1,
+		"img_width" : 64,
+		"img_height" : 36,
+		"hour_color" : [0,0,96],
+		"minute_color" : [96,96,0],
+		"second_color" : [96,0,0],
+		"clock_style"	: "hands"
+	}
+}
