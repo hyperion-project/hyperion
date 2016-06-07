@@ -166,7 +166,7 @@ void startBootsequence(const Json::Value &config, Hyperion &hyperion)
 
 
 // create XBMC video checker if the configuration is present
-void startXBMCVideoChecker(const Json::Value &config, XBMCVideoChecker* xbmcVideoChecker)
+void startXBMCVideoChecker(const Json::Value &config, XBMCVideoChecker* &xbmcVideoChecker)
 {
 	if (config.isMember("xbmcVideoChecker"))
 	{
@@ -186,7 +186,7 @@ void startXBMCVideoChecker(const Json::Value &config, XBMCVideoChecker* xbmcVide
 	}
 }
 
-void startNetworkServices(const Json::Value &config, Hyperion &hyperion, JsonServer* jsonServer, ProtoServer* protoServer, BoblightServer* boblightServer)
+void startNetworkServices(const Json::Value &config, Hyperion &hyperion, JsonServer* &jsonServer, ProtoServer* &protoServer, BoblightServer* &boblightServer)
 {
 	// Create Json server if configuration is present
 	if (config.isMember("jsonServer"))
@@ -194,6 +194,7 @@ void startNetworkServices(const Json::Value &config, Hyperion &hyperion, JsonSer
 		const Json::Value & jsonServerConfig = config["jsonServer"];
 		jsonServer = new JsonServer(&hyperion, jsonServerConfig["port"].asUInt());
 		std::cout << "INFO: Json server created and started on port " << jsonServer->getPort() << std::endl;
+
 #ifdef ENABLE_ZEROCONF
 		const Json::Value & deviceConfig = config["device"];
 		const std::string deviceName = deviceConfig.get("name", "").asString();
@@ -215,6 +216,7 @@ void startNetworkServices(const Json::Value &config, Hyperion &hyperion, JsonSer
 		const Json::Value & protoServerConfig = config["protoServer"];
 		protoServer = new ProtoServer(&hyperion, protoServerConfig["port"].asUInt() );
 		std::cout << "INFO: Proto server created and started on port " << protoServer->getPort() << std::endl;
+
 #ifdef ENABLE_ZEROCONF
 		const Json::Value & deviceConfig = config["device"];
 		const std::string deviceName = deviceConfig.get("name", "").asString();
@@ -240,7 +242,7 @@ void startNetworkServices(const Json::Value &config, Hyperion &hyperion, JsonSer
 }
 
 #ifdef ENABLE_DISPMANX
-void startGrabberDispmanx(const Json::Value &config, Hyperion &hyperion, ProtoServer * protoServer, XBMCVideoChecker* xbmcVideoChecker, DispmanxWrapper * dispmanx)
+void startGrabberDispmanx(const Json::Value &config, Hyperion &hyperion, ProtoServer* &protoServer, XBMCVideoChecker* &xbmcVideoChecker, DispmanxWrapper* &dispmanx)
 {
 	// Construct and start the frame-grabber if the configuration is present
 	if (config.isMember("framegrabber"))
@@ -273,7 +275,7 @@ void startGrabberDispmanx(const Json::Value &config, Hyperion &hyperion, ProtoSe
 #endif
 
 #ifdef ENABLE_V4L2
-void startGrabberV4L2(const Json::Value &config, Hyperion &hyperion, ProtoServer * protoServer, V4L2Wrapper * v4l2Grabber )
+void startGrabberV4L2(const Json::Value &config, Hyperion &hyperion, ProtoServer* &protoServer, V4L2Wrapper* &v4l2Grabber )
 {
 	// construct and start the v4l2 grabber if the configuration is present
 	if (config.isMember("grabber-v4l2"))
@@ -310,7 +312,7 @@ void startGrabberV4L2(const Json::Value &config, Hyperion &hyperion, ProtoServer
 #endif
 
 #ifdef ENABLE_AMLOGIC
-void startGrabberAmlogic(const Json::Value &config, Hyperion &hyperion, ProtoServer * protoServer, XBMCVideoChecker* xbmcVideoChecker, AmlogicWrapper * amlGrabber)
+void startGrabberAmlogic(const Json::Value &config, Hyperion &hyperion, ProtoServer* &protoServer, XBMCVideoChecker* &xbmcVideoChecker, AmlogicWrapper* &amlGrabber)
 {
 	// Construct and start the framebuffer grabber if the configuration is present
 	if (config.isMember("amlgrabber"))
@@ -339,7 +341,7 @@ void startGrabberAmlogic(const Json::Value &config, Hyperion &hyperion, ProtoSer
 
 
 #ifdef ENABLE_FB
-void startGrabberFramebuffer(const Json::Value &config, Hyperion &hyperion, ProtoServer * protoServer, XBMCVideoChecker* xbmcVideoChecker, FramebufferWrapper * fbGrabber)
+void startGrabberFramebuffer(const Json::Value &config, Hyperion &hyperion, ProtoServer* &protoServer, XBMCVideoChecker* &xbmcVideoChecker, FramebufferWrapper* &fbGrabber)
 {
 	// Construct and start the framebuffer grabber if the configuration is present
 	if (config.isMember("framebuffergrabber") || config.isMember("framegrabber"))
@@ -369,7 +371,7 @@ void startGrabberFramebuffer(const Json::Value &config, Hyperion &hyperion, Prot
 
 
 #ifdef ENABLE_OSX
-void startGrabberOsx(const Json::Value &config, Hyperion &hyperion, ProtoServer * protoServer, XBMCVideoChecker* xbmcVideoChecker, OsxWrapper * osxGrabber)
+void startGrabberOsx(const Json::Value &config, Hyperion &hyperion, ProtoServer* &protoServer, XBMCVideoChecker* &xbmcVideoChecker, OsxWrapper* &osxGrabber)
 {
 	// Construct and start the osx grabber if the configuration is present
 	if (config.isMember("osxgrabber") || config.isMember("framegrabber"))
@@ -471,7 +473,6 @@ int main(int argc, char** argv)
 	ProtoServer * protoServer = nullptr;
 	BoblightServer * boblightServer = nullptr;
 	startNetworkServices(config, hyperion, jsonServer, protoServer, boblightServer);
-
 
 // ---- grabber -----
 
