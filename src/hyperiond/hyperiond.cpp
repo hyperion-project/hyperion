@@ -187,7 +187,7 @@ void startXBMCVideoChecker(const Json::Value &config, XBMCVideoChecker* &xbmcVid
 	}
 }
 
-void startNetworkServices(const Json::Value &config, Hyperion &hyperion, JsonServer* &jsonServer, ProtoServer* &protoServer, BoblightServer* &boblightServer)
+void startNetworkServices(const Json::Value &config, Hyperion &hyperion, JsonServer* &jsonServer, ProtoServer* &protoServer, BoblightServer* &boblightServer, XBMCVideoChecker* &xbmcVideoChecker)
 {
 	// Create Json server if configuration is present
 	if (config.isMember("jsonServer"))
@@ -478,7 +478,7 @@ int main(int argc, char** argv)
 	JsonServer * jsonServer = nullptr;
 	ProtoServer * protoServer = nullptr;
 	BoblightServer * boblightServer = nullptr;
-	startNetworkServices(config, hyperion, jsonServer, protoServer, boblightServer);
+	startNetworkServices(config, hyperion, jsonServer, protoServer, boblightServer, xbmcVideoChecker);
 
 // ---- grabber -----
 
