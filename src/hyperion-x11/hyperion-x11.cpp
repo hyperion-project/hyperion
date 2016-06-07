@@ -23,13 +23,10 @@ void saveScreenshot(const char * filename, const Image<ColorRgb> & image)
 
 int main(int argc, char ** argv)
 {
-	{
-	PROFILER_BLOCK_EXECUTION_TIME;
-	}
-  std::cout
-	<< "hyperion-x11:" << std::endl
-	<< "\tversion   : " << HYPERION_VERSION_ID << std::endl
-	<< "\tbuild time: " << __DATE__ << " " << __TIME__ << std::endl;
+	 std::cout
+		<< "hyperion-x11:" << std::endl
+		<< "\tversion   : " << HYPERION_VERSION_ID << std::endl
+		<< "\tbuild time: " << __DATE__ << " " << __TIME__ << std::endl;
 
 	QCoreApplication app(argc, argv);
 
