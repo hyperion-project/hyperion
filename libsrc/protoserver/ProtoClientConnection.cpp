@@ -89,7 +89,6 @@ void ProtoClientConnection::setGrabbingMode(const GrabbingMode mode)
 	gMode.set_grabbing(grabbing_mode);
 
 	// send message
-	std::cout << "GrabbingMode = " << grabbing_mode << std::endl;
 	sendMessage(gMode);
 }
 
@@ -103,7 +102,6 @@ void ProtoClientConnection::setVideoMode(const VideoMode videoMode)
 	vMode.set_grabbing(video_Mode);
 
 	// send message
-	std::cout << "VideoMode = " << video_Mode << std::endl;
 	sendMessage(vMode);
 }
 
