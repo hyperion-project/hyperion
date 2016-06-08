@@ -9,6 +9,7 @@
 #include "protoserver/ProtoConnectionWrapper.h"
 #include "X11Wrapper.h"
 #include "HyperionConfig.h"
+#include "utils/Profiler.h"
 
 using namespace vlofgren;
 
@@ -22,10 +23,10 @@ void saveScreenshot(const char * filename, const Image<ColorRgb> & image)
 
 int main(int argc, char ** argv)
 {
-  std::cout
-	<< "hyperion-x11:" << std::endl
-	<< "\tversion   : " << HYPERION_VERSION_ID << std::endl
-	<< "\tbuild time: " << __DATE__ << " " << __TIME__ << std::endl;
+	 std::cout
+		<< "hyperion-x11:" << std::endl
+		<< "\tversion   : " << HYPERION_VERSION_ID << std::endl
+		<< "\tbuild time: " << __DATE__ << " " << __TIME__ << std::endl;
 
 	QCoreApplication app(argc, argv);
 
@@ -103,6 +104,10 @@ int main(int argc, char ** argv)
 
 			// Connect the screen capturing to the proto processing
 			QObject::connect(&x11Wrapper, SIGNAL(sig_screenshot(const Image<ColorRgb> &)), &protoWrapper, SLOT(receiveImage(Image<ColorRgb>)));
+			
+			// Connect the XBMC Video Checker to the proto processing
+			QObject::connect(&protoWrapper, SIGNAL(setGrabbingMode(GrabbingMode)), &x11Wrapper, SLOT(setGrabbingMode(GrabbingMode)));
+			QObject::connect(&protoWrapper, SIGNAL(setVideoMode(VideoMode)), &x11Wrapper, SLOT(setVideoMode(VideoMode)));
 
 			// Start the capturing
 			x11Wrapper.start();

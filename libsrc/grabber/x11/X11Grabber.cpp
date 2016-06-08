@@ -40,6 +40,11 @@ X11Grabber::~X11Grabber()
 	}
 }
 
+void X11Grabber::setVideoMode(const VideoMode videoMode)
+{
+	_imageResampler.set3D(videoMode);
+}
+
 void X11Grabber::freeResources()
 {
 	// Cleanup allocated resources of the X11 grab
@@ -187,7 +192,7 @@ int X11Grabber::updateScreenDimensions()
 	
 	_croppedHeight =  (_screenHeight > unsigned(_cropTop + _cropBottom))
 		? (_screenHeight - _cropTop - _cropBottom)
-		: (_croppedHeight = _screenHeight);
+		: _screenHeight;
 
 	std::cout << "X11GRABBER INFO: Using ";
 
