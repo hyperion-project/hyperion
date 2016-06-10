@@ -594,7 +594,7 @@ void JsonClientConnection::handleServerInfoCommand(const Json::Value &)
 	}
 
 	// Add Hyperion Version, build time
-	Json::Value & version = info["hyperion_build"] = Json::Value(Json:arrayValue);
+	Json::Value & version = info["hyperion_build"] = Json::Value(Json::arrayValue);
 	Json::Value ver;
 	ver["version"] = HYPERION_VERSION_ID;
 	ver["time"] = __DATE__" "__TIME__;
