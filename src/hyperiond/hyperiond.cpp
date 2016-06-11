@@ -69,6 +69,15 @@
 
 using namespace vlofgren;
 
+// ProtoServer includes
+#include <protoserver/ProtoServer.h>
+
+// BoblightServer includes
+#include <boblightserver/BoblightServer.h>
+#include <sys/prctl.h> 
+
+using namespace vlofgren;
+
 void signal_handler(const int signum)
 {
 	QCoreApplication::quit();

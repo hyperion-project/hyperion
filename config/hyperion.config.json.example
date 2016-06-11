@@ -155,6 +155,7 @@
 
 	/// The configuration of the effect engine, contains the following items: 
 	///  * paths		: An array with absolute location(s) of directories with effects 
+
 	"effects" : 
 	{
 		"paths" : 

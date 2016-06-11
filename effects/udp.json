@@ -1,0 +1,8 @@
+{
+	"name" : "UDP listener",
+	"script" : "udp.py",
+	"args" :
+	{
+		"ListenPort" : 2391
+	}
+}

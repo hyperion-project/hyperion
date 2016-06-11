@@ -1,5 +1,6 @@
 // Python includes
 #include <Python.h>
+#include <HyperionConfig.h>
 
 // Stl includes
 #include <fstream>
@@ -136,11 +137,11 @@ bool EffectEngine::loadEffectDefinition(const std::string &path, const std::stri
 
 	// setup the definition
 	effectDefinition.name = config["name"].asString();
-#ifdef ENABLE_QT5
+	#ifdef ENABLE_Qt5
 	effectDefinition.script = path + QDir::separator().toLatin1() + config["script"].asString();
-#else
+	#else
 	effectDefinition.script = path + QDir::separator().toAscii() + config["script"].asString();
-#endif
+	#endif
 	effectDefinition.args = config["args"];
 
 	// return succes //BLACKLIST OUTPUT TO LOG (Spam). This is more a effect development thing and the list gets longer and longer
