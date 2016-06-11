@@ -41,7 +41,7 @@ endif()
 
 
 install ( TARGETS hyperiond DESTINATION "bin" COMPONENT ambilight )
-install ( DIRECTORY ${CMAKE_SOURCE_DIR}/effects     DESTINATION "share/hyperion/" COMPONENT  ambilight )
+install ( DIRECTORY ${CMAKE_SOURCE_DIR}/assets/effects     DESTINATION "share/hyperion/" COMPONENT  ambilight )
 install ( DIRECTORY ${CMAKE_SOURCE_DIR}/bin/service DESTINATION "share/hyperion/" COMPONENT  ambilight )
 install ( DIRECTORY ${CMAKE_SOURCE_DIR}/config      DESTINATION "share/hyperion/" COMPONENT  ambilight )
 install ( DIRECTORY ${CMAKE_SOURCE_DIR}/assets/webconfig      DESTINATION "share/hyperion/" COMPONENT  ambilight )
