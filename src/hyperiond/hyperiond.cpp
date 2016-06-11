@@ -65,8 +65,7 @@
 #include <webconfig/WebConfig.h>
 
 #include <sys/prctl.h> 
-
-
+#include <utils/logger.h>
 
 using namespace vlofgren;
 
@@ -232,11 +231,11 @@ void startNetworkServices(const Json::Value &config, Hyperion &hyperion, JsonSer
 		const Json::Value & webconfigConfig = config["webConfig"];
 		webconfigEnable = webconfigConfig.get("enable", true).asBool();
 		webconfigPort   = webconfigConfig.get("port", 80).asUInt();
-		webconfigPath   = webconfigConfig.get("document_root", 80).asUInt();
+		webconfigPath   = webconfigConfig.get("document_root", "/usr/share/hyperion/webconfig").asString();
 	}
 
 	webConfig = new WebConfig(webconfigPath, webconfigPort, parent);
-	if ( webconfigEnable )
+	if ( webconfigEnable ) 
 		webConfig->start();
 #endif
 
