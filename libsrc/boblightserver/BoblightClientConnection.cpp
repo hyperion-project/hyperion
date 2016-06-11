@@ -20,6 +20,7 @@
 
 // project includes
 #include "BoblightClientConnection.h"
+#include "HyperionConfig.h"
 
 BoblightClientConnection::BoblightClientConnection(QTcpSocket *socket, const int priority, Hyperion * hyperion) :
 	QObject(),
