@@ -9,8 +9,11 @@ target_link_libraries(hyperiond
 		effectengine
 		jsonserver
 		boblightserver
-		 protoserver
+		protoserver
 )
+if (ENABLE_QT5)
+	target_link_libraries(hyperiond webconfig)
+endif ()
 
 if (ENABLE_DISPMANX)
 	target_link_libraries(hyperiond dispmanx-grabber)
@@ -35,6 +38,7 @@ endif ()
 if (ENABLE_ZEROCONF)
 	target_link_libraries(hyperiond bonjour)
 endif()
+
 
 install ( TARGETS hyperiond DESTINATION "bin" COMPONENT ambilight )
 install ( DIRECTORY ${CMAKE_SOURCE_DIR}/effects     DESTINATION "share/hyperion/" COMPONENT  ambilight )

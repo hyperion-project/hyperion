@@ -58,15 +58,15 @@
 #include <QHostInfo>
 #endif
 
-// JsonServer includes
+// network servers
 #include <jsonserver/JsonServer.h>
-
-// ProtoServer includes
 #include <protoserver/ProtoServer.h>
-
-// BoblightServer includes
 #include <boblightserver/BoblightServer.h>
+#include <webconfig/WebConfig.h>
+
 #include <sys/prctl.h> 
+
+
 
 using namespace vlofgren;
 
@@ -187,7 +187,11 @@ void startXBMCVideoChecker(const Json::Value &config, XBMCVideoChecker* &xbmcVid
 	}
 }
 
+#ifdef ENABLE_QT5
+void startNetworkServices(const Json::Value &config, Hyperion &hyperion, JsonServer* &jsonServer, ProtoServer* &protoServer, BoblightServer* &boblightServer, WebConfig* &webConfig, XBMCVideoChecker* &xbmcVideoChecker, QObject* parent)
+#else
 void startNetworkServices(const Json::Value &config, Hyperion &hyperion, JsonServer* &jsonServer, ProtoServer* &protoServer, BoblightServer* &boblightServer, XBMCVideoChecker* &xbmcVideoChecker)
+#endif
 {
 	// Create Json server if configuration is present
 	unsigned int jsonPort = 19444;
@@ -217,6 +221,24 @@ void startNetworkServices(const Json::Value &config, Hyperion &hyperion, JsonSer
 		QObject::connect(xbmcVideoChecker, SIGNAL(videoMode(VideoMode)), protoServer, SIGNAL(videoMode(VideoMode)));
 	}
 	std::cout << "INFO: Proto server created and started on port " << protoServer->getPort() << std::endl;
+
+#ifdef ENABLE_QT5
+	// webconfig server
+	std::string webconfigPath = "/usr/share/hyperion/webconfig";
+	quint16 webconfigPort = 80;
+	bool webconfigEnable = true; 
+	if (config.isMember("webConfig"))
+	{
+		const Json::Value & webconfigConfig = config["webConfig"];
+		webconfigEnable = webconfigConfig.get("enable", true).asBool();
+		webconfigPort   = webconfigConfig.get("port", 80).asUInt();
+		webconfigPath   = webconfigConfig.get("document_root", 80).asUInt();
+	}
+
+	webConfig = new WebConfig(webconfigPath, webconfigPort, parent);
+	if ( webconfigEnable )
+		webConfig->start();
+#endif
 
 #ifdef ENABLE_ZEROCONF
 	const Json::Value & deviceConfig = config["device"];
@@ -492,7 +514,12 @@ int main(int argc, char** argv)
 	JsonServer * jsonServer = nullptr;
 	ProtoServer * protoServer = nullptr;
 	BoblightServer * boblightServer = nullptr;
+#ifdef ENABLE_QT5
+	WebConfig * webConfig = nullptr;
+	startNetworkServices(config, hyperion, jsonServer, protoServer, boblightServer, webConfig, xbmcVideoChecker, &app);
+#else
 	startNetworkServices(config, hyperion, jsonServer, protoServer, boblightServer, xbmcVideoChecker);
+#endif
 
 // ---- grabber -----
 
