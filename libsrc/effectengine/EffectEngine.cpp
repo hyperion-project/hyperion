@@ -1,6 +1,5 @@
 // Python includes
 #include <Python.h>
-#include <HyperionConfig.h>
 
 // Stl includes
 #include <fstream>
@@ -17,6 +16,7 @@
 // effect engine includes
 #include <effectengine/EffectEngine.h>
 #include "Effect.h"
+#include "HyperionConfig.h"
 
 EffectEngine::EffectEngine(Hyperion * hyperion, const Json::Value & jsonEffectConfig) :
 	_hyperion(hyperion),
@@ -137,7 +137,7 @@ bool EffectEngine::loadEffectDefinition(const std::string &path, const std::stri
 
 	// setup the definition
 	effectDefinition.name = config["name"].asString();
-	#ifdef ENABLE_Qt5
+	#ifdef ENABLE_QT5
 	effectDefinition.script = path + QDir::separator().toLatin1() + config["script"].asString();
 	#else
 	effectDefinition.script = path + QDir::separator().toAscii() + config["script"].asString();
