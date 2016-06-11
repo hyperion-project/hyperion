@@ -56,10 +56,10 @@ void StaticFileServing::onRequestNeedsReply (QtHttpRequest * request, QtHttpRepl
 	if (command == QStringLiteral ("GET"))
 	{
 		QString path = request->getUrl ().path ();
-		QFile file (m_baseUrl % "/" % path);
 		if ( path == "/" || path.isEmpty() || ! QFile::exists(m_baseUrl % "/" % path) )
-			path = "/index.html";
+			path = "index.html";
 
+		QFile file (m_baseUrl % "/" % path);
 		if (file.exists ())
 		{
 			QMimeType mime = m_mimeDb->mimeTypeForFile (file.fileName ());
@@ -71,7 +71,7 @@ void StaticFileServing::onRequestNeedsReply (QtHttpRequest * request, QtHttpRepl
 			}
 			else
 			{
-				printErrorToReply (reply, "Requested file " % path % " couldn't be open for reading !");
+				printErrorToReply (reply, "Requested file " % m_baseUrl % "/" % path % " couldn't be open for reading !");
 			}
 		}
 		else
