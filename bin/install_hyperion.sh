@@ -50,7 +50,7 @@ if [ $CPU_RPI -ne 1 ] && [ $CPU_IMX6 -ne 1 ] && [ $CPU_WETEK -ne 1 ] && [ $CPU_X
 	exit 1
 fi
 
-#Check which RPi we are one (in case)
+#Check which RPi we are on (in case)
 RPI_1=`grep -m1 -c BCM2708 /proc/cpuinfo`
 RPI_2=`grep -m1 -c BCM2709 /proc/cpuinfo`
 RPI_3=`grep -m1 -c BCM2710 /proc/cpuinfo`
