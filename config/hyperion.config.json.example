@@ -180,8 +180,8 @@
 	"webConfig" :
 	{
 		"enable" : true,
-		"document_root: "/usr/share/hyperion/webconfig",
-		"port" : 80,
+		"document_root" : "/usr/share/hyperion/webconfig",
+		"port" : 80
 	},
 
 	/// The configuration of the Json/Proto forwarder. Forward messages to multiple instances of Hyperion on same and/or other hosts 
