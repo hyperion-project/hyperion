@@ -28,7 +28,7 @@ private:
 	StaticFileServing*   _server;
 
 	const std::string    WEBCONFIG_DEFAULT_PATH = "/usr/share/hyperion/webconfig";
-	const quint16        WEBCONFIG_DEFAULT_PORT = 8080;
+	const quint16        WEBCONFIG_DEFAULT_PORT = 8099;
 };
 
 #endif // WEBCONFIG_H
