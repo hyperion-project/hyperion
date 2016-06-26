@@ -2,6 +2,9 @@
 sudo apt-get update
 sudo apt-get install git cmake build-essential libQt4-dev libusb-1.0-0-dev python-dev libxrender-dev
 
+# Arch/ALARM dependencies
+sudo pacman -S --needed git cmake base-devel qt4 libusb libxrender
+
 # RPI ONLY: when you build on the rapberry pi and include the dispmanx grabber (which is the default) 
 # you also need the firmware including headers installed. This downloads the firmware from the raspberrypi github
 # and copies the required files to the correct place. The firmware directory can be deleted afterwards if desired.
@@ -45,10 +48,7 @@ sudo brew install cmake
 cmake -DENABLE_DISPMANX=OFF -DENABLE_SPIDEV=OFF -DENABLE_V4L2=OFF -DENABLE_OSX=ON ..
 
 # run make to build Hyperion
-make
-# or if you have a system with more then 1 cpu core
-make -j 4
-# "4" is  the number of cpu cores (e.g. 4 on RPi2 and RPi3), this makes compile faster
+make -j $(nproc)
 
 #after compile, to remove any stuff not needed for a release version.
 strip bin/*
