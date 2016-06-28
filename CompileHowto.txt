@@ -3,7 +3,7 @@ sudo apt-get update
 sudo apt-get install git cmake build-essential libQt4-dev libusb-1.0-0-dev python-dev libxrender-dev
 
 # Arch/ALARM dependencies
-sudo pacman -S --needed git cmake base-devel qt4 libusb libxrender
+sudo pacman -S --needed git cmake base-devel qt4 libusb libxrender icu
 
 # RPI ONLY: when you build on the rapberry pi and include the dispmanx grabber (which is the default) 
 # you also need the firmware including headers installed. This downloads the firmware from the raspberrypi github
