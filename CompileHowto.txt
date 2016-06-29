@@ -29,7 +29,7 @@ cd "$HYPERION_DIR/build"
 # run cmake to generate make files on the raspberry pi WITHOUT PWM SUPPORT
 cmake -DCMAKE_BUILD_TYPE=Release -DPLATFORM="rpi" -Wno-dev ..
 # run cmake to generate make files on the raspberry pi WITH PWM SUPPORT
-cmake -DENABLE_WS2812BPWM=ON -DENABLE_WS281XPWM=ON -DCMAKE_BUILD_TYPE=Release  -DPLATFORM="rpi" -Wno-dev ..
+cmake -DCMAKE_BUILD_TYPE=Release  -DPLATFORM="rpi-pwm" -Wno-dev ..
 # or if you are not compiling on the raspberry pi (e.g. OrangePi) and need to disable the Dispmanx grabber and support for spi devices
 cmake -DENABLE_DISPMANX=OFF -DENABLE_SPIDEV=OFF -DENABLE_X11=ON -DCMAKE_BUILD_TYPE=Release -Wno-dev ..
 # on amlogic platforms
