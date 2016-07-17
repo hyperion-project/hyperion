@@ -41,12 +41,26 @@ qt5_use_modules(bonjour Widgets Network)
 endif(ENABLE_QT5)
 
 target_link_libraries(bonjour
+		hyperion
+		hyperion-utils
+	${QT_LIBRARIES})
+
+set(USE_SHARED_AVAHI_LIBS ${DEFAULT_USE_SHARED_AVAHI_LIBS} CACHE BOOL "use avahi libraries from system")
+
+if (USE_SHARED_AVAHI_LIBS)
+	target_link_libraries(bonjour
+		dns_sd
+		avahi-client
+		avahi-common
+		avahi-core
+#		avahi-qt4
+		dbus-1)
+else ()
+	target_link_libraries(bonjour
 		libdns_sd.a
 		libavahi-client.a
 		libavahi-common.a
 		libavahi-core.a
-		libavahi-qt4.a
-		libdbus-1.a
-		hyperion
-		hyperion-utils
-        ${QT_LIBRARIES})
+#		libavahi-qt4.a
+		libdbus-1.a)
+endif ()
