@@ -299,7 +299,7 @@ echo '---> Starting Hyperion'
 if [ $OS_OPENELEC -eq 1 ]; then
 	/storage/.config/autostart.sh > /dev/null 2>&1 &
 elif [ $USE_SYSTEMD -eq 1 ]; then
-	service hyperion start
+	systemctl start hyperion
 elif [ $USE_INITCTL -eq 1 ]; then
 	/sbin/initctl start hyperion
 elif [ $USE_SERVICE -eq 1 ]; then
