@@ -24,7 +24,7 @@ public:
 	/// @param LedUpdatFrequency The frequency at which the leds will be updated (Hz)
 	/// @param settingTime The time after which the updated led values have been fully applied (sec)
 	/// @param updateDelay The number of frames to delay outgoing led updates
-	LinearColorSmoothing(LedDevice *ledDevice, double ledUpdateFrequency, int settlingTime, unsigned updateDelay);
+	LinearColorSmoothing(LedDevice *ledDevice, double ledUpdateFrequency, int settlingTime, unsigned updateDelay, bool continuousOutput);
 
 	/// Destructor
 	virtual ~LinearColorSmoothing();
@@ -82,4 +82,7 @@ private:
 
 	// prevent sending data to device when no intput data is sent
 	bool _writeToLedsEnable;
+
+	/// Flag for dis/enable continuous output to led device regardless there is new data or not
+	bool _continuousOutput;
 };
