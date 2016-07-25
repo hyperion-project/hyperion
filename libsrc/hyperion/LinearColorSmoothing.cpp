@@ -3,19 +3,16 @@
 
 #include "LinearColorSmoothing.h"
 
-LinearColorSmoothing::LinearColorSmoothing(
-		LedDevice * ledDevice,
-		double ledUpdateFrequency_hz,
-		int settlingTime_ms,
-		unsigned updateDelay) :
-	QObject(),
-	LedDevice(),
-	_ledDevice(ledDevice),
-	_updateInterval(1000 / ledUpdateFrequency_hz),
-	_settlingTime(settlingTime_ms),
-	_timer(),
-	_outputDelay(updateDelay),
-	_writeToLedsEnable(true)
+LinearColorSmoothing::LinearColorSmoothing( LedDevice * ledDevice, double ledUpdateFrequency_hz, int settlingTime_ms, unsigned updateDelay, bool continuousOutput)
+	: QObject()
+	, LedDevice()
+	, _ledDevice(ledDevice)
+	, _updateInterval(1000 / ledUpdateFrequency_hz)
+	, _settlingTime(settlingTime_ms)
+	, _timer()
+	, _outputDelay(updateDelay)
+	, _writeToLedsEnable(true)
+	, _continuousOutput(continuousOutput)
 {
 	_timer.setSingleShot(false);
 	_timer.setInterval(_updateInterval);
@@ -83,7 +80,7 @@ void LinearColorSmoothing::updateLeds()
 		_previousTime = now;
 
 		queueColors(_previousValues);
-		_writeToLedsEnable = false;
+		_writeToLedsEnable = _continuousOutput;
 	}
 	else
 	{
@@ -115,14 +112,18 @@ void LinearColorSmoothing::queueColors(const std::vector<ColorRgb> & ledColors)
 	}
 	else
 	{
-		// Push the new colors in the delay-buffer
-		_outputQueue.push_back(ledColors);
+		// Push new colors in the delay-buffer
+		if ( _writeToLedsEnable )
+			_outputQueue.push_back(ledColors);
+
 		// If the delay-buffer is filled pop the front and write to device
-		if (_outputQueue.size() > _outputDelay)
+		if (_outputQueue.size() > 0 )
 		{
-			if ( _writeToLedsEnable )
+			if ( _outputQueue.size() > _outputDelay || !_writeToLedsEnable )
+			{
 				_ledDevice->write(_outputQueue.front());
-			_outputQueue.pop_front();
+				_outputQueue.pop_front();
+			}
 		}
 	}
 }
