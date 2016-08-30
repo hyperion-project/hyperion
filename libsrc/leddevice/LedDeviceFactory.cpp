@@ -146,7 +146,7 @@ LedDevice * LedDeviceFactory::construct(const Json::Value & deviceConfig)
 	}
 	else if (type == "ws2812spi")
 	{
-		const std::string output = deviceConfig["output"].asString();
+		const std::string output = deviceConfig.get("output", "/dev/spidev0.0").asString();
 		const unsigned rate      = deviceConfig.get("rate",2857143).asInt();
 
 		LedDeviceWs2812SPI* deviceWs2812SPI = new LedDeviceWs2812SPI(output, rate);
