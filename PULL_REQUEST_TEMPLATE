@@ -1,7 +1,6 @@
-IMPORTANT: Please don´t commit to master, we will test your changes first at the beta branch!
+IMPORTANT: This repository no longer accepts new features or additions. Just bugfixes! Please commit to the repository "hyperion.ng" for new features.
 **1.** Tell us something about your changes.
 **2.** If this changes affect the .conf file. Please provide the changed section
 **3.** Reference a issue (optional)
 
-Note: For further discussions use our forum: forum.hyperion-project.org
 

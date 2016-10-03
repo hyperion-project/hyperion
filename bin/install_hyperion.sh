@@ -33,7 +33,7 @@ echo 'Created by brindosch - hyperion-project.org - the official Hyperion source
 echo '*******************************************************************************'
 
 # Find out if we are on OpenElec (Rasplex) / OSMC / Raspbian
-OS_OPENELEC=`grep -m1 -c 'OpenELEC\|RasPlex\|LibreELEC' /etc/issue`
+OS_OPENELEC=`grep -m1 -c 'OpenELEC\|RasPlex\|LibreELEC\|OpenPHT\|PlexMediaPlayer' /etc/issue`
 OS_LIBREELEC=`grep -m1 -c LibreELEC /etc/issue`
 OS_RASPLEX=`grep -m1 -c RasPlex /etc/issue`
 OS_OSMC=`grep -m1 -c OSMC /etc/issue`
@@ -81,9 +81,6 @@ SERVICEL="/usr/share/hyperion/services"
 echo '---> Stop Hyperion, if necessary'
 if [ $OS_OPENELEC -eq 1 ]; then
     killall hyperiond 2>/dev/null
-elif [ $USE_INITCTL -eq 1 ]; then
-	/sbin/initctl stop hyperion 2>/dev/null
-	SERVICEP="/etc/init"
 elif [ $USE_SYSTEMD -eq 1 ]; then
 	service hyperion stop 2>/dev/null
 	SERVICEP="/etc/systemd/system"
@@ -92,6 +89,9 @@ elif [ $USE_SYSTEMD -eq 1 ]; then
 	#Bad workaround for Jessie (systemd) users that used the old official script for install
 	update-rc.d -f hyperion remove 2>/dev/null
 	rm /etc/init.d/hyperion 2>/dev/null
+elif [ $USE_INITCTL -eq 1 ]; then
+	/sbin/initctl stop hyperion 2>/dev/null
+	SERVICEP="/etc/init"
 elif [ $USE_SERVICE -eq 1 ]; then
 	/usr/sbin/service hyperion stop 2>/dev/null
 	SERVICEP="/etc/init.d"
@@ -239,11 +239,7 @@ else
 fi
 
 # Copy the service control configuration to /etc/init (-n to respect user modified scripts)
-if [ $USE_INITCTL -eq 1 ]; then
-	echo '---> Installing initctl script'
-	cp -n $SERVICEL/hyperion.initctl.sh $SERVICEP/hyperion.conf 2>/dev/null
-	initctl reload-configuration
-elif [ $OS_OPENELEC -eq 1 ]; then
+if [ $OS_OPENELEC -eq 1 ]; then
 	#modify all old installs with a logfile output
 	sed -i 's|/dev/null|/storage/logfiles/hyperion.log|g' /storage/.config/autostart.sh 2>/dev/null
 	# only add to start script if hyperion is not present yet
@@ -271,6 +267,10 @@ elif [ $USE_SYSTEMD -eq 1 ]; then
 			sed -i '/Unit/a After = mediacenter.service' $SERVICEP/hyperion.service
 			systemctl -q daemon-reload
 		fi
+elif [ $USE_INITCTL -eq 1 ]; then
+	echo '---> Installing initctl script'
+	cp -n $SERVICEL/hyperion.initctl.sh $SERVICEP/hyperion.conf 2>/dev/null
+	initctl reload-configuration
 elif [ $USE_SERVICE -eq 1 ]; then
 	echo '---> Installing startup script in init.d'
 	# place startup script in init.d and add it to upstart (-s to respect user modified scripts)
@@ -298,12 +298,12 @@ fi
 echo '---> Starting Hyperion'
 if [ $OS_OPENELEC -eq 1 ]; then
 	/storage/.config/autostart.sh > /dev/null 2>&1 &
+elif [ $USE_SYSTEMD -eq 1 ]; then
+	systemctl start hyperion
 elif [ $USE_INITCTL -eq 1 ]; then
 	/sbin/initctl start hyperion
 elif [ $USE_SERVICE -eq 1 ]; then
 	/usr/sbin/service hyperion start
-elif [ $USE_SYSTEMD -eq 1 ]; then
-	service hyperion start
 fi
 
 echo '*******************************************************************************' 

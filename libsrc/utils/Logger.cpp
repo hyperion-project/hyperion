@@ -46,7 +46,11 @@ Logger::Logger ( std::string name, LogLevel minLevel ):
 	_syslogEnabled(true),
 	_loggerId(loggerId++)
 {
+#ifdef __GLIBC__
 	_appname = std::string(program_invocation_short_name);
+#else
+	_appname = std::string(getprogname());
+#endif
 	std::transform(_appname.begin(), _appname.end(),_appname.begin(), ::toupper);
 
 	loggerCount++;
@@ -76,10 +80,11 @@ void Logger::Message(LogLevel level, const char* sourceFile, const char* func, u
 	if ( level < _minLevel )
 		return;
 
-	char msg[512];
+	const size_t max_msg_length = 1024;
+	char msg[max_msg_length];
 	va_list args;
 	va_start (args, fmt);
-	vsprintf (msg,fmt, args);
+	vsnprintf (msg, max_msg_length, fmt, args);
 	va_end (args);
 
 	std::string location;
