@@ -39,6 +39,9 @@ OS_RASPLEX=`grep -m1 -c RasPlex /etc/issue`
 OS_OSMC=`grep -m1 -c OSMC /etc/issue`
 OS_RASPBIAN=`grep -m1 -c 'Raspbian\|RetroPie' /etc/issue`
 
+#Check for a bootloader as Berryboot (OpenElec|Raspbian|RetroPie)
+BOOT_BERRYBOOT=$(grep -m1 -c '\(/var/media\|/media/pi\)/berryboot' /etc/mtab)
+
 # Find out which device this script runs on
 CPU_RPI=`grep -m1 -c 'BCM2708\|BCM2709\|BCM2710' /proc/cpuinfo`
 CPU_IMX6=`grep -m1 -c i.MX6 /proc/cpuinfo`
@@ -104,20 +107,29 @@ if [ $OS_OPENELEC -ne 1 ]; then
 	mkdir /etc/hyperion 2>/dev/null
 fi
 
-#Check, if dtparam=spi=on is in place (not for OPENELEC)
-if [ $CPU_RPI -eq 1 ] && [ $OS_OPENELEC -ne 1 ]; then
-	SPIOK=`grep '^\dtparam=spi=on' /boot/config.txt | wc -l`
+#Check, if dtparam=spi=on is in place (not for OPENELEC, unless using BERRYBOOT)
+if [ $CPU_RPI -eq 1 ] && [ $OS_OPENELEC -ne 1 -o $BOOT_BERRYBOOT -eq 1 ]; then
+	BOOT_DIR="/boot"
+	if [ $BOOT_BERRYBOOT -eq 1 ]; then
+		BOOT_DIR=$(sed -ne "s#/dev/mmcblk0p1 \([^ ]*\) vfat rw,.*#\1#p" /etc/mtab)
+	fi
+	if [ -z "$BOOT_DIR" -o ! -f "$BOOT_DIR/config.txt" ]; then
+		echo '---> Warning: RPi using BERRYBOOT found but can not locate where config.txt is to assert that "dtparam=spi=on" is present. (BOOT_DIR='"$BOOT_DIR)"
+		SPIOK=1 # Not sure if OK, but don't ask to reboot
+	else
+		SPIOK=`grep '^\dtparam=spi=on' "$BOOT_DIR/config.txt" | wc -l`
 		if [ $SPIOK -ne 1 ]; then
-			echo '---> Raspberry Pi found, but SPI is not set, we write "dtparam=spi=on" to /boot/config.txt'
-			sed -i '$a dtparam=spi=on' /boot/config.txt
-				if [ $HCInstall -ne 1 ]; then
-				REBOOTMESSAGE="echo Please reboot your Raspberry Pi, we inserted dtparam=spi=on to /boot/config.txt"
-				fi
+			echo '---> Raspberry Pi found, but SPI is not set, we write "dtparam=spi=on" to '"$BOOT_DIR/config.txt"
+			sed -i '$a dtparam=spi=on' "$BOOT_DIR/config.txt"
+			if [ $HCInstall -ne 1 ]; then
+				REBOOTMESSAGE="echo Please reboot your Raspberry Pi, we inserted dtparam=spi=on to $BOOT_DIR/config.txt"
+			fi
 		fi
+	fi
 fi
 
-#Check, if dtparam=spi=on is in place (just for OPENELEC/LibreELEC
-if [ $CPU_RPI -eq 1 ] && [ $OS_OPENELEC -eq 1 ]; then
+#Check, if dtparam=spi=on is in place (just for OPENELEC/LibreELEC without BERRYBOOT)
+if [ $CPU_RPI -eq 1 ] && [ $OS_OPENELEC -eq 1 ] && [ $BOOT_BERRYBOOT -ne 1 ]; then
 	SPIOK=`grep '^\dtparam=spi=on' /flash/config.txt | wc -l`
 		if [ $SPIOK -ne 1 ]; then
 			mount -o remount,rw /flash
