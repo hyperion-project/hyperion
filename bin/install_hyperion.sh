@@ -53,7 +53,7 @@ fi
 #Check which RPi we are one (in case)
 RPI_1=`grep -m1 -c BCM2708 /proc/cpuinfo`
 RPI_2=`grep -m1 -c BCM2709 /proc/cpuinfo`
-RPI_3=`grep -m1 -c BCM2710 /proc/cpuinfo`
+RPI_3=`grep -m1 -c 'BCM2710\|BCM2835' /proc/cpuinfo`
 
 #Check, if year equals 1970
 DATE=$(date +"%Y")
