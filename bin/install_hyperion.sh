@@ -218,9 +218,9 @@ echo '---> Downloading the appropriate Hyperion release'
 if [ $OS_OPENELEC -eq 1 ]; then
 	# OpenELEC has a readonly file system. Use alternative location
 	echo '---> Downloading Hyperion OpenELEC/LibreELEC release'
-	curl -# -L --get $HYPERION_RELEASE | tar -C /storage -xz
+	curl -# -k -L --get $HYPERION_RELEASE | tar -C /storage -xz
 	echo '---> Downloading Hyperion OpenELEC/LibreELEC dependencies'
-	curl -# -L --get $OE_DEPENDECIES | tar -C /storage/hyperion/bin -xz
+	curl -# -k -L --get $OE_DEPENDECIES | tar -C /storage/hyperion/bin -xz
 	#set the executen bit (failsave)
 	chmod +x -R /storage/hyperion/bin
 else
