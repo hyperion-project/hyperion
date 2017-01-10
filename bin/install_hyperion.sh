@@ -216,6 +216,7 @@ fi
 # Get and extract the Hyperion binaries and effects
 echo '---> Downloading the appropriate Hyperion release'
 if [ $OS_OPENELEC -eq 1 ]; then
+    mkdir /storage/hyperion
 	# OpenELEC has a readonly file system. Use alternative location
 	echo '---> Downloading Hyperion OpenELEC/LibreELEC release'
 	curl -# -k -L --get $HYPERION_RELEASE | tar -C /storage -xz
