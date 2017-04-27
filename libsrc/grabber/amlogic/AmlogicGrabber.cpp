@@ -22,7 +22,7 @@
 
 // Flags copied from 'include/linux/amlogic/amports/amvstream.h' at https://github.com/codesnake/linux-amlogic
 #define AMSTREAM_IOC_MAGIC   'S'
-#define AMSTREAM_IOC_GET_VIDEO_DISABLE      _IOR(AMSTREAM_IOC_MAGIC,   0x48, unsigned long)
+#define AMSTREAM_IOC_GET_VIDEO_DISABLE      _IOR(AMSTREAM_IOC_MAGIC,   0x48, int)
 
 AmlogicGrabber::AmlogicGrabber(const unsigned width, const unsigned height) :
 	// Minimum required width or height is 160
