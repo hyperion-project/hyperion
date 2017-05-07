@@ -1,6 +1,6 @@
 # Install the required tools and dependencies
 sudo apt-get update
-sudo apt-get install git cmake build-essential libQt4-dev libusb-1.0-0-dev python-dev libxrender-dev python
+sudo apt-get install git cmake build-essential libqt4-dev libusb-1.0-0-dev python-dev libxrender-dev python
 
 # Arch/ALARM dependencies
 sudo pacman -S --needed git cmake base-devel qt4 libusb libxrender icu
