@@ -16,7 +16,7 @@ fi
 
 #Check, if script is running as root
 if [ $(id -u) != 0 ]; then
-		echo '---> Critical Error: Please run the script as root (sudo sh ./install_hyperion.sh) -> abort' 
+		echo '---> Critical Error: Please run the script as root (sudo sh ./install_hyperion.sh) -> abort'
 		exit 1
 fi
 
@@ -27,9 +27,9 @@ else WMESSAGE="echo This script will install/update Hyperion Ambient Light"
 fi
 
 #Welcome message
-echo '*******************************************************************************' 
-$WMESSAGE 
-echo 'Created by brindosch - hyperion-project.org - the official Hyperion source.' 
+echo '*******************************************************************************'
+$WMESSAGE
+echo 'Created by brindosch - hyperion-project.org - the official Hyperion source.'
 echo '*******************************************************************************'
 
 # Find out if we are on OpenElec (Rasplex) / OSMC / Raspbian
@@ -44,8 +44,9 @@ CPU_RPI=`grep -m1 -c 'BCM2708\|BCM2709\|BCM2710\|BCM2835' /proc/cpuinfo`
 CPU_IMX6=`grep -m1 -c i.MX6 /proc/cpuinfo`
 CPU_WETEK=`grep -m1 -c Amlogic /proc/cpuinfo`
 CPU_X32X64=`uname -m | grep 'x86_32\|i686\|x86_64' | wc -l`
+CPU_ODROIDC2=`grep -m1 -c "ODROID-C2" /proc/cpuinfo`
 # Check that we have a known configuration
-if [ $CPU_RPI -ne 1 ] && [ $CPU_IMX6 -ne 1 ] && [ $CPU_WETEK -ne 1 ] && [ $CPU_X32X64 -ne 1 ]; then
+if [ $CPU_RPI -ne 1 ] && [ $CPU_IMX6 -ne 1 ] && [ $CPU_WETEK -ne 1 ] && [ $CPU_X32X64 -ne 1 ] && [ $CPU_ODROIDC2 -ne 1 ]; then
 	echo '---> Critical Error: CPU information does not match any known releases -> abort'
 	exit 1
 fi
@@ -57,7 +58,7 @@ RPI_3=`grep -m1 -c 'BCM2710\|BCM2835' /proc/cpuinfo`
 
 #Check, if year equals 1970
 DATE=$(date +"%Y")
-if [ "$DATE" -le "2015" ]; then
+if [ "$DATE" -le "2016" ]; then
         echo "---> Critical Error: Please update your systemtime (Year of your system: ${DATE}) -> abort"
         exit 1
 fi
@@ -129,11 +130,11 @@ if [ $CPU_RPI -eq 1 ] && [ $OS_OPENELEC -eq 1 ]; then
 				fi
 		fi
 fi
- 
+
 # compatibility layer to move old configs to new config dir
 if [ -f "/opt/hyperion/bin/hyperiond" ]; then
 	echo '---> Old installation found, move configs to /etc/hyperion/ and move hyperion to /usr/share/hyperion/'
-	mv /opt/hyperion/config/*.json /etc/hyperion 2>/dev/null 
+	mv /opt/hyperion/config/*.json /etc/hyperion 2>/dev/null
 	sed -i "s|/opt/hyperion/effects|/usr/share/hyperion/effects|g" /etc/hyperion/*.json
 		CPO1=/etc/hyperion.config.json
 		CPO2=/opt/hyperion/config/hyperion.config.json
@@ -178,6 +179,9 @@ elif [ $CPU_RPI -eq 1 ] && [ $OS_LIBREELEC -eq 1 ] && [ $RPI_2 -eq 1 ]; then
 elif [ $CPU_RPI -eq 1 ] && [ $OS_LIBREELEC -eq 1 ] && [ $RPI_3 -eq 1 ]; then
 	HYPERION_RELEASE=$HYPERION_ADDRESS/hyperion_rpi3_le.tar.gz
 	OE_DEPENDECIES=$HYPERION_ADDRESS/hyperion.deps.openelec-rpi.tar.gz
+elif [ $CPU_ODROIDC2 -eq 1 ] && [ $OS_LIBREELEC -eq 1 ]; then
+	HYPERION_RELEASE=https://raw.githubusercontent.com/Starbix/hyperion-files/master/release/hyperion_odroidc2_le.tar.gz
+	OE_DEPENDECIES=https://raw.githubusercontent.com/Starbix/hyperion-files/master/release/hyperion.deps.libreelec-odroid.tar.gz
 elif [ $CPU_RPI -eq 1 ] && [ $OS_OPENELEC -eq 1 ] && [ $RPI_1 -eq 1 ]; then
 	HYPERION_RELEASE=$HYPERION_ADDRESS/hyperion_rpi_oe.tar.gz
 	OE_DEPENDECIES=$HYPERION_ADDRESS/hyperion.deps.openelec-rpi.tar.gz
@@ -226,7 +230,7 @@ if [ $OS_OPENELEC -eq 1 ]; then
 else
 	BINSP=/usr/share/hyperion/bin
 	BINTP=/usr/bin
-	wget -nv $HYPERION_RELEASE -O - | tar -C /usr/share -xz	
+	wget -nv $HYPERION_RELEASE -O - | tar -C /usr/share -xz
 	#set the executen bit (failsave) and move config to /etc/hyperion
 	chmod +x -R $BINSP
 	# create links to the binaries
@@ -253,7 +257,11 @@ if [ $OS_OPENELEC -eq 1 ]; then
 	# only add hyperion-x11 to startup, if not found and x32x64 detected
 	if [ $CPU_X32X64 -eq 1 ] && [ `cat /storage/.config/autostart.sh 2>/dev/null | grep hyperion-x11 | wc -l` -eq 0 ]; then
 		echo '---> Adding Hyperion-x11 to OpenELEC/LibreELEC autostart.sh'
-		echo "DISPLAY=:0.0 LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/storage/hyperion/bin /storage/hyperion/bin/hyperion-x11 </dev/null >/storage/logfiles/hyperion.log 2>&1 &" >> /storage/.config/autostart.sh		
+		echo "DISPLAY=:0.0 LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/storage/hyperion/bin /storage/hyperion/bin/hyperion-x11 </dev/null >/storage/logfiles/hyperion.log 2>&1 &" >> /storage/.config/autostart.sh
+	fi
+	if [ $CPU_ODROIDC2 -eq 1 ] && [ `cat /storage/.config/autostart.sh 2>/dev/null | grep "echo 1 | tee /sys/module/amvdec_h265/parameters/double_write_mode" | wc -l` -eq 0 ]; then
+		echo '---> Adding fix for capturing HEVC content'
+		echo "echo 1 | tee /sys/module/amvdec_h265/parameters/double_write_mode" >> /storage/.config/autostart.sh
 	fi
 elif [ $USE_SYSTEMD -eq 1 ]; then
 	echo '---> Installing systemd script'
@@ -306,13 +314,13 @@ elif [ $USE_SERVICE -eq 1 ]; then
 	/usr/sbin/service hyperion start
 fi
 
-echo '*******************************************************************************' 
-echo 'Hyperion Installation/Update finished!' 
-echo 'Please download the latest HyperCon version to benefit from new features!' 
-echo 'To create a config, follow the HyperCon Guide at our Wiki (EN/DE)!' 
-echo 'Wiki: wiki.hyperion-project.org Webpage: www.hyperion-project.org' 
+echo '*******************************************************************************'
+echo 'Hyperion Installation/Update finished!'
+echo 'Please download the latest HyperCon version to benefit from new features!'
+echo 'To create a config, follow the HyperCon Guide at our Wiki (EN/DE)!'
+echo 'Wiki: wiki.hyperion-project.org Webpage: www.hyperion-project.org'
 $REBOOTMESSAGE
-echo '*******************************************************************************' 
+echo '*******************************************************************************'
 ## Force reboot and prevent prompt if spi is added during a HyperCon Install
 if [ $HCInstall -eq 1 ] && [ $CPU_RPI -eq 1 ] && [ $SPIOK -ne 1 ]; then
 	echo "Rebooting now, we added dtparam=spi=on to config.txt"
