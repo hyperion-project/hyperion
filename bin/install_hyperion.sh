@@ -100,7 +100,7 @@ fi
 #Install dependencies for Hyperion and setup preperation
 if [ $OS_OPENELEC -ne 1 ]; then
 	echo '---> Install/Update Hyperion dependencies (This may take a while)'
-	apt-get -qq update && apt-get -qq --yes install libqtcore4 libqtgui4 libqt4-network libusb-1.0-0 ca-certificates
+	apt-get -qq update && apt-get -qq --yes install libqtcore4 libqtgui4 libqt4-network libusb-1.0-0 ca-certificates libpython2.7
 	mkdir /etc/hyperion 2>/dev/null
 fi
 
