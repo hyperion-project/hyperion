@@ -1,6 +1,7 @@
 #pragma once
 
 // STL includes
+#include <cassert>
 #include <vector>
 #include <cstdint>
 #include <cstring>
