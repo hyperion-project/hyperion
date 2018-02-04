@@ -40,6 +40,7 @@
 #include "LedDeviceAtmo.h"
 #include "LedDeviceAdalightApa102.h"
 #include "LedDeviceAtmoOrb.h"
+#include "LedDeviceAurora.h"
 
 #ifdef ENABLE_WS2812BPWM
 	#include "LedDeviceWS2812b.h"
@@ -319,6 +320,13 @@ LedDevice * LedDeviceFactory::construct(const Json::Value & deviceConfig)
 		const unsigned maxPacket   = deviceConfig["maxpacket"].asInt();
 		device = new LedDeviceUdp(output, rate, protocol, maxPacket);
 	}
+	else if (type == "aurora")
+	{
+		const std::string output = deviceConfig["output"].asString();
+		const std::string key  = deviceConfig["key"].asString();
+		LedDeviceAurora* deviceAurora = new LedDeviceAurora(output, key);
+		device = deviceAurora;
+	}
 	else if (type == "udpraw")
 	{
 		const std::string output = deviceConfig["output"].asString();
@@ -350,7 +358,7 @@ LedDevice * LedDeviceFactory::construct(const Json::Value & deviceConfig)
 #ifdef ENABLE_WS2812BPWM
 	else if (type == "ws2812b")
 	{
-		LedDeviceWS2812b * ledDeviceWS2812b = new LedDeviceWS2812b();
+		libleddevice.anew LedDeviceWS2812b();
 		device = ledDeviceWS2812b;
 	}
 #endif
