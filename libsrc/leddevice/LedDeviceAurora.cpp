@@ -1,23 +1,22 @@
 
 // Local-Hyperion includes
 #include "LedDeviceAurora.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <errno.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
 #include <netdb.h>
 #include <assert.h>
 // jsoncpp includes
 #include <json/json.h>
 // qt includes
-#include <QtCore/qmath.h>
 #include <QEventLoop>
 #include <QNetworkReply>
+
+#define LAYOUT_ROUTE "panelLayout/layout"
+#define EFFECTS_ROUTE "effects"
+#define URL_FORMAT "http://%1:16021/api/v1/%2/%3"
+#define EXT_MODE_STRING "{\"write\" : {\"command\" : \"display\", \"animType\" : \"extControl\"}}"
+#define PANELCOUNT_KEY "numPanels"
+#define PANELID_KEY "panelId"
+#define POSITIONDATA_KEY "positionData"
+#define UDPPORT_KEY "streamControlPort"
 
 struct addrinfo vints, *serverinfo, *pt;
 //char udpbuffer[1024];
@@ -32,7 +31,7 @@ LedDeviceAurora::LedDeviceAurora(const std::string& output, const std::string&  
 	Json::Reader reader;
 	Json::FastWriter writer;
 	// Read Panel count and panel Ids
-	QByteArray response = get(QString::fromStdString(hostname), QString::fromStdString(key), "panelLayout/layout");
+	QByteArray response = get(QString::fromStdString(hostname), QString::fromStdString(key), LAYOUT_ROUTE);
 	Json::Value json;
 	if (!reader.parse(QString(response).toStdString(), json)) {
 		throw std::runtime_error("No Layout found");
@@ -41,12 +40,12 @@ LedDeviceAurora::LedDeviceAurora(const std::string& output, const std::string&  
 	//Json::FastWriter fastWriter;
 	//std::cout << fastWriter.write(json);
 
-	panelCount = json["numPanels"].asUInt();
-	Json::Value positionDataJson = json["positionData"];
+	panelCount = json[PANELCOUNT_KEY].asUInt();
+	Json::Value positionDataJson = json[POSITIONDATA_KEY];
 	// Loop over all children.
 	for (Json::ValueIterator it = positionDataJson.begin(); it != positionDataJson.end() && panelIds.size() < panelCount; it++) {
 		Json::Value panel = *it;		
-		int panelId = panel["panelId"].asUInt();
+		int panelId = panel[PANELID_KEY].asUInt();
 		panelIds.push_back(panelId);
 	}
 
@@ -57,14 +56,14 @@ LedDeviceAurora::LedDeviceAurora(const std::string& output, const std::string&  
 		std::cout <<  "All panel Ids found: "<< panelIds.size()<<std::endl;
 	}
 	// Set Aurora to UDP Mode
-	QByteArray modeResponse = changeMode(QString::fromStdString(hostname), QString::fromStdString(key), "effects");
+	QByteArray modeResponse = changeMode(QString::fromStdString(hostname), QString::fromStdString(key), EFFECTS_ROUTE);
 	Json::Value configJson;
 	if (!reader.parse(QString(modeResponse).toStdString(), configJson)) {
 		throw std::runtime_error("Could not change Mode token ");
 	}
 	//std::cout << fastWriter.write(configJson);
 	// Get UDP port
-	port = std::to_string(configJson["streamControlPort"].asUInt());
+	port = std::to_string(configJson[UDPPORT_KEY].asUInt());
 
 	//std::cout << "output " << output << " hostname " << hostname << " port " << port <<std::endl;
 
@@ -98,7 +97,7 @@ LedDeviceAurora::LedDeviceAurora(const std::string& output, const std::string&  
 }
 
 QString LedDeviceAurora::getUrl(QString host, QString token, QString route) {
-	return QString("http://%1:16021/api/v1/%2/%3").arg(host).arg(token).arg(route);
+	return QString(URL_FORMAT).arg(host).arg(token).arg(route);
 }
 
 QByteArray LedDeviceAurora::get(QString host, QString token, QString route) {
@@ -138,7 +137,7 @@ QByteArray LedDeviceAurora::putJson(QString url, QString json) {
 
 QByteArray LedDeviceAurora::changeMode(QString host, QString token, QString route) {
 	QString url = getUrl(host, token, route);
-	QString jsondata( "{\"write\" : {\"command\" : \"display\", \"animType\" : \"extControl\"}}"); //Enable UDP Mode
+	QString jsondata(EXT_MODE_STRING); //Enable UDP Mode
 	return putJson(url, jsondata);
 }
 
