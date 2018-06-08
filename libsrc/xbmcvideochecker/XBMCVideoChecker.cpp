@@ -62,7 +62,8 @@ void XBMCVideoChecker::receiveReply()
 // silence - no "debug" code should be at the log
 //	std::cout << "KODICHECK INFO: Kodi Message: " << reply.toStdString() << std::endl;
 
-	if (reply.contains("\"method\":\"Player.OnPlay\""))
+	if ( (_xbmcVersion < 18 && reply.contains("\"method\":\"Player.OnPlay\"")) ||
+	     (_xbmcVersion >= 18 && reply.contains("\"method\":\"Player.OnAVStart\"")) )
 	{
 		// send a request for the current player state
 		_socket.write(_activePlayerRequest.toUtf8());
