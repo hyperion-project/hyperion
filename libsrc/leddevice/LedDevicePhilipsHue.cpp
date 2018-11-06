@@ -111,8 +111,9 @@ CiColor PhilipsHueLight::rgbToCiColor(float red, float green, float blue) {
 	if (std::isnan(cy)) {
 		cy = 0.0f;
 	}
-	// Brightness is simply Y in the XYZ space.
-	CiColor xy = { cx, cy, Y };
+	// RGB to HSV Convertion for Brightness Value, not XYZ Space.
+	float bri = qMax(qMax(r, g), b);
+	CiColor xy = { cx, cy, bri };
 	// Check if the given XY value is within the color reach of our lamps.
 	if (!isPointInLampsReach(xy)) {
 		// It seems the color is out of reach let's find the closes color we can produce with our lamp and send this XY value out.
