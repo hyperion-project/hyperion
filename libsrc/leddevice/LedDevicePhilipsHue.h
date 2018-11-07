@@ -2,8 +2,7 @@
 
 // STL includes
 #include <string>
-#include <cmath>
-  
+
 // Qt includes
 #include <QObject>
 #include <QString>
