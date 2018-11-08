@@ -112,7 +112,7 @@ CiColor PhilipsHueLight::rgbToCiColor(float red, float green, float blue) {
 		cy = 0.0f;
 	}
 	// RGB to HSV Convertion for Brightness Value, not XYZ Space.
-	float bri = qMax(qMax(r, g), b);
+	float bri = qMax(qMax(red, green), blue);
 	CiColor xy = { cx, cy, bri };
 	// Check if the given XY value is within the color reach of our lamps.
 	if (!isPointInLampsReach(xy)) {
