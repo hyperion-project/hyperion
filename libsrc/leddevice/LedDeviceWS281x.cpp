@@ -9,6 +9,7 @@ LedDeviceWS281x::LedDeviceWS281x(const int gpio, const int leds, const uint32_t 
 std::cout << "whiteAlgorithm :" << whiteAlgorithm << ":\n";
 
 	initialized = false;
+	led_string = {};
 	led_string.freq = freq;
 	led_string.dmanum = dmanum;
 	if (pwmchannel != 0 && pwmchannel != 1) {
