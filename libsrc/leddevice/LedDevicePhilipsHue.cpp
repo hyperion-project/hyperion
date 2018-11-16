@@ -39,7 +39,7 @@ PhilipsHueLight::PhilipsHueLight(unsigned int id, QString originalState, QString
 		colorSpace.red = {0.675f, 0.322f};
 		colorSpace.green = {0.409f, 0.518f};
 		colorSpace.blue = {0.167f, 0.04f};
-	} else if (GAMUT_C_MODEL_IDS.find(modelId) != GAMUT_B_MODEL_IDS.end()) {
+	} else if (GAMUT_C_MODEL_IDS.find(modelId) != GAMUT_C_MODEL_IDS.end()) {
 		colorSpace.red = {0.6915f, 0.3083f};
 		colorSpace.green = {0.17f, 0.7f};
 		colorSpace.blue = {0.1532f, 0.0475f};
