@@ -42,7 +42,9 @@ sudo port install qt4-mac
 sudo port install cmake
 #sudo port install libusb
 #for brew:
-sudo brew install qt4-mac
+sudo brew tap cartr/qt4
+sudo brew tap-pin cartr/qt4
+sudo brew install qt@4
 sudo brew install cmake
 #sudo brew install libusb
 cmake -DENABLE_DISPMANX=OFF -DENABLE_SPIDEV=OFF -DENABLE_V4L2=OFF -DENABLE_OSX=ON ..
