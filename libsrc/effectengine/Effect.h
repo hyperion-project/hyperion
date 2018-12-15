@@ -14,10 +14,12 @@ class Effect : public QThread
 	Q_OBJECT
 
 public:
-    Effect(PyThreadState * mainThreadState, int priority, int timeout, const std::string & script, const Json::Value & args = Json::Value());
+    Effect(PyThreadState * mainThreadState, const std::string & name, int priority, int timeout, const std::string & script, const Json::Value & args = Json::Value());
 	virtual ~Effect();
 
 	virtual void run();
+    
+    std::string getName() const { return _name; }
 
 	int getPriority() const;
 	
@@ -62,6 +64,8 @@ private:
 
 private:
     PyThreadState * _mainThreadState;
+
+    const std::string _name;
 
 	const int _priority;
 
