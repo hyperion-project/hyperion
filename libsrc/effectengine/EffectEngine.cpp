@@ -86,6 +86,7 @@ const std::list<ActiveEffectDefinition> &EffectEngine::getActiveEffects()
 	for (Effect * effect : _activeEffects)
 	{
 		ActiveEffectDefinition activeEffectDefinition;
+		activeEffectDefinition.name = effect->getName();
 		activeEffectDefinition.script = effect->getScript();
 		activeEffectDefinition.priority = effect->getPriority();
 		activeEffectDefinition.timeout = effect->getTimeout();
@@ -174,16 +175,16 @@ int EffectEngine::runEffect(const std::string &effectName, const Json::Value &ar
 		return -1;
 	}
 
-	return runEffectScript(effectDefinition->script, args.isNull() ? effectDefinition->args : args, priority, timeout);
+	return runEffectScript(effectName, effectDefinition->script, args.isNull() ? effectDefinition->args : args, priority, timeout);
 }
 
-int EffectEngine::runEffectScript(const std::string &script, const Json::Value &args, int priority, int timeout)
+int EffectEngine::runEffectScript(const std::string & name, const std::string &script, const Json::Value &args, int priority, int timeout)
 {
 	// clear current effect on the channel
 	channelCleared(priority);
 
 	// create the effect
-    Effect * effect = new Effect(_mainThreadState, priority, timeout, script, args);
+    Effect * effect = new Effect(_mainThreadState, name, priority, timeout, script, args);
 	connect(effect, SIGNAL(setColors(int,std::vector<ColorRgb>,int,bool)), _hyperion, SLOT(setColors(int,std::vector<ColorRgb>,int,bool)), Qt::QueuedConnection);
 	connect(effect, SIGNAL(effectFinished(Effect*)), this, SLOT(effectFinished(Effect*)));
 	_activeEffects.push_back(effect);

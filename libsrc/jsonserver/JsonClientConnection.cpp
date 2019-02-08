@@ -524,6 +524,7 @@ void JsonClientConnection::handleServerInfoCommand(const Json::Value &)
 	for (const ActiveEffectDefinition & activeEffectDefinition : activeEffectsDefinitions)
 	{
 		Json::Value activeEffect;
+		activeEffect["name"] = activeEffectDefinition.name;
 		activeEffect["script"] = activeEffectDefinition.script;
 		activeEffect["priority"] = activeEffectDefinition.priority;
 		activeEffect["timeout"] = activeEffectDefinition.timeout;

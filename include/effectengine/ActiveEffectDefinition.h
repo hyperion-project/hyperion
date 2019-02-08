@@ -8,6 +8,7 @@
 
 struct ActiveEffectDefinition
 {
+    std::string name;
 	std::string script;
 	int priority;
 	int timeout;
