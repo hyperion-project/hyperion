@@ -24,25 +24,25 @@ PhilipsHueLight::PhilipsHueLight(unsigned int id, QString originalState, QString
 		id(id), originalState(originalState) {
 	// Hue system model ids (http://www.developers.meethue.com/documentation/supported-lights).
 	// Light strips, color iris, ...
-	const std::set<QString> GAMUT_A_MODEL_IDS = { "LLC001", "LLC005", "LLC006", "LLC007", "LLC010", "LLC011", "LLC012",
-			"LLC013", "LLC014", "LST001" };
+	const std::set<QString> GAMUT_A_MODEL_IDS = { "LLC001", "LLC005", "LLC006", "LLC007", "LLC010", "LLC011", "LLC012", "LLC013", "LLC014", "LST001" };
 	// Hue bulbs, spots, ...
 	const std::set<QString> GAMUT_B_MODEL_IDS = { "LCT001", "LCT002", "LCT003", "LCT007", "LLM001" };
 	// Hue Lightstrip plus, go ...
-	const std::set<QString> GAMUT_C_MODEL_IDS = { "LLC020", "LST002" };
+	const std::set<QString> GAMUT_C_MODEL_IDS = { "LLC020", "LST002", "LCT011", "LCT012", "LCT010", "LCT014", "LCT015", "LCT016", "LCT024" };
+			
 	// Find id in the sets and set the appropiate color space.
 	if (GAMUT_A_MODEL_IDS.find(modelId) != GAMUT_A_MODEL_IDS.end()) {
-		colorSpace.red = {0.703f, 0.296f};
+		colorSpace.red = {0.704f, 0.296f};
 		colorSpace.green = {0.2151f, 0.7106f};
 		colorSpace.blue = {0.138f, 0.08f};
 	} else if (GAMUT_B_MODEL_IDS.find(modelId) != GAMUT_B_MODEL_IDS.end()) {
 		colorSpace.red = {0.675f, 0.322f};
-		colorSpace.green = {0.4091f, 0.518f};
+		colorSpace.green = {0.409f, 0.518f};
 		colorSpace.blue = {0.167f, 0.04f};
-	} else if (GAMUT_C_MODEL_IDS.find(modelId) != GAMUT_B_MODEL_IDS.end()) {
-		colorSpace.red = {0.675f, 0.322f};
-		colorSpace.green = {0.2151f, 0.7106f};
-		colorSpace.blue = {0.167f, 0.04f};
+	} else if (GAMUT_C_MODEL_IDS.find(modelId) != GAMUT_C_MODEL_IDS.end()) {
+		colorSpace.red = {0.6915f, 0.3083f};
+		colorSpace.green = {0.17f, 0.7f};
+		colorSpace.blue = {0.1532f, 0.0475f};
 	} else {
 		colorSpace.red = {1.0f, 0.0f};
 		colorSpace.green = {0.0f, 1.0f};
