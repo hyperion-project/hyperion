@@ -27,6 +27,9 @@
 // Define to enable the osx grabber
 #cmakedefine ENABLE_OSX
 
+// Define to enable the opencv grabber
+#cmakedefine ENABLE_OPENCV
+
 // Define to enable the bonjour/zeroconf publishing
 #cmakedefine ENABLE_ZEROCONF
 

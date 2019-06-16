@@ -31,6 +31,10 @@ if (ENABLE_V4L2)
 	target_link_libraries(hyperiond v4l2-grabber)
 endif ()
 
+if (ENABLE_OPENCV)
+	target_link_libraries(hyperiond opencv-grabber)
+endif ()
+
 if (ENABLE_AMLOGIC)
 	target_link_libraries(hyperiond amlogic-grabber)
 endif ()
