@@ -300,6 +300,21 @@
 		"blueSignalThreshold"  : 0.0
 	},
 
+	/// Configuration for the embedded OpenCV grabber
+	///  * input		: integer id of input device [default= 0]
+	///  * width		: optional resolution (note: will force OpenCV to capture in that resolution) [default=0]
+	///  * height		: optional resolution (note: will force OpenCV to capture in that resolution) [default=0]
+	///  * frequency_Hz	: optional capture frequency [defaults=10]
+	///  * priority		: optional hyperion priority channel [default=900]
+	"opencvgrabber" :
+	{
+		"input" : 0,
+		"width" : 0,
+		"height" : 0,
+		"frequency_Hz" : 10,
+		"priority" : 900
+	},
+
 	///  The configuration for each individual led. This contains the specification of the area 
 	///  averaged of an input image for each led to determine its color. Each item in the list 
 	///  contains the following fields:
