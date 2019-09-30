@@ -46,6 +46,11 @@
 #include <grabber/OsxWrapper.h>
 #endif
 
+#ifdef ENABLE_OPENCV
+// OpenCV grabber
+#include <grabber/OpenCVWrapper.h>
+#endif
+
 // XBMC Video checker includes
 #include <xbmcvideochecker/XBMCVideoChecker.h>
 
@@ -428,6 +433,30 @@ void startGrabberOsx(const Json::Value &config, Hyperion &hyperion, ProtoServer*
 }
 #endif
 
+#ifdef ENABLE_OPENCV
+void startGrabberOpenCV(const Json::Value &config, Hyperion &hyperion, ProtoServer* &protoServer, OpenCVWrapper* &opencvGrabber)
+{
+	// Construct and start the OpenCV grabber if the configuration is present
+	if (config.isMember("opencvgrabber"))
+	{
+		const Json::Value & grabberConfig = config["opencvgrabber"];
+		opencvGrabber = new OpenCVWrapper(
+			grabberConfig.get("input", 0).asUInt(),
+			grabberConfig.get("width", 0).asUInt(),
+			grabberConfig.get("height", 0).asUInt(),
+			grabberConfig.get("frequency_Hz", 10).asUInt(),
+			grabberConfig.get("priority", 900).asInt(),
+			&hyperion);
+
+		QObject::connect(opencvGrabber, SIGNAL(emitImage(int, const Image<ColorRgb>&, const int)), protoServer, SLOT(sendImageToProtoSlaves(int, const Image<ColorRgb>&, const int)) );
+
+		opencvGrabber->start();
+		std::cout << "INFO: OpenCV grabber created and started" << std::endl;
+	}
+}
+#endif
+
+
 int main(int argc, char** argv)
 {
 	std::cout
@@ -582,6 +611,16 @@ int main(int argc, char** argv)
 		std::cerr << "ERROR: The osx grabber can not be instantiated, because it has been left out from the build" << std::endl;
 	}
 #endif
+#endif
+
+#ifdef ENABLE_OPENCV
+	OpenCVWrapper * opencvGrabber = nullptr;
+	startGrabberOpenCV(config, hyperion, protoServer, opencvGrabber);
+#else
+	if (config.isMember("opencvgrabber"))
+	{
+		std::cerr << "ERROR: The OpenCV grabber can not be instantiated, because it has been left out from the build" << std::endl;
+	}
 #endif
 
 

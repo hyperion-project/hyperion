@@ -18,6 +18,10 @@ if (ENABLE_V4L2)
 	add_subdirectory(v4l2)
 endif (ENABLE_V4L2)
 
+if (ENABLE_OPENCV)
+	add_subdirectory(opencv)
+endif (ENABLE_OPENCV)
+
 if (ENABLE_X11)
 	add_subdirectory(x11)
 endif()
