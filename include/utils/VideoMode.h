@@ -16,7 +16,7 @@ enum VideoMode
 inline VideoMode parse3DMode(std::string videoMode)
 {
 	// convert to lower case
-	std::transform(videoMode.begin(), videoMode.end(), videoMode.begin(), ::tolower);
+	std::transform(videoMode.begin(), videoMode.end(), videoMode.begin(), ::toupper);
 
 	if (videoMode == "3DTAB")
 	{
