@@ -81,6 +81,7 @@ SERVICEL="/usr/share/hyperion/services"
 echo '---> Stop Hyperion, if necessary'
 if [ $OS_OPENELEC -eq 1 ]; then
     killall hyperiond 2>/dev/null
+    killall hyperion-x11 2>/dev/null
 elif [ $USE_SYSTEMD -eq 1 ]; then
 	service hyperion stop 2>/dev/null
 	SERVICEP="/etc/systemd/system"
