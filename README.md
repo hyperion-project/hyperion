@@ -1,6 +1,13 @@
 HYPERION
 ========
 
+**Hyperion Classic (this git) has been discontinued. Please go to [Hyperion.NG (Next Generation)](https://github.com/hyperion-project/hyperion.ng)**
+
+
+
+
+
+
 Hyperion is an opensource 'AmbiLight' implementation supported by many devices. The main features of Hyperion are:
 * Low CPU load. For a led string of 50 leds the CPU usage will typically be below 1.5% on a non-overclocked Pi.
 * Json interface which allows easy integration into scripts.
